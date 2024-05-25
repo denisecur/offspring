@@ -20,6 +20,9 @@
       "relation": "oneToMany",
       "target": "api::lernfeld.lernfeld",
       "mappedBy": "ausbildungsfach"
+    },
+    "fachrichtung": {
+      "type": "string"
     }
   }
 }

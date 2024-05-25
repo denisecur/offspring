@@ -381,6 +381,7 @@ export interface ApiAusbildungsfachAusbildungsfach
       'oneToMany',
       'api::lernfeld.lernfeld'
     >;
+    fachrichtung: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

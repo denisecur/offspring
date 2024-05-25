@@ -10,7 +10,7 @@
       "type": "enumeration",
       "enum": [
         "Büromanagement",
-        "Versicherungen- und Finanzen"
+        "Versicherungen- und Finanzanlagen"
       ]
     },
     "schule": {

@@ -8,7 +8,7 @@ export interface AusbildungAusbildung extends Schema.Component {
   };
   attributes: {
     fachrichtung: Attribute.Enumeration<
-      ['B\u00FCromanagement', 'Versicherungen- und Finanzen']
+      ['B\u00FCromanagement', 'Versicherungen- und Finanzanlagen']
     >;
     schule: Attribute.Component<'ausbildung.schule'>;
     noten: Attribute.Component<'ausbildung.noten', true>;
