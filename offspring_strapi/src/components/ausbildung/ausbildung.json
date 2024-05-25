@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_ausbildung_ausbildungs",
+  "info": {
+    "displayName": "ausbildung",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "fachrichtung": {
+      "type": "enumeration",
+      "enum": [
+        "Büromanagement",
+        "Versicherungen- und Finanzen"
+      ]
+    },
+    "schule": {
+      "type": "component",
+      "repeatable": false,
+      "component": "ausbildung.schule"
+    },
+    "noten": {
+      "type": "component",
+      "repeatable": true,
+      "component": "ausbildung.noten"
+    },
+    "berichtshefte": {
+      "type": "component",
+      "repeatable": true,
+      "component": "ausbildung.berichtsheft"
+    }
+  }
+}

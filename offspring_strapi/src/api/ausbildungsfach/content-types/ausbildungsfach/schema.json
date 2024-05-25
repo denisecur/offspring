@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ausbildungsfaecher",
+  "info": {
+    "singularName": "ausbildungsfach",
+    "pluralName": "ausbildungsfaecher",
+    "displayName": "Ausbildungsfach",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "lernfelder": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lernfeld.lernfeld",
+      "mappedBy": "ausbildungsfach"
+    }
+  }
+}

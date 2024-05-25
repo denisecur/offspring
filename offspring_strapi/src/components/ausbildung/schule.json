@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_ausbildung_schules",
+  "info": {
+    "displayName": "Schule"
+  },
+  "options": {},
+  "attributes": {
+    "schulname": {
+      "type": "string"
+    },
+    "anschrift": {
+      "type": "text"
+    },
+    "tel": {
+      "type": "string"
+    },
+    "ansprechpartner": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_ausbildung_berichtshefts",
+  "info": {
+    "displayName": "berichtsheft"
+  },
+  "options": {},
+  "attributes": {
+    "datum": {
+      "type": "date"
+    },
+    "beschreibung": {
+      "type": "text"
+    },
+    "datei": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

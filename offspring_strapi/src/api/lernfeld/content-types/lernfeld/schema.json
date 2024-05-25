@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lernfelder",
+  "info": {
+    "singularName": "lernfeld",
+    "pluralName": "lernfelder",
+    "displayName": "Lernfeld"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "ausbildungsfach": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::ausbildungsfach.ausbildungsfach",
+      "inversedBy": "lernfelder"
+    }
+  }
+}

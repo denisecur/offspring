@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_ausbildung_notens",
+  "info": {
+    "displayName": "note",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "datum": {
+      "type": "date",
+      "required": true
+    },
+    "wert": {
+      "type": "decimal"
+    },
+    "art": {
+      "type": "enumeration",
+      "enum": [
+        "Schulaufgabe",
+        "Kurzarbeit",
+        "Stegreifaufgabe",
+        "Mündliche Leistung",
+        "Projekt",
+        "Präsentation"
+      ]
+    },
+    "gewichtung": {
+      "type": "decimal"
+    },
+    "ausbildungsfach": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ausbildungsfach.ausbildungsfach"
+    },
+    "lernfeld": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lernfeld.lernfeld"
+    }
+  }
+}
