@@ -8,8 +8,11 @@ import ListView from "./components/ListView";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<ListView />} />
-      <Route path="/login" element={<Login />} />
+        <Route
+        path="/" element={<ListView/>}/>
+              <Route path="/login" element={<Login />} />
+
+      <Route path="/listView"  element={getToken() ? <ListView/> : <Navigate to="/login" />} />
       <Route
         path="/profil"
         element={getToken() ? <Profil /> : <Navigate to="/login" />}
