@@ -75,6 +75,16 @@ export interface AusbildungSchule extends Schema.Component {
   };
 }
 
+export interface TestTest extends Schema.Component {
+  collectionName: 'components_test_tests';
+  info: {
+    displayName: 'test';
+  };
+  attributes: {
+    name: Attribute.String;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
@@ -82,6 +92,7 @@ declare module '@strapi/types' {
       'ausbildung.berichtsheft': AusbildungBerichtsheft;
       'ausbildung.noten': AusbildungNoten;
       'ausbildung.schule': AusbildungSchule;
+      'test.test': TestTest;
     }
   }
 }

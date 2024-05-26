@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchUserGrades, addUserGrade } from '../api/notenService';
+import { fetchUserGrades, addUserGrade } from './../api/notenService';
 import { message, Button, Modal, Form, Input, DatePicker, Select, Table } from 'antd';
 
 const { Option } = Select;
@@ -33,17 +33,20 @@ const ListView = () => {
 
   const handleAddGrade = async (values) => {
     try {
-      await addUserGrade({
+      const gradeData = {
         datum: values.datum.format('YYYY-MM-DD'),
         wert: values.wert,
         art: values.art,
         gewichtung: values.gewichtung,
         ausbildungsfach: values.ausbildungsfach,
         lernfeld: values.lernfeld,
-      });
+      };
+
+      await addUserGrade(gradeData);
       message.success('Note erfolgreich hinzugefügt');
       form.resetFields();
       setIsModalOpen(false);
+
       const data = await fetchUserGrades();
       const gradesData = data?.ausbildung?.noten?.map(note => ({
         id: note.id,
@@ -58,6 +61,16 @@ const ListView = () => {
     } catch (error) {
       message.error('Fehler beim Hinzufügen der Note');
     }
+  };
+
+  const handleArtChange = (value) => {
+    let gewichtung = 1;
+    if (value === 'Schulaufgabe') {
+      gewichtung = 2;
+    } else if (value === 'Stegreifaufgabe' || value === 'Muendliche Leistung') {
+      gewichtung = 0.5;
+    }
+    form.setFieldsValue({ gewichtung });
   };
 
   const columns = [
@@ -107,7 +120,6 @@ const ListView = () => {
           form
             .validateFields()
             .then(values => {
-              form.resetFields();
               handleAddGrade(values);
             })
             .catch(info => {
@@ -123,7 +135,7 @@ const ListView = () => {
             <Input type="number" />
           </Form.Item>
           <Form.Item name="art" label="Art" rules={[{ required: true, message: 'Bitte Art auswählen' }]}>
-            <Select>
+            <Select onChange={handleArtChange}>
               <Option value="Schulaufgabe">Schulaufgabe</Option>
               <Option value="Kurzarbeit">Kurzarbeit</Option>
               <Option value="Stegreifaufgabe">Stegreifaufgabe</Option>
@@ -133,7 +145,7 @@ const ListView = () => {
             </Select>
           </Form.Item>
           <Form.Item name="gewichtung" label="Gewichtung">
-            <Input type="number" />
+            <Input type="number" readOnly />
           </Form.Item>
           <Form.Item name="ausbildungsfach" label="Ausbildungsfach">
             <Input />
