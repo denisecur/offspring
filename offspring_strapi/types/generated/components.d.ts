@@ -42,11 +42,12 @@ export interface AusbildungNoten extends Schema.Component {
         'Schulaufgabe',
         'Kurzarbeit',
         'Stegreifaufgabe',
-        'M\u00FCndliche Leistung',
+        'Muendliche Leistung',
         'Projekt',
-        'Pr\u00E4sentation'
+        'Praesentation'
       ]
-    >;
+    > &
+      Attribute.Required;
     gewichtung: Attribute.Decimal;
     ausbildungsfach: Attribute.Relation<
       'ausbildung.noten',
