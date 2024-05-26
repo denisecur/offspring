@@ -1,140 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import { API } from '../constant';
-import { message, Button, Modal, Form, Input, DatePicker, Select } from 'antd';
-import { getToken } from "../helpers";
+import React, { useEffect, useState } from 'react';
+import { fetchUserGrades, addUserGrade } from '../api/notenService';
+import { message, Button, Modal, Form, Input, DatePicker, Select, Table } from 'antd';
 
 const { Option } = Select;
 
 const ListView = () => {
-    const [grades, setGrades] = useState([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [form] = Form.useForm();
+  const [grades, setGrades] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
 
-    const fetchGrades = async () => {
-        const url = `${API}/users/me?populate=ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld`; // Angepasste URL für die Noten
-        const token = getToken(); // Token abrufen
-
-        try {
-            const response = await fetch(url, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error("Netzwerkantwort war nicht ok");
-            }
-
-            const result = await response.json();
-            const gradesData = result.ausbildung.noten;
-
-            // Überprüfen Sie, ob gradesData ein Array ist, bevor Sie es setzen
-            if (Array.isArray(gradesData)) {
-                setGrades(gradesData);
-            } else {
-                console.error("Expected gradesData to be an array, but got:", gradesData);
-                setGrades([]);
-            }
-        } catch (error) {
-            console.error(error);
-            message.error("Error while fetching grades!");
-        } finally {
-            console.info("Done fetching grades");
-        }
+  useEffect(() => {
+    const loadGrades = async () => {
+      try {
+        const data = await fetchUserGrades();
+        const gradesData = data?.ausbildung?.noten?.map(note => ({
+          id: note.id,
+          datum: note.datum,
+          wert: note.wert,
+          art: note.art,
+          gewichtung: note.gewichtung,
+          ausbildungsfach: note.ausbildungsfach?.name,
+          lernfeld: note.lernfeld?.name,
+        })) || [];
+        setGrades(gradesData);
+      } catch (error) {
+        message.error('Fehler beim Abrufen der Noten');
+      }
     };
 
-    const handleAddGrade = async (values) => {
-        try {
-            const token = getToken();
-            const response = await fetch(`${API}/notes`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values),
+    loadGrades();
+  }, []);
+
+  const handleAddGrade = async (values) => {
+    try {
+      await addUserGrade({
+        datum: values.datum.format('YYYY-MM-DD'),
+        wert: values.wert,
+        art: values.art,
+        gewichtung: values.gewichtung,
+        ausbildungsfach: values.ausbildungsfach,
+        lernfeld: values.lernfeld,
+      });
+      message.success('Note erfolgreich hinzugefügt');
+      form.resetFields();
+      setIsModalOpen(false);
+      const data = await fetchUserGrades();
+      const gradesData = data?.ausbildung?.noten?.map(note => ({
+        id: note.id,
+        datum: note.datum,
+        wert: note.wert,
+        art: note.art,
+        gewichtung: note.gewichtung,
+        ausbildungsfach: note.ausbildungsfach?.name,
+        lernfeld: note.lernfeld?.name,
+      })) || [];
+      setGrades(gradesData);
+    } catch (error) {
+      message.error('Fehler beim Hinzufügen der Note');
+    }
+  };
+
+  const columns = [
+    {
+      title: 'Datum',
+      dataIndex: 'datum',
+      key: 'datum',
+    },
+    {
+      title: 'Wert',
+      dataIndex: 'wert',
+      key: 'wert',
+    },
+    {
+      title: 'Art',
+      dataIndex: 'art',
+      key: 'art',
+    },
+    {
+      title: 'Gewichtung',
+      dataIndex: 'gewichtung',
+      key: 'gewichtung',
+    },
+    {
+      title: 'Ausbildungsfach',
+      dataIndex: 'ausbildungsfach',
+      key: 'ausbildungsfach',
+    },
+    {
+      title: 'Lernfeld',
+      dataIndex: 'lernfeld',
+      key: 'lernfeld',
+    },
+  ];
+
+  return (
+    <div>
+      <Button type="primary" onClick={() => setIsModalOpen(true)} style={{ marginBottom: '1rem' }}>
+        Note hinzufügen
+      </Button>
+      <Table columns={columns} dataSource={grades} rowKey="id" pagination={false} />
+      <Modal
+        title="Neue Note hinzufügen"
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onOk={() => {
+          form
+            .validateFields()
+            .then(values => {
+              form.resetFields();
+              handleAddGrade(values);
+            })
+            .catch(info => {
+              console.log('Validate Failed:', info);
             });
-
-            if (!response.ok) {
-                throw new Error("Netzwerkantwort war nicht ok");
-            }
-
-            message.success("Note erfolgreich hinzugefügt!");
-            fetchGrades();
-            setIsModalVisible(false);
-            form.resetFields();
-        } catch (error) {
-            console.error(error);
-            message.error("Error while adding grade!");
-        }
-    };
-
-    useEffect(() => {
-        fetchGrades();
-    }, []);
-
-    return (
-        <div>
-            <Button type="primary" onClick={() => setIsModalVisible(true)}>
-                Note hinzufügen
-            </Button>
-            <Modal
-                title="Neue Note hinzufügen"
-                visible={isModalVisible}
-                onCancel={() => setIsModalVisible(false)}
-                onOk={() => {
-                    form
-                        .validateFields()
-                        .then(values => {
-                            form.resetFields();
-                            handleAddGrade(values);
-                        })
-                        .catch(info => {
-                            console.log('Validate Failed:', info);
-                        });
-                }}
-            >
-                <Form form={form} layout="vertical">
-                    <Form.Item name="datum" label="Datum" rules={[{ required: true, message: 'Bitte Datum eingeben' }]}>
-                        <DatePicker />
-                    </Form.Item>
-                    <Form.Item name="wert" label="Wert" rules={[{ required: true, message: 'Bitte Wert eingeben' }]}>
-                        <Input type="number" />
-                    </Form.Item>
-                    <Form.Item name="art" label="Art" rules={[{ required: true, message: 'Bitte Art auswählen' }]}>
-                        <Select>
-                            <Option value="Schulaufgabe">Schulaufgabe</Option>
-                            <Option value="Kurzarbeit">Kurzarbeit</Option>
-                            <Option value="Stegreifaufgabe">Stegreifaufgabe</Option>
-                            <Option value="Muendliche Leistung">Muendliche Leistung</Option>
-                            <Option value="Projekt">Projekt</Option>
-                            <Option value="Praesentation">Praesentation</Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item name="gewichtung" label="Gewichtung">
-                        <Input type="number" />
-                    </Form.Item>
-                    <Form.Item name="ausbildungsfach" label="Ausbildungsfach">
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="lernfeld" label="Lernfeld">
-                        <Input />
-                    </Form.Item>
-                </Form>
-            </Modal>
-            {grades.map((grade) => (
-                <div key={grade.id} style={{ marginBottom: '1rem', padding: '1rem', border: '1px solid #ccc' }}>
-                    <p><strong>Datum:</strong> {grade.datum}</p>
-                    <p><strong>Wert:</strong> {grade.wert}</p>
-                    <p><strong>Art:</strong> {grade.art}</p>
-                    <p><strong>Gewichtung:</strong> {grade.gewichtung}</p>
-                    <p><strong>Ausbildungsfach:</strong> {grade.ausbildungsfach?.name || 'N/A'}</p>
-                    <p><strong>Lernfeld:</strong> {grade.lernfeld?.name || 'N/A'}</p>
-                </div>
-            ))}
-        </div>
-    );
-}
+        }}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item name="datum" label="Datum" rules={[{ required: true, message: 'Bitte Datum eingeben' }]}>
+            <DatePicker />
+          </Form.Item>
+          <Form.Item name="wert" label="Wert" rules={[{ required: true, message: 'Bitte Wert eingeben' }]}>
+            <Input type="number" />
+          </Form.Item>
+          <Form.Item name="art" label="Art" rules={[{ required: true, message: 'Bitte Art auswählen' }]}>
+            <Select>
+              <Option value="Schulaufgabe">Schulaufgabe</Option>
+              <Option value="Kurzarbeit">Kurzarbeit</Option>
+              <Option value="Stegreifaufgabe">Stegreifaufgabe</Option>
+              <Option value="Muendliche Leistung">Muendliche Leistung</Option>
+              <Option value="Projekt">Projekt</Option>
+              <Option value="Praesentation">Praesentation</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="gewichtung" label="Gewichtung">
+            <Input type="number" />
+          </Form.Item>
+          <Form.Item name="ausbildungsfach" label="Ausbildungsfach">
+            <Input />
+          </Form.Item>
+          <Form.Item name="lernfeld" label="Lernfeld">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div>
+  );
+};
 
 export default ListView;
