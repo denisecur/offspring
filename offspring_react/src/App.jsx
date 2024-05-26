@@ -1,20 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { Col, Layout, Row } from "antd";
+import AppHeader from "./components/Header/AppHeader";
+import AppRoutes from "./Routes";
+const { Header, Content } = Layout;
 
- function App() {
+const App = () => {
   return (
-    <div>
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    <button
-    class="inline-block cursor-pointer rounded-md bg-gray-800 px-4 py-3 text-center text-sm font-semibold uppercase text-white transition duration-200 ease-in-out hover:bg-gray-900">
-    Button
-  </button>
-  </div>
-  )
-}
+    <Layout>
+      <Row gutter={[0, 32]}>
+        <Col span={24}>
+          <Header>
+            <AppHeader />
+          </Header>
+        </Col>
+        <Col span={22} offset={1}>
+          <Content>
+            <AppRoutes />
+          </Content>
+        </Col>
+      </Row>
+    </Layout>
+  );
+};
 
-export default App
+export default App;

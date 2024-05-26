@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../../courses/mern-jobify"
 		}
 	],
 	"settings": {}

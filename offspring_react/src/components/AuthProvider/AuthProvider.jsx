@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { message } from "antd";
 import { API, BEARER } from "../../constant";
 import { useEffect } from "react";
 import { getToken } from "../../helpers";
- /**
-  *  AuthProvider will be the wrapper component which will provide the authenticated user details.
-  * This component will take one prop which is "children" and return it with AuthContext provider values. 
-  * it will fetch the authenticated user details if the jwt token is present.
-  */
+
 const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState();
   const [isLoading, setIsLoading] = useState(false);
@@ -25,13 +22,13 @@ const AuthProvider = ({ children }) => {
       setUserData(data);
     } catch (error) {
       console.error(error);
-      console.error("Error While Getting Logged In User Details");
+      message.error("Error While Getting Logged In User Details");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleUser = (user) => {
+  const handleUser = (user) => {  
     setUserData(user);
   };
 
