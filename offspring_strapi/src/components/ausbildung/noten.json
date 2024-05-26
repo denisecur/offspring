@@ -19,10 +19,11 @@
         "Schulaufgabe",
         "Kurzarbeit",
         "Stegreifaufgabe",
-        "Mündliche Leistung",
+        "Muendliche Leistung",
         "Projekt",
-        "Präsentation"
-      ]
+        "Praesentation"
+      ],
+      "required": true
     },
     "gewichtung": {
       "type": "decimal"
