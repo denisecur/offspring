@@ -30,10 +30,15 @@ const Login = () => {
       if (data?.error) {
         throw data?.error;
       } else {
+        // set the token
         setToken(data.jwt);
+
+        // set the user
         setUser(data.user);
+
         message.success(`Welcome back ${data.user.username}!`);
-        navigate("/profil", { replace: true });
+
+        navigate("/", { replace: true });
       }
     } catch (error) {
       console.error(error);
