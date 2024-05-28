@@ -1,17 +1,5 @@
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  message,
-  Row,
-  Spin,
-  Typography,
-} from "antd";
 import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import { Alert, Button, Card, Col, Form, Input, message, Row, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
 import { API } from "../../constant";
@@ -19,11 +7,8 @@ import { setToken } from "../../helpers";
 
 const Login = () => {
   const navigate = useNavigate();
-
   const { setUser } = useAuthContext();
-
   const [isLoading, setIsLoading] = useState(false);
-
   const [error, setError] = useState("");
 
   const onFinish = async (values) => {
@@ -53,7 +38,7 @@ const Login = () => {
 
         message.success(`Welcome back ${data.user.username}!`);
 
-        navigate("/profil", { replace: true });
+        navigate("/", { replace: true });
       }
     } catch (error) {
       console.error(error);
@@ -65,59 +50,53 @@ const Login = () => {
 
   return (
     <Fragment>
-      <Row align="middle">
-        <Col >
-          <Card title="Card Title">
-            {error ? (
-              <Alert
-                className="alert_error"
-                message={error}
-                type="error"
-                closable
-                afterClose={() => setError("")}
-              />
-            ) : null}
-            <Form
-              name="basic"
-              layout="vertical"
-              onFinish={onFinish}
-              autoComplete="off"
-            >
-              <Form.Item
-                label="Email"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    type: "email",
-                  },
-                ]}
-              >
-                <Input placeholder="Email address" />
-              </Form.Item>
-
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[{ required: true }]}
-              >
-                <Input.Password placeholder="Password" />
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="login_submit_btn"
+      <div className="items-center">
+        <Row align="middle">
+          <Col>
+            <Card title="Einloggen">
+              {error ? (
+                <Alert
+                  className="alert_error"
+                  message={error}
+                  type="error"
+                  closable
+                  afterClose={() => setError("")}
+                />
+              ) : null}
+              <Form name="basic" layout="vertical" onFinish={onFinish} autoComplete="off">
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  rules={[
+                    {
+                      required: true,
+                      type: "email",
+                    },
+                  ]}
                 >
-                  Login {isLoading && <Spin size="small" />}
-                </Button>
-              </Form.Item>
-            </Form>
-            
-          </Card>
-        </Col>
-      </Row>
+                  <Input placeholder="Email-Addresse" />
+                </Form.Item>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  rules={[{ required: true }]}
+                >
+                  <Input.Password placeholder="Passwort" />
+                </Form.Item>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="login_submit_btn"
+                  >
+                    Login {isLoading && <Spin size="small" />}
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Card>
+          </Col>
+        </Row>
+      </div>
     </Fragment>
   );
 };

@@ -4,6 +4,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import { API } from "../../constant";
 import { useState } from "react";
 import { getToken } from "../../helpers";
+import ListView from "../../components/ListView";
 
 const Profil = () => {
   const [loading, setLoading] = useState(false);
@@ -38,6 +39,8 @@ const Profil = () => {
   }
 
   return (
+    <div>
+        <ListView />
     <Card className="profile_page_card">
       <Form
         layout="vertical"
@@ -181,6 +184,7 @@ const Profil = () => {
         </Button>
       </Form>
     </Card>
+    </div>
   );
 };
 

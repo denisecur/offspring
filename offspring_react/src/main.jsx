@@ -1,17 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter as Router } from 'react-router-dom'
-import  AuthProvider  from './components/AuthProvider/AuthProvider'
-import App from './App.jsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AuthProvider from "./components/AuthProvider/AuthProvider";
+import routes from "./AppRoutes";
+import "./index.css";
 
-import './index.css'
+const router = createBrowserRouter(routes);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
-      <Router>
-        <App />
-      </Router>
+      <RouterProvider router={router} />
     </AuthProvider>
   </React.StrictMode>
 );

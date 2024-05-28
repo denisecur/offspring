@@ -844,6 +844,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.role'
     >;
     ausbildung: Attribute.Component<'ausbildung.ausbildung'>;
+    test: Attribute.Component<'test.test', true>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
