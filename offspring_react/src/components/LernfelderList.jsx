@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, Typography, Grid } from "@mui/material";
 
 const LernfelderList = ({ lernfelder }) => {
-  console.log("Lernfelder: " + JSON.stringify(lernfelder, null, 2));  // Detaillierter Log für Debugging
+  //console.log("Lernfelder: " + JSON.stringify(lernfelder, null, 2));  // Detaillierter Log für Debugging
   return (
     <Grid container spacing={2}>
       {lernfelder.map((lernfeld) => (

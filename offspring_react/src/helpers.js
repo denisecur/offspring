@@ -8,8 +8,12 @@ export const setToken = (token) => {
   if (token) {
     localStorage.setItem(AUTH_TOKEN, token);
   }
+  console.log("setToken", token);
+
 };
 
 export const removeToken = () => {
   localStorage.removeItem(AUTH_TOKEN);
+  console.log("removedToken: " );
+
 };

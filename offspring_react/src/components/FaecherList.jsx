@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, Typography, Grid } from "@mui/material";
 
 const FaecherList = ({ faecher }) => {
-    console.log("fächer: " + JSON.stringify({faecher}));
+  //console.log("fächer: " + JSON.stringify({faecher}));
   return (
     <Grid container spacing={2}>
       {faecher.map((fach) => (

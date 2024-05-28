@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,26 +14,37 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../context/AuthContext';
+import { removeToken } from "../../helpers";
 
 const drawerWidth = 240;
 
 const navItems = [
-  {name: "Home", path: "/"},
-  {name: "Profil", path: "/profil"},
-  {name: "Berichtshefte", path: "/berichtshefte"},
-  {name: "Noten", path: "/noten"},
-
-  {name: "Login", path: "/login"},
+  { name: "Home", path: "/" },
+  { name: "Profil", path: "/profil" },
+  { name: "Berichtshefte", path: "/berichtshefte" },
+  { name: "Noten", path: "/noten" }
 ];
 
 function DrawerAppBar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    removeToken();
+    navigate("/login", { replace: true });
+  };
+
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+
+  console.log('User state in DrawerAppBar:', user); // Debugging line
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -49,6 +60,19 @@ function DrawerAppBar(props) {
             </ListItemButton>
           </ListItem>
         ))}
+        {user ? (
+          <ListItem disablePadding>
+            <ListItemButton sx={{ textAlign: 'center' }} onClick={handleLogout}>
+              <ListItemText primary="Logout" />
+            </ListItemButton>
+          </ListItem>
+        ) : (
+          <ListItem disablePadding>
+            <ListItemButton sx={{ textAlign: 'center' }} component={Link} to="/login">
+              <ListItemText primary="Login" />
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
     </Box>
   );
@@ -82,6 +106,15 @@ function DrawerAppBar(props) {
                 {item.name}
               </Button>
             ))}
+            {user ? (
+              <Button sx={{ color: '#fff' }} onClick={handleLogout}>
+                Logout
+              </Button>
+            ) : (
+              <Button sx={{ color: '#fff' }} component={Link} to="/login">
+                Login
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
@@ -113,10 +146,6 @@ function DrawerAppBar(props) {
 }
 
 DrawerAppBar.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window: PropTypes.func,
 };
 

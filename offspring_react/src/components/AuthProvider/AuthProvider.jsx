@@ -1,16 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import { message } from "antd";
 import { API, BEARER } from "../../constant";
-import { getToken, removeToken, setToken } from "../../helpers";
-
-export const AuthContext = createContext({
-  user: undefined,
-  isLoading: false,
-  setUser: () => {},
-  logout: () => {},
-});
-
-export const useAuthContext = () => useContext(AuthContext);
+import { useEffect } from "react";
+import { getToken } from "../../helpers";
 
 const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState();
@@ -35,14 +28,8 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const handleUser = (user) => {
+  const handleUser = (user) => {  
     setUserData(user);
-  };
-
-  const logout = () => {
-    setUserData(undefined);
-    removeToken();
-    message.success("Successfully logged out");
   };
 
   useEffect(() => {
@@ -52,7 +39,9 @@ const AuthProvider = ({ children }) => {
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={{ user: userData, setUser: handleUser, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ user: userData, setUser: handleUser, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
