@@ -40,7 +40,7 @@ const Profil = () => {
 
   return (
     <div>
-        <ListView />
+      <div>Persönliche Infos sehen, Avatar oder Foto hochladen, Übersicht Berichtshefte aktuell, Notenstand</div>
     <Card className="profile_page_card">
       <Form
         layout="vertical"
