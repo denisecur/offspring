@@ -31,30 +31,17 @@ const AppHeader = () => {
             >
               Logout
             </Button>
-            <Button  href="/all-berichtshefte" type="primary">
-              Berichtshefte 
+            <Button href="/all-berichtshefte" type="primary">
+              Berichtshefte
             </Button>
-            <Button  href="/noten" type="primary">
-              Noten 
+            <Button href="/noten" type="primary">
+              Noten
             </Button>
-            <Button href="/azubis-overview" type="primary">
-              Chefmode: Azubis Overview
-            </Button>
-            <Button href="/azubis-stats" type="primary">
-              Chefmode: Azubis Stats
-            </Button>
-          </> 
+          </>
         ) : (
           <>
-            <Button className="auth_button_login" href="/signin" type="link">
+            <Button className="auth_button_login" href="/login" type="link">
               Login
-            </Button>
-            <Button
-              className="auth_button_signUp"
-              href="/signup"
-              type="primary"
-            >
-              SignUp
             </Button>
           </>
         )}

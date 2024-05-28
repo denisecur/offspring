@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchUserGrades, addUserGrade } from './../api/notenService';
+import { fetchUserGrades, addUserGrade } from '../api/noten/notenService';
 import { message, Button, Modal, Form, Input, DatePicker, Select, Table } from 'antd';
 
 const { Option } = Select;

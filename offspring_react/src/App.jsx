@@ -6,14 +6,14 @@ const { Header, Content } = Layout;
 
 const App = () => {
   return (
-    <Layout>
-      <Row gutter={[0, 32]}>
-        <Col span={24}>
+    <Layout className="bg-green-300">
+      <Row gutter={[0, 32]} className="bg-yellow-300">
+        <Col span={4}>
           <Header>
             <AppHeader />
           </Header>
         </Col>
-        <Col span={22} offset={1}>
+        <Col span={22} offset={1} className="bg-red-300">
           <Content>
             <AppRoutes />
           </Content>

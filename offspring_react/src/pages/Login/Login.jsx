@@ -65,9 +65,10 @@ const Login = () => {
 
   return (
     <Fragment>
+      <div className="items-center">
       <Row align="middle">
         <Col >
-          <Card title="Card Title">
+          <Card title="Einloggen">
             {error ? (
               <Alert
                 className="alert_error"
@@ -118,6 +119,7 @@ const Login = () => {
           </Card>
         </Col>
       </Row>
+      </div>
     </Fragment>
   );
 };

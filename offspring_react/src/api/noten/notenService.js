@@ -1,5 +1,5 @@
-import { getToken } from '../helpers'; 
-import { API } from '../constant';
+import { getToken } from '../../helpers'; 
+import { API } from '../../constant';
 
 export const fetchUserGrades = async () => {
   const url = `${API}/users/me?populate=ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld`;
@@ -18,6 +18,7 @@ export const fetchUserGrades = async () => {
   const data = await response.json();
   return data;
 };
+
 
 export const addUserGrade = async (gradeData) => {
   const url = `${API}/user/me`; // stammt aus benutzerdefinierter route (siehe backend/src/api/user-permissions/...strapi-server.js und routes.json)
