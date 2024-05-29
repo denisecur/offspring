@@ -16,6 +16,6 @@ export const fetchLernfelder = async () => {
   }
 
   const res = await response.json();
-  console.log("res.data: " + res.data)
+  //console.log("res.data: " + res.data)
   return res.data;
 };

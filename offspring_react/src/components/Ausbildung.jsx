@@ -9,18 +9,31 @@ const Ausbildung = () => {
   const [lernfelder, setLernfelder] = useState([]);
 
   useEffect(() => {
-    const loadAusbildungsfaecher = async () => {
-      const data = await fetchAusbildungsfaecher();
-      console.log("data = ", data.data);
-      const ausbildungsfaecherData = data?.data?.map((item) => ({
+  const loadAusbildungsfaecher = async () => {
+    const data = await fetchAusbildungsfaecher();
+    const ausbildungsfaecherData = data?.data?.map((item) => {
+      // Extrahiere die Lernfelder, falls vorhanden
+      const lernfelder = Array.isArray(item.attributes.lernfelder.data) && item.attributes.lernfelder.data.length > 0
+        ? item.attributes.lernfelder.data.map(lernfeld => ({
+            id: lernfeld.id,
+            name: lernfeld.attributes.name
+          }))
+        : [];
+
+      return {
         id: item.id,
         name: item.attributes.name,
         fachrichtung: item.attributes.fachrichtung,
-      }));
-      setFaecher(ausbildungsfaecherData);
-    };
-    loadAusbildungsfaecher();
-  }, []);
+        lernfelder_count: lernfelder.length,
+        lernfelder: lernfelder
+      };
+    });
+    console.log((ausbildungsfaecherData))
+    setFaecher(ausbildungsfaecherData);
+  };
+
+  loadAusbildungsfaecher();
+}, []);
 
   useEffect(() => {
     const loadLernfelder = async () => {
@@ -32,6 +45,7 @@ const Ausbildung = () => {
         ausbildungsfachName: item.attributes.ausbildungsfach?.data?.attributes?.name,
       }));
       setLernfelder(lernfelderData);
+      console.log(lernfelderData)
     };
     loadLernfelder();
   }, []);
