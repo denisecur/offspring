@@ -3,7 +3,6 @@ import { API } from "../../constant";
 
 export const fetchUserGrades = async () => {
   const url = `${API}/users/me?populate=ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld`;
-                    //users/me?populate=ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld
   const token = getToken();
   const response = await fetch(url, {
     headers: {
@@ -21,10 +20,10 @@ export const fetchUserGrades = async () => {
 };
 
 export const addUserGrade = async (gradeData) => {
-  const url = `${API}/user/me`;
+  const url = `${API}/user/note`;
   const token = getToken();
   const response = await fetch(url, {
-    method: "PUT",
+    method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -36,7 +35,7 @@ export const addUserGrade = async (gradeData) => {
         art: gradeData.art,
         gewichtung: gradeData.gewichtung,
         ausbildungsfach: gradeData.ausbildungsfach,
-        lernfeld: grade.lernfeld,
+        lernfeld: gradeData.lernfeld,
       },
     }),
   });
