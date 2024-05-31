@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -23,5 +23,25 @@ export default {
       // => @media (min-width: 1536px) { ... }
     }
   },
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          "primary": "#2563eb",
+          "secondary": "#f472b6",
+          "accent": "#34d399",
+          "neutral": "#5eead4",
+          "base-100": "#ffffff",
+          "info": "#fde047",
+          "success": "#4ade80",
+          "warning": "#fb923c",
+          "error": "#ef4444",
+          "allgemeinFach": "#8492a6",
+          "fachlichFach": "#7e5bef"
+        },
+      },
+    ],
+  },
   plugins: [require("daisyui")],
+
 }

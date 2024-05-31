@@ -18,7 +18,13 @@ module.exports = (plugin) => {
 
         // Aktualisiere den Benutzer mit der neuen Note
         const updatedUser = await strapi.entityService.update('plugin::users-permissions.user', userId, {
-            data: {
+            populate: {
+                ausbildung: {
+                  populate: { noten: { 
+                        populate: { ausbildungsfach: true, lernfeld: true } }, // populate mit zweimal true?!
+                  },
+                },
+              },            data: {
                 ausbildung: user.ausbildung
             }
         });
