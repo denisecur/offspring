@@ -41,7 +41,7 @@ const ListView = ({ selectedFach }) => {
   }, [selectedFach, form]);
 
   const handleAddGrade = async (values) => {
-    console.log("1. handleAddGrade: " + "start");
+    console.log("1. handleAddGrade: start");
     try {
       const gradeData = {
         datum: values.datum.format('YYYY-MM-DD'),
@@ -49,15 +49,15 @@ const ListView = ({ selectedFach }) => {
         art: values.art,
         gewichtung: values.gewichtung,
         ausbildungsfach: selectedFach.id, // Use selectedFach ID for ausbildungsfach
-        lernfeld: values.lernfeld.id ? values.lernfeld.id : null, // Make sure lernfeld is correctly passed
+        lernfeld: values.lernfeld ? selectedFach.lernfelder.find(lf => lf.name === values.lernfeld).id : null, // Find the correct lernfeld id
       };
-      console.log("2. handleAddGrade: " + "gradeData: " + JSON.stringify(gradeData));
-
+      console.log("2. handleAddGrade: gradeData: " + JSON.stringify(gradeData));
+  
       await addUserGrade(gradeData);
       message.success('Note erfolgreich hinzugefügt');
       form.resetFields();
       setIsModalOpen(false);
-
+  
       const data = await fetchUserGrades();
       const gradesData = data?.ausbildung?.noten?.map(note => ({
         id: note.id,
@@ -65,15 +65,15 @@ const ListView = ({ selectedFach }) => {
         wert: note.wert,
         art: note.art,
         gewichtung: note.gewichtung,
-        ausbildungsfach: note.ausbildungsfach?.id,
-        lernfeld: note.lernfeld?.id,
+        ausbildungsfach: note.ausbildungsfach?.name,
+        lernfeld: note.lernfeld?.name,
       })) || [];
       setGrades(gradesData);
     } catch (error) {
       message.error('Fehler beim Hinzufügen der Note');
     }
   };
-
+  
   const handleArtChange = (value) => {
     let gewichtung = 1;
     if (value === 'Schulaufgabe') {
