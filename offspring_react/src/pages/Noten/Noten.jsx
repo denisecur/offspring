@@ -76,7 +76,9 @@ const Noten = () => {
       <div className="flex">
         {renderFachCards('beide')}
       </div>
-  
+      {selectedFach && (
+        <ListView selectedFach={selectedFach} />
+      )}
     </div>
   );
 };

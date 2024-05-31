@@ -21,7 +21,7 @@ module.exports = (plugin) => {
             populate: {
                 ausbildung: {
                   populate: { noten: { 
-                        populate: { ausbildungsfach: true, lernfeld: true } }, // TODO populate mit zweimal true?!
+                        populate: { ausbildungsfach: true, lernfeld: true } }, // populate mit zweimal true?!
                   },
                 },
               },            data: {

@@ -20,7 +20,7 @@ const ListView = ({ selectedFach }) => {
           art: note.art,
           gewichtung: note.gewichtung,
           ausbildungsfach: note.ausbildungsfach?.name,
-          lernfeld: note.lernfeld?.name,
+          lernfeld: note.lernfeld?.id,
         })) || [];
         setGrades(gradesData);
       } catch (error) {
@@ -49,8 +49,9 @@ const ListView = ({ selectedFach }) => {
         art: values.art,
         gewichtung: values.gewichtung,
         ausbildungsfach: selectedFach.id, // Use selectedFach ID for ausbildungsfach
-        lernfeld: values.lernfeld ? values.lernfeld : null, // Make sure lernfeld is correctly passed
+        lernfeld: values.lernfeld.id ? values.lernfeld.id : null, // Make sure lernfeld is correctly passed
       };
+      console.log("2. handleAddGrade: " + "gradeData: " + JSON.stringify(gradeData));
 
       await addUserGrade(gradeData);
       message.success('Note erfolgreich hinzugefügt');
@@ -116,12 +117,16 @@ const ListView = ({ selectedFach }) => {
     },
   ];
 
+  const filteredGrades = selectedFach 
+    ? grades.filter(grade => grade.ausbildungsfach === selectedFach.name) 
+    : grades;
+
   return (
     <div>
       <Button type="primary" onClick={() => setIsModalOpen(true)} style={{ marginBottom: '1rem' }}>
         Note hinzufügen
       </Button>
-      <Table columns={columns} dataSource={grades} rowKey="id" pagination={false} />
+      <Table columns={columns} dataSource={filteredGrades} rowKey="id" pagination={false} />
       <Modal
         title="Neue Note hinzufügen"
         open={isModalOpen}
@@ -169,7 +174,6 @@ const ListView = ({ selectedFach }) => {
           </Form.Item>
         </Form>
       </Modal>
-      
     </div>
   );
 };
