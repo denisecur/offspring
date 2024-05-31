@@ -4,7 +4,7 @@ import { message, Button, Modal, Form, Input, DatePicker, Select, Table } from '
 
 const { Option } = Select;
 
-const ListView = () => {
+const ListView = ({ selectedFach }) => {
   const [grades, setGrades] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -31,15 +31,25 @@ const ListView = () => {
     loadGrades();
   }, []);
 
+  useEffect(() => {
+    if (selectedFach) {
+      form.setFieldsValue({
+        ausbildungsfach: selectedFach.name,
+        lernfeld: selectedFach.lernfelder.length > 0 ? selectedFach.lernfelder[0].name : ''
+      });
+    }
+  }, [selectedFach, form]);
+
   const handleAddGrade = async (values) => {
+    console.log("1. handleAddGrade: " + "start");
     try {
       const gradeData = {
         datum: values.datum.format('YYYY-MM-DD'),
         wert: values.wert,
         art: values.art,
         gewichtung: values.gewichtung,
-        ausbildungsfach: values.ausbildungsfach,
-        lernfeld: values.lernfeld,
+        ausbildungsfach: selectedFach.id, // Use selectedFach ID for ausbildungsfach
+        lernfeld: values.lernfeld ? values.lernfeld : null, // Make sure lernfeld is correctly passed
       };
 
       await addUserGrade(gradeData);
@@ -54,8 +64,8 @@ const ListView = () => {
         wert: note.wert,
         art: note.art,
         gewichtung: note.gewichtung,
-        ausbildungsfach: note.ausbildungsfach?.name,
-        lernfeld: note.lernfeld?.name,
+        ausbildungsfach: note.ausbildungsfach?.id,
+        lernfeld: note.lernfeld?.id,
       })) || [];
       setGrades(gradesData);
     } catch (error) {
@@ -147,14 +157,19 @@ const ListView = () => {
           <Form.Item name="gewichtung" label="Gewichtung">
             <Input type="number" readOnly />
           </Form.Item>
-          <Form.Item name="ausbildungsfach" label="Ausbildungsfach">
-            <Input />
+          <Form.Item name="ausbildungsfach" label="Ausbildungsfach" initialValue={selectedFach?.name}>
+            <Input readOnly />
           </Form.Item>
           <Form.Item name="lernfeld" label="Lernfeld">
-            <Input />
+            <Select>
+              {selectedFach?.lernfelder.map(lf => (
+                <Option key={lf.id} value={lf.name}>{lf.name}</Option>
+              ))}
+            </Select>
           </Form.Item>
         </Form>
       </Modal>
+      
     </div>
   );
 };
