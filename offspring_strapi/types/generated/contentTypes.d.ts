@@ -400,6 +400,38 @@ export interface ApiAusbildungsfachAusbildungsfach
   };
 }
 
+export interface ApiBerichtsheftBerichtsheft extends Schema.CollectionType {
+  collectionName: 'berichtshefte';
+  info: {
+    singularName: 'berichtsheft';
+    pluralName: 'berichtshefte';
+    displayName: 'Berichtsheft';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    pdf: Attribute.Media & Attribute.Required;
+    woche_vom: Attribute.Date;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::berichtsheft.berichtsheft',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::berichtsheft.berichtsheft',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiLernfeldLernfeld extends Schema.CollectionType {
   collectionName: 'lernfelder';
   info: {
@@ -873,6 +905,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'api::ausbildungsfach.ausbildungsfach': ApiAusbildungsfachAusbildungsfach;
+      'api::berichtsheft.berichtsheft': ApiBerichtsheftBerichtsheft;
       'api::lernfeld.lernfeld': ApiLernfeldLernfeld;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
