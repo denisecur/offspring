@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_berechtigungen_permissions",
+  "info": {
+    "displayName": "permissions"
+  },
+  "options": {},
+  "attributes": {
+    "app": {
+      "type": "string"
+    },
+    "isParticipant": {
+      "type": "boolean"
+    },
+    "isSupervisor": {
+      "type": "boolean"
+    }
+  }
+}

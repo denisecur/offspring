@@ -1,5 +1,6 @@
 module.exports = (plugin) => {
     plugin.controllers.user.addNote = async (ctx) => {
+        console.log("strapi-server");
         if (!ctx.state.user || !ctx.state.user.id) {
             return ctx.response.status = 401;
         }

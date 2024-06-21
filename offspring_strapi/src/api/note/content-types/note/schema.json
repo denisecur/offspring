@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "noten",
+  "info": {
+    "singularName": "note",
+    "pluralName": "noten",
+    "displayName": "Note"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "datum": {
+      "type": "date"
+    },
+    "wert": {
+      "type": "integer"
+    },
+    "art": {
+      "type": "enumeration",
+      "enum": [
+        "Schulaufgabe",
+        "Kurzarbeit",
+        "Stegreifaufgabe",
+        "Muendliche Leistung",
+        "Projekt",
+        "Praesentation"
+      ]
+    },
+    "gewichtung": {
+      "type": "decimal"
+    },
+    "ausbildungsfach": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ausbildungsfach.ausbildungsfach"
+    },
+    "lernfeld": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lernfeld.lernfeld"
+    }
+  }
+}

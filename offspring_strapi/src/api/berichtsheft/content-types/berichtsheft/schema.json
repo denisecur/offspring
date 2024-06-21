@@ -22,6 +22,9 @@
     },
     "woche_vom": {
       "type": "date"
+    },
+    "titel": {
+      "type": "string"
     }
   }
 }
