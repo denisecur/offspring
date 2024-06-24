@@ -79,10 +79,10 @@ export interface BerechtigungenPermissions extends Schema.Component {
   collectionName: 'components_berechtigungen_permissions';
   info: {
     displayName: 'permissions';
+    description: '';
   };
   attributes: {
     app: Attribute.String;
-    isParticipant: Attribute.Boolean;
     isSupervisor: Attribute.Boolean;
   };
 }
