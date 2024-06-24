@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "rollen",
+  "info": {
+    "singularName": "rolle",
+    "pluralName": "rollen",
+    "displayName": "Rolle",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "beschreibung": {
+      "type": "text"
+    },
+    "permissions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "berechtigungen.permissions"
+    },
+    "users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "rolles"
+    }
+  }
+}

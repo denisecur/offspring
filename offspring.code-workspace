@@ -2,15 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "../../courses/odin"
-		},
-		{
-			"path": "../../courses/mern-jobify-v2-main"
-		},
-		{
-			"path": "../../courses/mern-jobify"
 		}
 	],
 	"settings": {}

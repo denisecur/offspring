@@ -1,35 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { fetchUserGrades, addUserGrade } from '../api/noten/notenService';
-import { message, Button, Modal, Form, Input, DatePicker, Select, Table } from 'antd';
-
+import { message, Button, Modal, Form, Input, DatePicker, Select } from 'antd';
+import { DATE_OPTIONS } from '../constant';
 const { Option } = Select;
 
-const ListView = ({ selectedFach }) => {
-  const [grades, setGrades] = useState([]);
+const ListView = ({ selectedFach, filteredGrades }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    const loadGrades = async () => {
-      try {
-        const data = await fetchUserGrades();
-        const gradesData = data?.ausbildung?.noten?.map(note => ({
-          id: note.id,
-          datum: note.datum,
-          wert: note.wert,
-          art: note.art,
-          gewichtung: note.gewichtung,
-          ausbildungsfach: note.ausbildungsfach?.name,
-          lernfeld: note.lernfeld?.id,
-        })) || [];
-        setGrades(gradesData);
-      } catch (error) {
-        message.error('Fehler beim Abrufen der Noten');
-      }
-    };
-
-    loadGrades();
-  }, []);
 
   useEffect(() => {
     if (selectedFach) {
@@ -41,39 +18,25 @@ const ListView = ({ selectedFach }) => {
   }, [selectedFach, form]);
 
   const handleAddGrade = async (values) => {
-    console.log("1. handleAddGrade: start");
     try {
       const gradeData = {
         datum: values.datum.format('YYYY-MM-DD'),
         wert: values.wert,
         art: values.art,
         gewichtung: values.gewichtung,
-        ausbildungsfach: selectedFach.id, // Use selectedFach ID for ausbildungsfach
-        lernfeld: values.lernfeld ? selectedFach.lernfelder.find(lf => lf.name === values.lernfeld).id : null, // Find the correct lernfeld id
+        ausbildungsfach: selectedFach.id,
+        lernfeld: values.lernfeld ? selectedFach.lernfelder.find(lf => lf.name === values.lernfeld).id : null,
       };
-      console.log("2. handleAddGrade: gradeData: " + JSON.stringify(gradeData));
   
       await addUserGrade(gradeData);
       message.success('Note erfolgreich hinzugefügt');
       form.resetFields();
       setIsModalOpen(false);
-  
-      const data = await fetchUserGrades();
-      const gradesData = data?.ausbildung?.noten?.map(note => ({
-        id: note.id,
-        datum: note.datum,
-        wert: note.wert,
-        art: note.art,
-        gewichtung: note.gewichtung,
-        ausbildungsfach: note.ausbildungsfach?.name,
-        lernfeld: note.lernfeld?.name,
-      })) || [];
-      setGrades(gradesData);
     } catch (error) {
       message.error('Fehler beim Hinzufügen der Note');
     }
   };
-  
+
   const handleArtChange = (value) => {
     let gewichtung = 1;
     if (value === 'Schulaufgabe') {
@@ -84,49 +47,39 @@ const ListView = ({ selectedFach }) => {
     form.setFieldsValue({ gewichtung });
   };
 
-  const columns = [
-    {
-      title: 'Datum',
-      dataIndex: 'datum',
-      key: 'datum',
-    },
-    {
-      title: 'Wert',
-      dataIndex: 'wert',
-      key: 'wert',
-    },
-    {
-      title: 'Art',
-      dataIndex: 'art',
-      key: 'art',
-    },
-    {
-      title: 'Gewichtung',
-      dataIndex: 'gewichtung',
-      key: 'gewichtung',
-    },
-    {
-      title: 'Ausbildungsfach',
-      dataIndex: 'ausbildungsfach',
-      key: 'ausbildungsfach',
-    },
-    {
-      title: 'Lernfeld',
-      dataIndex: 'lernfeld',
-      key: 'lernfeld',
-    },
-  ];
-
-  const filteredGrades = selectedFach 
-    ? grades.filter(grade => grade.ausbildungsfach === selectedFach.name) 
-    : grades;
+  const displayedGrades = selectedFach 
+    ? filteredGrades.filter(grade => grade.ausbildungsfach === selectedFach.name) 
+    : filteredGrades;
 
   return (
     <div>
       <Button type="primary" onClick={() => setIsModalOpen(true)} style={{ marginBottom: '1rem' }}>
         Note hinzufügen
       </Button>
-      <Table columns={columns} dataSource={filteredGrades} rowKey="id" pagination={false} />
+      <table className="min-w-fit border-collapse">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border w-2/16 px-4 py-2 text-left text-sm font-medium text-gray-700">Datum</th>
+            <th className="border w-1/16 px-4 py-2 text-left text-sm font-medium text-gray-700">Wert</th>
+            <th className="border w-5/16 px-4 py-2 text-left text-sm font-medium text-gray-700">Art</th>
+            <th className="border w-1/16 px-4 py-2 text-left text-sm font-medium text-gray-700">Gewichtung</th>
+              {/* <th className="border w-1/6 px-4 py-2 text-left text-sm font-medium text-gray-700">Ausbildungsfach</th> */ }
+            <th className="border w-1/16 px-4 py-2 text-left text-sm font-medium text-gray-700">Lernfeld</th>
+          </tr>
+        </thead>
+        <tbody>
+          {displayedGrades.map(grade => (
+            <tr key={grade.id} className="even:bg-gray-50">
+              <td className="border px-4 py-2 text-sm text-gray-900">{grade.datum.toLocaleDateString('de-DE', DATE_OPTIONS)}</td>
+              <td className="border px-4 py-2 text-sm text-gray-900">{grade.wert}</td>
+              <td className="border px-4 py-2 text-sm text-gray-900">{grade.art}</td>
+              <td className="border px-4 py-2 text-sm text-gray-900">{grade.gewichtung}</td>
+            {/*  <td className="border px-4 py-2 text-sm text-gray-900">{grade.ausbildungsfach}</td>*/ }
+              <td className="border px-4 py-2 text-sm text-gray-900">{grade.lernfeld}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <Modal
         title="Neue Note hinzufügen"
         open={isModalOpen}

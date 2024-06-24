@@ -362,79 +362,6 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiAusbildungsfachAusbildungsfach
-  extends Schema.CollectionType {
-  collectionName: 'ausbildungsfaecher';
-  info: {
-    singularName: 'ausbildungsfach';
-    pluralName: 'ausbildungsfaecher';
-    displayName: 'Ausbildungsfach';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String;
-    lernfelder: Attribute.Relation<
-      'api::ausbildungsfach.ausbildungsfach',
-      'oneToMany',
-      'api::lernfeld.lernfeld'
-    >;
-    fachrichtung: Attribute.String;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::ausbildungsfach.ausbildungsfach',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::ausbildungsfach.ausbildungsfach',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiLernfeldLernfeld extends Schema.CollectionType {
-  collectionName: 'lernfelder';
-  info: {
-    singularName: 'lernfeld';
-    pluralName: 'lernfelder';
-    displayName: 'Lernfeld';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String;
-    ausbildungsfach: Attribute.Relation<
-      'api::lernfeld.lernfeld',
-      'manyToOne',
-      'api::ausbildungsfach.ausbildungsfach'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::lernfeld.lernfeld',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::lernfeld.lernfeld',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -844,7 +771,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.role'
     >;
     ausbildung: Attribute.Component<'ausbildung.ausbildung'>;
-    test: Attribute.Component<'test.test', true>;
+    rolles: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToMany',
+      'api::rolle.rolle'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -862,6 +793,194 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiAusbildungsfachAusbildungsfach
+  extends Schema.CollectionType {
+  collectionName: 'ausbildungsfaecher';
+  info: {
+    singularName: 'ausbildungsfach';
+    pluralName: 'ausbildungsfaecher';
+    displayName: 'Ausbildungsfach';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    lernfelder: Attribute.Relation<
+      'api::ausbildungsfach.ausbildungsfach',
+      'oneToMany',
+      'api::lernfeld.lernfeld'
+    >;
+    fachrichtung: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::ausbildungsfach.ausbildungsfach',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::ausbildungsfach.ausbildungsfach',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiBerichtsheftBerichtsheft extends Schema.CollectionType {
+  collectionName: 'berichtshefte';
+  info: {
+    singularName: 'berichtsheft';
+    pluralName: 'berichtshefte';
+    displayName: 'Berichtsheft';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    pdf: Attribute.Media & Attribute.Required;
+    woche_vom: Attribute.Date;
+    titel: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::berichtsheft.berichtsheft',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::berichtsheft.berichtsheft',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiLernfeldLernfeld extends Schema.CollectionType {
+  collectionName: 'lernfelder';
+  info: {
+    singularName: 'lernfeld';
+    pluralName: 'lernfelder';
+    displayName: 'Lernfeld';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    ausbildungsfach: Attribute.Relation<
+      'api::lernfeld.lernfeld',
+      'manyToOne',
+      'api::ausbildungsfach.ausbildungsfach'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::lernfeld.lernfeld',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::lernfeld.lernfeld',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiNoteNote extends Schema.CollectionType {
+  collectionName: 'noten';
+  info: {
+    singularName: 'note';
+    pluralName: 'noten';
+    displayName: 'Note';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    datum: Attribute.Date;
+    wert: Attribute.Integer;
+    art: Attribute.Enumeration<
+      [
+        'Schulaufgabe',
+        'Kurzarbeit',
+        'Stegreifaufgabe',
+        'Muendliche Leistung',
+        'Projekt',
+        'Praesentation'
+      ]
+    >;
+    gewichtung: Attribute.Decimal;
+    ausbildungsfach: Attribute.Relation<
+      'api::note.note',
+      'oneToOne',
+      'api::ausbildungsfach.ausbildungsfach'
+    >;
+    lernfeld: Attribute.Relation<
+      'api::note.note',
+      'oneToOne',
+      'api::lernfeld.lernfeld'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::note.note', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::note.note', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+  };
+}
+
+export interface ApiRolleRolle extends Schema.CollectionType {
+  collectionName: 'rollen';
+  info: {
+    singularName: 'rolle';
+    pluralName: 'rollen';
+    displayName: 'Rolle';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    beschreibung: Attribute.Text;
+    permissions: Attribute.Component<'berechtigungen.permissions', true>;
+    users: Attribute.Relation<
+      'api::rolle.rolle',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::rolle.rolle',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::rolle.rolle',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -872,8 +991,6 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::ausbildungsfach.ausbildungsfach': ApiAusbildungsfachAusbildungsfach;
-      'api::lernfeld.lernfeld': ApiLernfeldLernfeld;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
@@ -882,6 +999,11 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::ausbildungsfach.ausbildungsfach': ApiAusbildungsfachAusbildungsfach;
+      'api::berichtsheft.berichtsheft': ApiBerichtsheftBerichtsheft;
+      'api::lernfeld.lernfeld': ApiLernfeldLernfeld;
+      'api::note.note': ApiNoteNote;
+      'api::rolle.rolle': ApiRolleRolle;
     }
   }
 }

@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "berichtshefte",
+  "info": {
+    "singularName": "berichtsheft",
+    "pluralName": "berichtshefte",
+    "displayName": "Berichtsheft",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pdf": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "woche_vom": {
+      "type": "date"
+    },
+    "titel": {
+      "type": "string"
+    }
+  }
+}

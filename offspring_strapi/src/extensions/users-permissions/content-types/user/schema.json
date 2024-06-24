@@ -70,10 +70,11 @@
       "repeatable": false,
       "component": "ausbildung.ausbildung"
     },
-    "test": {
-      "type": "component",
-      "repeatable": true,
-      "component": "test.test"
+    "rolles": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::rolle.rolle",
+      "inversedBy": "users"
     }
   }
 }

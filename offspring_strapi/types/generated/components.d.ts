@@ -75,13 +75,15 @@ export interface AusbildungSchule extends Schema.Component {
   };
 }
 
-export interface TestTest extends Schema.Component {
-  collectionName: 'components_test_tests';
+export interface BerechtigungenPermissions extends Schema.Component {
+  collectionName: 'components_berechtigungen_permissions';
   info: {
-    displayName: 'test';
+    displayName: 'permissions';
   };
   attributes: {
-    name: Attribute.String;
+    app: Attribute.String;
+    isParticipant: Attribute.Boolean;
+    isSupervisor: Attribute.Boolean;
   };
 }
 
@@ -92,7 +94,7 @@ declare module '@strapi/types' {
       'ausbildung.berichtsheft': AusbildungBerichtsheft;
       'ausbildung.noten': AusbildungNoten;
       'ausbildung.schule': AusbildungSchule;
-      'test.test': TestTest;
+      'berechtigungen.permissions': BerechtigungenPermissions;
     }
   }
 }

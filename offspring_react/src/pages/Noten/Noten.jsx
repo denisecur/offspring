@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import FachCard from '../../components/FachCard';
 import ListView from '../../components/ListView';
-import { fetchAusbildungsfaecher } from './../../api/noten/ausbildungsfaecherService';
-import { calculateDurchschnitt } from '../../api/noten/notenService';
+import { fetchAusbildungsfaecher } from '../../api/noten/ausbildungsfaecherService';
+import { calculateDurchschnitt, fetchUserGrades } from '../../api/noten/notenService';
+import { DatePicker } from 'antd';
 
+const { RangePicker } = DatePicker;
 
 const Noten = () => {
   const [faecher, setFaecher] = useState([]);
   const [selectedFach, setSelectedFach] = useState(null);
   const [durchschnittMap, setDurchschnittMap] = useState({});
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [filteredGrades, setFilteredGrades] = useState([]);
 
   useEffect(() => {
     const loadAusbildungsfaecher = async () => {
@@ -50,8 +54,41 @@ const Noten = () => {
     }
   }, [faecher]);
 
+  useEffect(() => {
+    const loadFilteredGrades = async () => {
+      try {
+        const data = await fetchUserGrades();
+        const gradesData = data?.ausbildung?.noten?.map(note => ({
+          id: note.id,
+          datum: new Date(note.datum),
+          wert: note.wert,
+          art: note.art,
+          gewichtung: note.gewichtung,
+          ausbildungsfach: note.ausbildungsfach?.name,
+          lernfeld: note.lernfeld?.id,
+        })) || [];
+
+        if (dateRange[0] && dateRange[1]) {
+          const [start, end] = dateRange;
+          const filtered = gradesData.filter(grade => grade.datum >= start && grade.datum <= end);
+          setFilteredGrades(filtered);
+        } else {
+          setFilteredGrades(gradesData);
+        }
+      } catch (error) {
+        message.error('Fehler beim Abrufen der Noten');
+      }
+    };
+
+    loadFilteredGrades();
+  }, [dateRange]);
+
   const handleCardClick = (fach) => {
     setSelectedFach(fach);
+  };
+
+  const handleDateRangeChange = (dates) => {
+    setDateRange(dates);
   };
 
   const renderFachCards = (filter) => {
@@ -70,6 +107,7 @@ const Noten = () => {
 
   return (
     <div>
+      <RangePicker onChange={handleDateRangeChange} style={{ marginBottom: '1rem' }} />
       <div className="flex">
         {renderFachCards('Büromanagement')}
       </div>
@@ -77,7 +115,7 @@ const Noten = () => {
         {renderFachCards('beide')}
       </div>
       {selectedFach && (
-        <ListView selectedFach={selectedFach} />
+        <ListView selectedFach={selectedFach} filteredGrades={filteredGrades} />
       )}
     </div>
   );
