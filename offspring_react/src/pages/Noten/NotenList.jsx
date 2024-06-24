@@ -9,8 +9,16 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const Kennzahlen = () => {
-  return <Item>Kennzahlen</Item>;
+const NotenList = ({ noten }) => {
+  return (
+    <div>
+      {noten.map((note) => (
+        <Item key={note.id}>
+          {note.art}: {note.wert} (Datum: {note.datum})
+        </Item>
+      ))}
+    </div>
+  );
 };
 
-export default Kennzahlen;
+export default NotenList;
