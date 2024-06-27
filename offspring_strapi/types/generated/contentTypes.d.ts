@@ -770,11 +770,25 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    ausbildung: Attribute.Component<'ausbildung.ausbildung'>;
-    rolles: Attribute.Relation<
+    Rollen: Attribute.Relation<
       'plugin::users-permissions.user',
       'manyToMany',
       'api::rolle.rolle'
+    >;
+    berichtshefte: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::berichtsheft.berichtsheft'
+    >;
+    noten: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::note.note'
+    >;
+    blog_posts: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::blog-post.blog-post'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -846,6 +860,11 @@ export interface ApiBerichtsheftBerichtsheft extends Schema.CollectionType {
     pdf: Attribute.Media & Attribute.Required;
     woche_vom: Attribute.Date;
     titel: Attribute.String;
+    user: Attribute.Relation<
+      'api::berichtsheft.berichtsheft',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -857,6 +876,43 @@ export interface ApiBerichtsheftBerichtsheft extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::berichtsheft.berichtsheft',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiBlogPostBlogPost extends Schema.CollectionType {
+  collectionName: 'blog_posts';
+  info: {
+    singularName: 'blog-post';
+    pluralName: 'blog-posts';
+    displayName: 'Blog-Post';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String;
+    body: Attribute.Text;
+    image: Attribute.Media;
+    user: Attribute.Relation<
+      'api::blog-post.blog-post',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::blog-post.blog-post',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::blog-post.blog-post',
       'oneToOne',
       'admin::user'
     > &
@@ -933,6 +989,11 @@ export interface ApiNoteNote extends Schema.CollectionType {
       'oneToOne',
       'api::lernfeld.lernfeld'
     >;
+    user: Attribute.Relation<
+      'api::note.note',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1001,6 +1062,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::ausbildungsfach.ausbildungsfach': ApiAusbildungsfachAusbildungsfach;
       'api::berichtsheft.berichtsheft': ApiBerichtsheftBerichtsheft;
+      'api::blog-post.blog-post': ApiBlogPostBlogPost;
       'api::lernfeld.lernfeld': ApiLernfeldLernfeld;
       'api::note.note': ApiNoteNote;
       'api::rolle.rolle': ApiRolleRolle;

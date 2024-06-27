@@ -65,16 +65,29 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "ausbildung": {
-      "type": "component",
-      "repeatable": false,
-      "component": "ausbildung.ausbildung"
-    },
-    "rolles": {
+    "Rollen": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::rolle.rolle",
       "inversedBy": "users"
+    },
+    "berichtshefte": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::berichtsheft.berichtsheft",
+      "mappedBy": "user"
+    },
+    "noten": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::note.note",
+      "mappedBy": "user"
+    },
+    "blog_posts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::blog-post.blog-post",
+      "mappedBy": "user"
     }
   }
 }
