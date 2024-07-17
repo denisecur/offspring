@@ -10,8 +10,7 @@ module.exports = createCoreController('api::order.order', ({strapi}) => ({
             const { id } = ctx.request.params;
 
             // bestellung holen mit EntityServieApi, bearbeiten
-            await strapi.entityService.update("api::order.order", {
-                id,
+            await strapi.entityService.update("api::order.order", id, {
                 data: {
                     confirmed: true,
                     date_confirmed: new Date(),
@@ -32,8 +31,8 @@ module.exports = createCoreController('api::order.order', ({strapi}) => ({
         data: {
             products: ctx.request.body.data.products,
             owner: user.id,
-        }
-       })
+        },
+       });
         return {order};
       }
 }));
