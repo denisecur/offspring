@@ -82,12 +82,6 @@
       "relation": "oneToMany",
       "target": "api::note.note",
       "mappedBy": "user"
-    },
-    "blog_posts": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::blog-post.blog-post",
-      "mappedBy": "user"
     }
   }
 }

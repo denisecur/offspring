@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { fetchUserGrades, addUserGrade } from '../api/noten/notenService';
 import { message, Button, Modal, Form, Input, DatePicker, Select } from 'antd';
 import { DATE_OPTIONS } from '../constant';
 const { Option } = Select;

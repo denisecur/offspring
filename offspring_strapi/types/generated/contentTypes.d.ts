@@ -785,11 +785,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'api::note.note'
     >;
-    blog_posts: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::blog-post.blog-post'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -883,43 +878,6 @@ export interface ApiBerichtsheftBerichtsheft extends Schema.CollectionType {
   };
 }
 
-export interface ApiBlogPostBlogPost extends Schema.CollectionType {
-  collectionName: 'blog_posts';
-  info: {
-    singularName: 'blog-post';
-    pluralName: 'blog-posts';
-    displayName: 'Blog-Post';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    title: Attribute.String;
-    body: Attribute.Text;
-    image: Attribute.Media;
-    user: Attribute.Relation<
-      'api::blog-post.blog-post',
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::blog-post.blog-post',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::blog-post.blog-post',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface ApiLernfeldLernfeld extends Schema.CollectionType {
   collectionName: 'lernfelder';
   info: {
@@ -1004,6 +962,79 @@ export interface ApiNoteNote extends Schema.CollectionType {
   };
 }
 
+export interface ApiOrderOrder extends Schema.CollectionType {
+  collectionName: 'orders';
+  info: {
+    singularName: 'order';
+    pluralName: 'orders';
+    displayName: 'Order';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    owner: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    confirmed: Attribute.Boolean;
+    confirmation_date: Attribute.DateTime;
+    products: Attribute.Relation<
+      'api::order.order',
+      'oneToMany',
+      'api::product.product'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProductProduct extends Schema.CollectionType {
+  collectionName: 'products';
+  info: {
+    singularName: 'product';
+    pluralName: 'products';
+    displayName: 'Product';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    product_code: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product.product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product.product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiRolleRolle extends Schema.CollectionType {
   collectionName: 'rollen';
   info: {
@@ -1062,9 +1093,10 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::ausbildungsfach.ausbildungsfach': ApiAusbildungsfachAusbildungsfach;
       'api::berichtsheft.berichtsheft': ApiBerichtsheftBerichtsheft;
-      'api::blog-post.blog-post': ApiBlogPostBlogPost;
       'api::lernfeld.lernfeld': ApiLernfeldLernfeld;
       'api::note.note': ApiNoteNote;
+      'api::order.order': ApiOrderOrder;
+      'api::product.product': ApiProductProduct;
       'api::rolle.rolle': ApiRolleRolle;
     }
   }
