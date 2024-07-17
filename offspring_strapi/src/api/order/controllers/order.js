@@ -8,8 +8,6 @@ module.exports = createCoreController('api::order.order', ({strapi}) => ({
 
     // TODOS
 
-    //Creating entry from controller goes to draft https://forum.strapi.io/t/creating-entry-from-controller-goes-to-draft/22501/1
-
     // hier ausprobieren ob man abfragen kann mit ist rollen permissions offspring (den weg vorher schon gehen und akürzen, im new context speichern oder so) oder ist eben order id gleich user id
 
     // dann schrittweise ausprobieren -> bauen... 
