@@ -26,7 +26,7 @@ module.exports = async  (policyContext, config, { strapi }) => {
       populate: ["owner"],
     });
 
-    if(order.owner.id === user.id) {
+    if(order.owner.id === user.id) { // oder rolle chef 
       return true;
     }  else {
       throw new PolicyError('You are not allowed to perform this action', { // die scheiße soll in v5 dann gehen https://github.com/strapi/strapi/issues/18566 "in Strapi v4 we've updated the documentation to reflect this" ne hat er nicht

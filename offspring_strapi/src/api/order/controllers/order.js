@@ -5,20 +5,28 @@ const { createCoreController } = require('@strapi/strapi').factories;
 
 module.exports = createCoreController('api::order.order', ({strapi}) => ({
     // Logik
+
+    // TODOS
+
+    //Creating entry from controller goes to draft https://forum.strapi.io/t/creating-entry-from-controller-goes-to-draft/22501/1
+
+    // hier ausprobieren ob man abfragen kann mit ist rollen permissions offspring (den weg vorher schon gehen und akürzen, im new context speichern oder so) oder ist eben order id gleich user id
+
+    // dann schrittweise ausprobieren -> bauen... 
     confirmOrder: async (ctx, next) => {  // das ist die handler-Methode
             // Welche Bestellung? id parameter holen
             const { id } = ctx.request.params;
+            // owner soll nicht per id zugeordnet werden, sondern aus der request gefolgert werden 
 
             // bestellung holen mit EntityServieApi, bearbeiten
             await strapi.entityService.update("api::order.order", id, {
                 data: {
                     confirmed: true,
-                    date_confirmed: new Date(),
+                    confirmation_date: new Date(),
                 },
             });
 
             // E-Mail-Bestätigung als Folge der order confirmation
-            // owner soll nicht per id zugeordnet werden, sondern aus der request gefolgert werden 
             return {
                 message: "confirmed",
             };
@@ -31,6 +39,8 @@ module.exports = createCoreController('api::order.order', ({strapi}) => ({
         data: {
             products: ctx.request.body.data.products,
             owner: user.id,
+            publishedAt: new Date().getTime(),
+
         },
        });
         return {order};
