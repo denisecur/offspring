@@ -9,8 +9,10 @@
     "app": {
       "type": "string"
     },
-    "isSupervisor": {
-      "type": "boolean"
+    "full_access": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

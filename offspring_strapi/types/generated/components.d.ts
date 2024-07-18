@@ -83,7 +83,9 @@ export interface BerechtigungenPermissions extends Schema.Component {
   };
   attributes: {
     app: Attribute.String;
-    isSupervisor: Attribute.Boolean;
+    full_access: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
   };
 }
 

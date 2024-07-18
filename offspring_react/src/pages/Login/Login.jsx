@@ -35,10 +35,10 @@ const Login = () => {
 
         // set the user
         setUser(data.user);
-
+        navigate("/", { replace: true });
         message.success(`Welcome back ${data.user.username}!`);
 
-        navigate("/", { replace: true });
+        
       }
     } catch (error) {
       console.error(error);
