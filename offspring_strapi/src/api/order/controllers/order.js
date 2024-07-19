@@ -11,6 +11,8 @@ module.exports = createCoreController('api::order.order', ({strapi}) => ({
     // hier ausprobieren ob man abfragen kann mit ist rollen permissions offspring (den weg vorher schon gehen und akürzen, im new context speichern oder so) oder ist eben order id gleich user id
 
     // dann schrittweise ausprobieren -> bauen... 
+
+    //TODO: if already confirmed bla
     confirmOrder: async (ctx, next) => {  // das ist die handler-Methode
             // Welche Bestellung? id parameter holen
             const { id } = ctx.request.params;

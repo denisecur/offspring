@@ -8,6 +8,7 @@ import Noten from "./pages/Noten/Noten";
 import Berichtshefte from "./pages/Berichtshefte/Berichtshefte";
 import Layout from "./Layout";
 import { getToken } from "./helpers";
+import Orders from "./components/Orders";
 
 const isAuthenticated = getToken();
 
@@ -21,6 +22,7 @@ const AppRoutes = [
       { path: "listView", element: isAuthenticated ? <ListView /> : <Navigate to="/login" /> },
       { path: "profil", element: isAuthenticated ? <Profil /> : <Navigate to="/login" /> },
       { path: "berichtshefte", element: isAuthenticated ? <Berichtshefte /> : <Navigate to="/login" /> },
+      { path: "orders", element: isAuthenticated ? <Orders /> : <Navigate to="/login" />},
     ],
   },
   {
