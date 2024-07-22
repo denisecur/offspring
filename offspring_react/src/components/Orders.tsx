@@ -34,29 +34,17 @@ interface Order {
   attributes: OrderAttributes;
 }
 
-interface StrapiResponse {
-  data: Order[];
-  meta: {
-    pagination: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
-}
-
 function Orders() {
-  const { data, error, isLoading } = useQuery<StrapiResponse>({
-    queryKey: ['orders'],
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['order'],
     queryFn: async () => {
       const token = getToken();
       const response = await axios.get(orderApi, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         params: {
-          populate: 'products', // Passe dies nach Bedarf an, um spezifische Relationen zu laden
+          populate: 'products',
         },
       });
       return response.data;
