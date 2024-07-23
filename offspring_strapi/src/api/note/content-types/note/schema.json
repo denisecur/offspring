@@ -4,7 +4,8 @@
   "info": {
     "singularName": "note",
     "pluralName": "noten",
-    "displayName": "Note"
+    "displayName": "Note",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -43,9 +44,8 @@
     },
     "user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "noten"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

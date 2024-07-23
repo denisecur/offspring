@@ -23,14 +23,10 @@
     "woche_vom": {
       "type": "date"
     },
-    "titel": {
-      "type": "string"
-    },
-    "user": {
+    "owner": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "berichtshefte"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

@@ -70,18 +70,6 @@
       "relation": "manyToMany",
       "target": "api::rolle.rolle",
       "inversedBy": "users"
-    },
-    "berichtshefte": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::berichtsheft.berichtsheft",
-      "mappedBy": "user"
-    },
-    "noten": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::note.note",
-      "mappedBy": "user"
     }
   }
 }

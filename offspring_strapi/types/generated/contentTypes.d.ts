@@ -775,16 +775,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToMany',
       'api::rolle.rolle'
     >;
-    berichtshefte: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::berichtsheft.berichtsheft'
-    >;
-    noten: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToMany',
-      'api::note.note'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -854,10 +844,9 @@ export interface ApiBerichtsheftBerichtsheft extends Schema.CollectionType {
   attributes: {
     pdf: Attribute.Media & Attribute.Required;
     woche_vom: Attribute.Date;
-    titel: Attribute.String;
-    user: Attribute.Relation<
+    owner: Attribute.Relation<
       'api::berichtsheft.berichtsheft',
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
@@ -919,6 +908,7 @@ export interface ApiNoteNote extends Schema.CollectionType {
     singularName: 'note';
     pluralName: 'noten';
     displayName: 'Note';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -949,7 +939,7 @@ export interface ApiNoteNote extends Schema.CollectionType {
     >;
     user: Attribute.Relation<
       'api::note.note',
-      'manyToOne',
+      'oneToOne',
       'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
