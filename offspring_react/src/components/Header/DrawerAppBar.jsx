@@ -1,3 +1,4 @@
+// src/components/DrawerAppBar.jsx
 import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
@@ -7,29 +8,34 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
-import { removeToken } from '../../helpers';
 import nachwuchsOffspring from '../../assets/nachwuchs_offspring.png';
 
-const navItems = [
+const navItemsAzubi = [
   { name: "Home", path: "/" },
   { name: "Profil", path: "/profil" },
   { name: "Berichtshefte", path: "/berichtshefte" },
   { name: "Noten", path: "/noten" },
   { name: "azubi db", path: "/azubi-dashboard" },
   { name: "chef db", path: "/chef-dashboard" },
+];
 
+const navItemsChef = [
+  { name: "Home", path: "/" },
+  { name: "Profil", path: "/profil" },
+  { name: "Berichtshefte", path: "/berichtshefte" },
+  { name: "Noten", path: "/noten" },
+  { name: "azubi db", path: "/azubi-dashboard" },
+  { name: "chef db", path: "/chef-dashboard" },
 ];
 
 function DrawerAppBar(props) {
   const { window } = props;
-  const { user } = useAuthContext();
-  const navigate = useNavigate();
+  const { user, logout } = useAuthContext();
 
   const handleLogout = () => {
-    removeToken();
-    navigate("/login", { replace: true });
+    logout();
   };
 
   return (
@@ -51,6 +57,9 @@ function DrawerAppBar(props) {
               OFFSPRING
             </Typography>
           </Tooltip>
+          <Typography variant='h7' sx={{ flexGrow: 44, display: { xs: 'none', sm: 'block' } }}>
+
+{user.username}</Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
               <Button key={item.name} sx={{ color: '#fff' }} component={Link} to={item.path}>

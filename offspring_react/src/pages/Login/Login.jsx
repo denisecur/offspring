@@ -8,7 +8,7 @@ import { setToken } from "../../helpers";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser } = useAuthContext();
+  const { setUser, setHasFullAccess } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -35,14 +35,30 @@ const Login = () => {
         // Set the token
         setToken(data.jwt);
 
+        // Fetch user details
+        const userResponse = await fetch(`${API}/users/me?populate=Rollen.permissions`, {
+          headers: { Authorization: `Bearer ${data.jwt}` },
+        });
+        const userData = await userResponse.json();
+
         // Set the user
-        setUser(data.user);
+        setUser(userData);
+
+        // Determine full access
+        const fullAccess = userData.Rollen.some(role => 
+          role.permissions.some(permission => permission.full_access)
+        );
+        setHasFullAccess(fullAccess);
 
         // Show success message
-        message.success(`Welcome back ${data.user.username}!`);
+        message.success(`Welcome back ${userData.username}!`);
 
-        // Navigate to home page
-        navigate("/", { replace: true });
+        // Navigate to appropriate dashboard
+        if (fullAccess) {
+          navigate("/chef-dashboard", { replace: true });
+        } else {
+          navigate("/azubi-dashboard", { replace: true });
+        }
       }
     } catch (error) {
       console.error("Login error:", error);

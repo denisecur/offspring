@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import FullAccessRoute from "./components/FullAccessRoute";
 import ChefDashboard from "./components/Dashboard/ChefDashboard";
 import AzubiDashboard from "./components/Dashboard/AzubiDashboard";
+import Logout from "./components/Logout";
 
 const AppRoutes = [
   {
@@ -23,7 +24,7 @@ const AppRoutes = [
       </ProtectedRoute>
     ),
     children: [
-      { path: "/", element: <ProtectedRoute><Home /></ProtectedRoute> },
+      { path: "/", element: <Navigate to="/profil" /> },
       { path: "noten", element: <ProtectedRoute><Noten /></ProtectedRoute> },
       { path: "listView", element: <ProtectedRoute><ListView /></ProtectedRoute> },
       { path: "profil", element: <ProtectedRoute><Profil /></ProtectedRoute> },
@@ -36,6 +37,10 @@ const AppRoutes = [
   {
     path: "/login",
     element: <Login />
+  },
+  {
+    path: "/logout",
+    element: <Logout />
   },
 ];
 

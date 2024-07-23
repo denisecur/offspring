@@ -5,8 +5,10 @@ import { useAuthContext } from '../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuthContext();
+  console.log('ProtectedRoute: user', user);
   
   if (!user) {
+    console.log('Redirecting to login');
     return <Navigate to="/login" replace />;
   }
 

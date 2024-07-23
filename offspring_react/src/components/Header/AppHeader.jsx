@@ -29,10 +29,10 @@ const AppHeader = () => {
               type="primary"
               onClick={handleLogout}
             >
-              Logout
+              Logoutss
             </Button>
             <Button href="/all-berichtshefte" type="primary">
-              Berichtshefte
+              Berichtsheftew
             </Button>
             <Button href="/noten" type="primary">
               Noten
