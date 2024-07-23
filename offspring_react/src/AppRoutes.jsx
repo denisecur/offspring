@@ -1,3 +1,4 @@
+// src/AppRoutes.jsx
 import React from "react";
 import { Navigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
@@ -7,22 +8,29 @@ import ListView from "./components/ListView";
 import Noten from "./pages/Noten/Noten";
 import Berichtshefte from "./pages/Berichtshefte/Berichtshefte";
 import Layout from "./Layout";
-import { getToken } from "./helpers";
 import Orders from "./components/Orders";
-
-const isAuthenticated = getToken();
+import ProtectedRoute from "./components/ProtectedRoute";
+import FullAccessRoute from "./components/FullAccessRoute";
+import ChefDashboard from "./components/Dashboard/ChefDashboard";
+import AzubiDashboard from "./components/Dashboard/AzubiDashboard";
 
 const AppRoutes = [
   {
     path: "/",
-    element: isAuthenticated ? <Layout /> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
-      { path: "/", element: isAuthenticated ? <Home /> : <Navigate to="/login" /> },
-      { path: "noten", element: isAuthenticated ? <Noten /> : <Navigate to="/login" /> },
-      { path: "listView", element: isAuthenticated ? <ListView /> : <Navigate to="/login" /> },
-      { path: "profil", element: isAuthenticated ? <Profil /> : <Navigate to="/login" /> },
-      { path: "berichtshefte", element: isAuthenticated ? <Berichtshefte /> : <Navigate to="/login" /> },
-      { path: "orders", element: isAuthenticated ? <Orders /> : <Navigate to="/login" />},
+      { path: "/", element: <ProtectedRoute><Home /></ProtectedRoute> },
+      { path: "noten", element: <ProtectedRoute><Noten /></ProtectedRoute> },
+      { path: "listView", element: <ProtectedRoute><ListView /></ProtectedRoute> },
+      { path: "profil", element: <ProtectedRoute><Profil /></ProtectedRoute> },
+      { path: "berichtshefte", element: <ProtectedRoute><Berichtshefte /></ProtectedRoute> },
+      { path: "orders", element: <ProtectedRoute><Orders /></ProtectedRoute> },
+      { path: "chef-dashboard", element: <FullAccessRoute><ChefDashboard /></FullAccessRoute> },
+      { path: "azubi-dashboard", element: <ProtectedRoute><AzubiDashboard /></ProtectedRoute> },
     ],
   },
   {

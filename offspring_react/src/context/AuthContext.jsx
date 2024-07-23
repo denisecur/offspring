@@ -1,9 +1,14 @@
+// src/context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getToken } from '../../helpers';
+import { getToken } from '../helpers';
 import axios from 'axios';
-import { API } from '../../constant';
+import { API } from '../constant';
 
-const AuthContext = createContext();
+const AuthContext = createContext({
+  user: undefined,
+  isLoading: false,
+  setUser: () => {},
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

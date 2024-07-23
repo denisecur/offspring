@@ -16,7 +16,10 @@ const navItems = [
   { name: "Home", path: "/" },
   { name: "Profil", path: "/profil" },
   { name: "Berichtshefte", path: "/berichtshefte" },
-  { name: "Noten", path: "/noten" }
+  { name: "Noten", path: "/noten" },
+  { name: "azubi db", path: "/azubi-dashboard" },
+  { name: "chef db", path: "/chef-dashboard" },
+
 ];
 
 function DrawerAppBar(props) {

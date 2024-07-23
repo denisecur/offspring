@@ -1,16 +1,16 @@
-// src/components/ProtectedRoute.jsx
+// src/components/FullAccessRoute.jsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 
-const ProtectedRoute = ({ children }) => {
-  const { user } = useAuthContext();
+const FullAccessRoute = ({ children }) => {
+  const { user, hasFullAccess } = useAuthContext();
   
-  if (!user) {
+  if (!user || !hasFullAccess) {
     return <Navigate to="/login" replace />;
   }
 
   return children;
 };
 
-export default ProtectedRoute;
+export default FullAccessRoute;
