@@ -11,28 +11,29 @@ import Tooltip from '@mui/material/Tooltip';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import nachwuchsOffspring from '../../assets/nachwuchs_offspring.png';
+import SchoolIcon from '@mui/icons-material/School';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import GridViewIcon from '@mui/icons-material/GridView';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const navItemsAzubi = [
-  { name: "Home", path: "/" },
-  { name: "Profil", path: "/profil" },
-  { name: "Berichtshefte", path: "/berichtshefte" },
-  { name: "Noten", path: "/noten" },
-  { name: "azubi db", path: "/azubi-dashboard" },
-  { name: "chef db", path: "/chef-dashboard" },
+  { name: "Dashboard A", path: "/azubi-dashboard", icon: <GridViewIcon/> },
+  { name: "Berichtshefte", path: "/berichtshefte", icon: <MenuBookIcon/> },
+  { name: "Noten", path: "/noten", icon: <SchoolIcon/> },
 ];
 
 const navItemsChef = [
-  { name: "Home", path: "/" },
-  { name: "Profil", path: "/profil" },
-  { name: "Berichtshefte", path: "/berichtshefte" },
-  { name: "Noten", path: "/noten" },
-  { name: "azubi db", path: "/azubi-dashboard" },
-  { name: "chef db", path: "/chef-dashboard" },
+  { name: "Dashboard C", path: "/azubi-dashboard", icon: <GridViewIcon/> },
+  { name: "Berichtshefte", path: "/berichtshefte", icon: <MenuBookIcon/> },
+  { name: "Noten", path: "/noten", icon: <SchoolIcon/> },
 ];
 
 function DrawerAppBar(props) {
   const { window } = props;
-  const { user, logout } = useAuthContext();
+  const { user, logout, hasFullAccess } = useAuthContext();
+
+
+  const navItems = (hasFullAccess?navItemsChef:navItemsAzubi); // Headermenü Items laden abhängig von access-type
 
   const handleLogout = () => {
     logout();
@@ -57,25 +58,23 @@ function DrawerAppBar(props) {
               OFFSPRING
             </Typography>
           </Tooltip>
-          <Typography variant='h7' sx={{ flexGrow: 44, display: { xs: 'none', sm: 'block' } }}>
-
-{user.username}</Typography>
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
               <Button key={item.name} sx={{ color: '#fff' }} component={Link} to={item.path}>
-                {item.name}
+                {item.icon}
               </Button>
             ))}
-            {user ? (
+          </Box>
+          {user ? (
               <Button sx={{ color: '#fff' }} onClick={handleLogout}>
-                Logout
+                <LogoutIcon/>
               </Button>
             ) : (
               <Button sx={{ color: '#fff' }} component={Link} to="/login">
                 Login
               </Button>
             )}
-          </Box>
         </Toolbar>
       </AppBar>
       <Box component="main" sx={{ p: 3 }}>

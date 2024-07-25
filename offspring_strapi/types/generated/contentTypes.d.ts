@@ -842,7 +842,7 @@ export interface ApiBerichtsheftBerichtsheft extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    pdf: Attribute.Media & Attribute.Required;
+    pdf: Attribute.Media<'files'> & Attribute.Required;
     woche_vom: Attribute.Date;
     owner: Attribute.Relation<
       'api::berichtsheft.berichtsheft',
