@@ -18,7 +18,7 @@ const NotenPage = () => {
             spacing={2.5}
             direction="row"
             justifyContent="space-evenly"
-            alignItems="baseline"
+            alignItems="baseline" 
           >
             <Grid item xs={12} sm={6} md={6}>
               <Kennzahlen noten={noten} />

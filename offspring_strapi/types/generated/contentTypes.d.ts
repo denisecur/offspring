@@ -937,7 +937,7 @@ export interface ApiNoteNote extends Schema.CollectionType {
       'oneToOne',
       'api::lernfeld.lernfeld'
     >;
-    user: Attribute.Relation<
+    owner: Attribute.Relation<
       'api::note.note',
       'oneToOne',
       'plugin::users-permissions.user'

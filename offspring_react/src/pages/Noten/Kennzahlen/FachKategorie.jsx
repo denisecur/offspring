@@ -2,37 +2,10 @@ import React from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Fachdurchschnitt from '../Kennzahlen/Fachdurchschnitt';
-import { calculateAverage, calculateTrend } from './../../../utils/utils';
-import Grid from '@mui/material/Grid';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import RemoveIcon from '@mui/icons-material/Remove'; // Neutral icon
-
-const getUniqueSubjects = (noten) => {
-  const subjectsMap = {};
-  noten.forEach(note => {
-    if (note.ausbildungsfach) {
-      subjectsMap[note.ausbildungsfach.id] = note.ausbildungsfach;
-    }
-  });
-  return Object.values(subjectsMap);
-};
-
-const TrendArrow = ({ trend }) => {
-  if (trend === 'up') {
-    return <ArrowUpwardIcon style={{ color: 'green', marginLeft: 4 }} />;
-  }
-  if (trend === 'down') {
-    return <ArrowDownwardIcon style={{ color: 'red', marginLeft: 4 }} />;
-  }
-  if (trend === 'neutral') {
-    return <RemoveIcon style={{ color: 'gray', marginLeft: 4 }} />;
-  }
-  return null;
-};
+import Typography from '@mui/material/Typography';
+import { Grid } from '@mui/material';
+import Fachdurchschnitt from './Fachdurchschnitt';
 
 const FachKategorie = ({ title, noten, showTrend, expandable }) => {
   const uniqueSubjects = getUniqueSubjects(noten);

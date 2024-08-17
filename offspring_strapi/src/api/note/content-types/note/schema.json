@@ -42,7 +42,7 @@
       "relation": "oneToOne",
       "target": "api::lernfeld.lernfeld"
     },
-    "user": {
+    "owner": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"

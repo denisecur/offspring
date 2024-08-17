@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import Gesamtdurchschnitt from './Kennzahlen/Gesamtdurchschnitt';
-import FachKategorie from './Kennzahlen/FachKategorie';
-import { Card, Grid, Typography, Switch, Box } from '@mui/material';
+import React from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Typography from '@mui/material/Typography';
+import { Grid } from '@mui/material';
+import Fachdurchschnitt from './Kennzahlen/Fachdurchschnitt';
 import { calculateAverage, calculateTrend } from './../../utils/utils';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import RemoveIcon from '@mui/icons-material/Remove'; // Neutral icon
 
 const TrendArrow = ({ trend }) => {
   if (trend === 'up') {
@@ -20,47 +21,52 @@ const TrendArrow = ({ trend }) => {
   return null;
 };
 
-const Kennzahlen = ({ noten }) => {
-  const [showTrend, setShowTrend] = useState(true);
+const FachKategorie = ({ title, noten, showTrend, expandable }) => {
+  const getUniqueSubjects = (noten) => {
+    const subjectsMap = {};
+    noten.forEach(note => {
+      if (note.ausbildungsfach) {
+        subjectsMap[note.ausbildungsfach.id] = note.ausbildungsfach;
+      }
+    });
+    return Object.values(subjectsMap);
+  };
 
-  const handleShowTrendToggle = () => setShowTrend(!showTrend);
-
-  const allgemeinbildend = noten.filter(note => note.ausbildungsfach?.fachrichtung === 'beide');
-  const fachlich = noten.filter(note => note.ausbildungsfach && note.ausbildungsfach.fachrichtung !== 'beide');
-
-  const allgemeinbildendAverage = calculateAverage(allgemeinbildend);
-  const fachlichAverage = calculateAverage(fachlich);
-
-  const allgemeinbildendTrend = showTrend ? calculateTrend(allgemeinbildend) : null;
-  const fachlichTrend = showTrend ? calculateTrend(fachlich) : null;
+  const uniqueSubjects = getUniqueSubjects(noten);
+  const overallAverage = calculateAverage(noten);
+  const overallTrend = showTrend ? calculateTrend(noten) : null;
 
   return (
-    <Card>
-      <Grid container justifyContent="space-between" alignItems="center" padding={2}>
-        <Grid item>
-          <div className='text-xl'>Kennzahlen</div>
-        </Grid>
-        <Grid item>
-          <Typography gutterBottom><ArrowUpwardIcon style={{ color: 'green'}}/><ArrowDownwardIcon style={{ color: 'red'}} /><Switch checked={showTrend} onChange={handleShowTrendToggle} /></Typography>
-          
-        </Grid>
-      </Grid>
-      
-      <Box padding={2}>
-      <Card className='p-6 items-start'>
-        <Gesamtdurchschnitt title="Gesamtdurchschnitt" noten={noten} showTrend={showTrend} />
-      </Card>
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Grid container justifyContent="space-between" alignItems="center">
-         
+          <div className='text-base'>{title}</div>
+          <Grid item>
+            <Grid container alignItems="center">
+              <Typography variant="body1">Ø {overallAverage}</Typography>
+              {overallTrend && <TrendArrow trend={overallTrend} />}
+            </Grid>
+          </Grid>
         </Grid>
-        <FachKategorie title="Fachlicher Unterricht" noten={fachlich} showTrend={showTrend} expandable={false} />
-        <Grid container justifyContent="space-between" alignItems="center">
-       
-        </Grid>
-        <FachKategorie title="Allgemeinbildender Unterricht" noten={allgemeinbildend} showTrend={showTrend} expandable={false} />
-      </Box>
-    </Card>
+      </AccordionSummary>
+      <AccordionDetails>
+        {uniqueSubjects.map(subject => (
+          expandable ? (
+            <Fachdurchschnitt key={subject.id} subject={subject} noten={noten} showTrend={showTrend} expandable={expandable} />
+          ) : (
+            <Grid container justifyContent="space-between" alignItems="center" key={subject.id} style={{ marginBottom: '1em' }}>
+              <Grid item>
+                <Typography variant="body1">{subject.name}</Typography>
+              </Grid>
+              <Grid item>
+                <Fachdurchschnitt subject={subject} noten={noten} showTrend={showTrend} expandable={expandable} />
+              </Grid>
+            </Grid>
+          )
+        ))}
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
-export default Kennzahlen;
+export default FachKategorie;
