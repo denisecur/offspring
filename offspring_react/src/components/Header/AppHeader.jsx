@@ -32,7 +32,7 @@ const AppHeader = () => {
               Logoutss
             </Button>
             <Button href="/all-berichtshefte" type="primary">
-              Berichtsheftew
+              Berichtshefte
             </Button>
             <Button href="/noten" type="primary">
               Noten

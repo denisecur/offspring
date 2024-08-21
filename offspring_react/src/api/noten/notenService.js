@@ -2,9 +2,8 @@ import { getToken } from "../../helpers";
 import { API } from "../../constant";
 
 export const fetchUserGrades = async () => {
-  const url = `${API}/noten?populate=ausbildungsfach.fachrichtung`;
+  const url = `${API}/noten?populate=*`;
   const token = getToken();
-  console.log('token');
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,

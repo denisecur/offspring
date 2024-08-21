@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import DatePicker from "react-datepicker";
 
 const AddNoteForm = () => {
+  const [startDate, setStartDate] = useState(new Date()); //DatePicker
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
+    note: '',
+    datum: '',
+    fach: '',
+    art: '',
   });
 
   const handleChange = (event) => {
@@ -32,15 +35,22 @@ const AddNoteForm = () => {
         value={formData.datum}
         onChange={handleChange}
       />
-      <textarea
-        type="text"
-        name="Fach"
-        placeholder="Geschichte"
-        value={formData.fach}
-        onChange={handleChange}
-      />
-      <button type="submit">Speichern</button>
+
+
+       <select className="select select-primary w-full max-w-xs">
+          <option disabled selected>
+           Art
+          </option>
+          <option>Schulaufgabe</option>
+          <option>Kurzarbeit</option>
+          <option>Stegreifaufgabe</option>
+          <option>Mündliche Leistung</option>
+        </select>
+
+    <button type="submit" className="btn btn-accent">Accent</button>    
+    
     </form>
+
   );
 };
 

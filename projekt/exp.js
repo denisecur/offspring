@@ -14,3 +14,11 @@ const fourCountySums = sums.filter(sum => {
 console.log(fourCountySums);
 
 
+// code that we run
+const grades = [10, 15, 5];
+
+const sumsis = grades.reduce((total, current) => { 
+    return total + current;
+}, 0);
+
+console.log(sumsis);
