@@ -2,7 +2,7 @@ import { getToken } from "../../helpers";
 import { API } from "../../constant";
 
 export const fetchUserGrades = async () => {
-  const url = `${API}/users/me?populate=ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld`;
+  const url = `${API}/noten?populate=*`;
   const token = getToken();
   const response = await fetch(url, {
     headers: {
@@ -16,6 +16,7 @@ export const fetchUserGrades = async () => {
   }
 
   const data = await response.json();
+
   return data;
 };
 
@@ -51,7 +52,7 @@ export const addUserGrade = async (gradeData) => {
 export const fetchGradesByFach = async (fachId) => {
   const token = getToken();
   const response = await fetch(
-    `${API}/users/me?populate=ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld`,
+    `${API}/noten?populate=ausbildungfach.fachrichtung`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

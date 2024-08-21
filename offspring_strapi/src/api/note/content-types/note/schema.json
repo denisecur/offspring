@@ -4,7 +4,8 @@
   "info": {
     "singularName": "note",
     "pluralName": "noten",
-    "displayName": "Note"
+    "displayName": "Note",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -41,11 +42,10 @@
       "relation": "oneToOne",
       "target": "api::lernfeld.lernfeld"
     },
-    "user": {
+    "owner": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "noten"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }
