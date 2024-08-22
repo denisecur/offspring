@@ -22,3 +22,23 @@ const sumsis = grades.reduce((total, current) => {
 }, 0);
 
 console.log(sumsis);
+const user = {
+    id: 1,
+    name: "Sam",
+    size: 200
+};
+
+const {name, isAdmin = false} = user;
+console.log(isAdmin); // false
+console.log(name);
+console.log({user});
+
+const user2 = {
+    id: 1,
+    name2: "Sam",
+    isAdmin: true
+};
+
+const {id, name2, isAdmin: admin} = user2;
+// We've renamed isAdmin to admin while destructuring
+console.log(admin); // true

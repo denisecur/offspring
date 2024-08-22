@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
 
 const AddNoteForm = () => {
+  // selected Fach..
   const [startDate, setStartDate] = useState(new Date()); //DatePicker
   const [formData, setFormData] = useState({
     note: '',
     datum: '',
     fach: '',
-    art: '',
+ //   fach: '', art: '',
   });
 
   const handleChange = (event) => {
