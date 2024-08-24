@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchUserGrades, addUserGrade, calculateDurchschnitt } from "/src/api/noten/notenService";
-import './A_Noten.css'; // Für benutzerdefinierte Stile
 
-const A_Noten = () => {
+const NotenPage = () => {
   const [grades, setGrades] = useState([]);
   const [newGrade, setNewGrade] = useState({
     datum: '',
@@ -122,5 +121,5 @@ const A_Noten = () => {
   );
 };
 
-export default A_Noten;
+export default NotenPage;
  
