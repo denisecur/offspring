@@ -5,7 +5,6 @@ import Home from "./pages/Home/Home";
 import Profil from "./pages/Profil/Profil";
 import Login from "./pages/Login/Login";
 import ListView from "./components/ListView";
-import Noten from "./pages/Noten/Noten";
 import Berichtshefte from "./pages/Berichtshefte/Berichtshefte";
 import Layout from "./Layout";
 import Orders from "./components/Orders";
@@ -14,7 +13,7 @@ import FullAccessRoute from "./components/FullAccessRoute";
 import ChefDashboard from "./components/Dashboard/ChefDashboard";
 import AzubiDashboard from "./components/Dashboard/AzubiDashboard";
 import Logout from "./components/Logout";
-import A_Noten from "./pages/Noten/A/A_Noten";
+import NotenPage from "./pages/Noten/NotenPage";
 
 const AppRoutes = [
   {
@@ -26,7 +25,7 @@ const AppRoutes = [
     ),
     children: [
       { path: "/", element: <Navigate to="/profil" /> },
-      { path: "noten", element: <ProtectedRoute><A_Noten /></ProtectedRoute> },
+      { path: "noten", element: <ProtectedRoute><NotenPage /></ProtectedRoute> },
       { path: "listView", element: <ProtectedRoute><ListView /></ProtectedRoute> },
       { path: "profil", element: <ProtectedRoute><Profil /></ProtectedRoute> },
       { path: "berichtshefte", element: <ProtectedRoute><Berichtshefte /></ProtectedRoute> },
