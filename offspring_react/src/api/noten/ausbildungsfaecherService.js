@@ -2,7 +2,7 @@ import { getToken } from '../../helpers';
 import { API } from '../../constant';
 
 export const fetchAusbildungsfaecher = async () => {
-  const url = `${API}/ausbildungsfaecher?populate=lernfelder`;
+  const url = `${API}/ausbildungsfaecher`;
   const token = getToken();
   const response = await fetch(url, {
     headers: {
@@ -16,7 +16,6 @@ export const fetchAusbildungsfaecher = async () => {
   }
 
   const data = await response.json();
-  console.log(data.data)
   
   return data;
 };

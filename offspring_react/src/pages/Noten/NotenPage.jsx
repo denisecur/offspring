@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { fetchUserGrades, addUserGrade, calculateDurchschnitt } from "/src/api/noten/notenService";
+import React, { useState, useEffect } from 'react';
+import { CircularProgress } from '@mui/material'; // Optional: To show a loading indicator
+import Fachliste from './Fachliste';
+import { fetchAusbildungsfaecher } from '../../api/noten/ausbildungsfaecherService';
+import {fetchUserGrades} from '../../api/noten/notenService';
 
 const NotenPage = () => {
+  const [faecher, setFaecher] = useState([]);
   const [grades, setGrades] = useState([]);
   const [newGrade, setNewGrade] = useState({
     datum: '',
@@ -9,52 +13,56 @@ const NotenPage = () => {
     art: '',
     gewichtung: '',
     ausbildungsfach: '',
-    lernfeld: ''
+    lernfeld: '',
   });
-  const [error, setError] = useState('');
-  const [average, setAverage] = useState(0);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(''); 
 
-  // Lädt die Noten des Benutzers beim Laden der Komponente
+  // Fetch Fächer
+  useEffect(() => {
+    const loadFaecher = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchAusbildungsfaecher();
+        setFaecher(response.data);
+        console.log(response.data);
+      } catch (err) {
+        setError('Fehler beim Abrufen der Fächer');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadFaecher();
+  }, []);
+
+  // Load user grades when component mounts
   useEffect(() => {
     const loadGrades = async () => {
+      setLoading(true);
       try {
-        const data = await fetchUserGrades();
-        setGrades(data.data);
+        const response = await fetchUserGrades();
+        setGrades(response.data);
       } catch (err) {
         setError('Fehler beim Abrufen der Noten');
+      } finally {
+        setLoading(false);
       }
     };
     loadGrades();
   }, []);
 
-  // Berechnet den Durchschnitt der Noten bei Änderung der Notenliste
-  useEffect(() => {
-    if (grades.length > 0) {
-      const calculateAvg = async () => {
-        const avg = await calculateDurchschnitt(grades.map(grade => grade.ausbildungsfach.id));
-        setAverage(avg);
-      };
-      calculateAvg();
-    }
-  }, [grades]);
-
-  // Handhabung der Änderung in Eingabefeldern
-  const handleChange = (e) => {
-    setNewGrade({ ...newGrade, [e.target.name]: e.target.value });
-  };
-
-  // Fügt eine neue Note hinzu
+  // Add a new grade
   const handleAddGrade = async () => {
     try {
-      const addedGrade = await addUserGrade(newGrade);
-      setGrades([...grades, addedGrade.data]);
+      const response = await addUserGrade(newGrade);
+      setGrades((prevGrades) => [...prevGrades, response.data]); // Use functional state update
       setNewGrade({
         datum: '',
         wert: '',
         art: '',
         gewichtung: '',
         ausbildungsfach: '',
-        lernfeld: ''
+        lernfeld: '',
       });
       setError('');
     } catch (err) {
@@ -63,30 +71,14 @@ const NotenPage = () => {
   };
 
   return (
-    <div className="notenverwaltung-container">
-      <h2>Notenverwaltung</h2>
-
-      {error && <p className="error-message">{error}</p>}
-
-      {/* Anzeige des Durchschnitts */}
-      <div className="average-display">
-        <h3>Durchschnittsnote: {average}</h3>
-      </div>
-
-      {/* Formular zum Hinzufügen einer neuen Note */}
-      <div className="add-grade-form">
-        <h3>Neue Note hinzufügen</h3>
-        <input type="date" name="datum" value={newGrade.datum} onChange={handleChange} placeholder="Datum" />
-        <input type="number" name="wert" value={newGrade.wert} onChange={handleChange} placeholder="Note (z.B. 1.0)" />
-        <input type="text" name="art" value={newGrade.art} onChange={handleChange} placeholder="Art (z.B. Schulaufgabe)" />
-        <input type="number" name="gewichtung" value={newGrade.gewichtung} onChange={handleChange} placeholder="Gewichtung" />
-        <input type="text" name="ausbildungsfach" value={newGrade.ausbildungsfach} onChange={handleChange} placeholder="Ausbildungsfach" />
-        <input type="text" name="lernfeld" value={newGrade.lernfeld} onChange={handleChange} placeholder="Lernfeld" />
-        <button onClick={handleAddGrade}>Note hinzufügen</button>
-      </div>
-
-      {/* Anzeige der Notenliste */}
-      <div className="grades-list">
+    <div className="min-h-screen bg-gray-100 p-6">
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold text-gray-900">Notenverwaltung</h1>
+        </div>
+      </header>
+       {/* Anzeige der Notenliste */}
+       <div className="grades-list">
         <h3>Alle Noten</h3>
         {grades.length === 0 ? (
           <p>Keine Noten vorhanden</p>
@@ -116,10 +108,20 @@ const NotenPage = () => {
             </tbody>
           </table>
         )}
-      </div>
+        </div>
+      <main>
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <CircularProgress />
+          </div>
+        ) : error ? (
+          <div className="text-red-500">{error}</div>
+        ) : (
+          <Fachliste faecher={faecher} />
+        )}
+      </main>
     </div>
   );
 };
 
 export default NotenPage;
- 
