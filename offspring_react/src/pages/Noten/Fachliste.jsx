@@ -1,11 +1,24 @@
-import React from 'react'
+import React from 'react';
+import { ListItem, ListItemText, List } from '@mui/material';
 
-const Fachliste = () => {
+const Fachliste = ({ faecher }) => {
+  if (!Array.isArray(faecher)) {
+    return <div>Faecher is not an array!</div>;
+  }
+
+  const listItems = faecher.map((fach) => (
+    <ListItem disablePadding key={fach.id}>
+      <ListItemText primary={fach.attributes.name} />
+    </ListItem>
+  ));
+
   return (
     <div>
-      Fachliste
+      <List>
+        {listItems}
+      </List>
     </div>
-  )
-}
+  );
+};
 
-export default Fachliste
+export default Fachliste;

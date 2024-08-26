@@ -1,51 +1,72 @@
-import React, { useState, useEffect } from "react";
-import { fetchUserGrades, addUserGrade } from "/src/api/noten/notenService";
+import React, { useState, useEffect } from 'react';
+import { CircularProgress } from '@mui/material'; // Optional: To show a loading indicator
+import Fachliste from './Fachliste';
+import { fetchAusbildungsfaecher } from '../../api/noten/ausbildungsfaecherService';
+import {fetchUserGrades} from '../../api/noten/notenService';
 
 const NotenPage = () => {
+  const [faecher, setFaecher] = useState([]);
   const [grades, setGrades] = useState([]);
   const [newGrade, setNewGrade] = useState({
-    datum: "",
-    wert: "",
-    art: "",
-    gewichtung: "",
-    ausbildungsfach: "",
-    lernfeld: "",
+    datum: '',
+    wert: '',
+    art: '',
+    gewichtung: '',
+    ausbildungsfach: '',
+    lernfeld: '',
   });
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(''); 
 
-  // Lädt die Noten des Benutzers beim Laden der Komponente
+  // Fetch Fächer
+  useEffect(() => {
+    const loadFaecher = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchAusbildungsfaecher();
+        setFaecher(response.data);
+        console.log(response.data);
+      } catch (err) {
+        setError('Fehler beim Abrufen der Fächer');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadFaecher();
+  }, []);
+
+  // Load user grades when component mounts
   useEffect(() => {
     const loadGrades = async () => {
+      setLoading(true);
       try {
-        const data = await fetchUserGrades();
-        setGrades(data.data);
+        const response = await fetchUserGrades();
+        setGrades(response.data);
       } catch (err) {
-        setError("Fehler beim Abrufen der Noten");
+        setError('Fehler beim Abrufen der Noten');
+      } finally {
+        setLoading(false);
       }
     };
     loadGrades();
   }, []);
 
-  // Handhabung der Änderung in Eingabefeldern
-  const handleChange = (e) => {
-    setNewGrade({ ...newGrade, [e.target.name]: e.target.value });
-  };
-
-  // Fügt eine neue Note hinzu
+  // Add a new grade
   const handleAddGrade = async () => {
     try {
-      const addedGrade = await addUserGrade(newGrade);
-      setGrades([...grades, addedGrade.data]);
+      const response = await addUserGrade(newGrade);
+      setGrades((prevGrades) => [...prevGrades, response.data]); // Use functional state update
       setNewGrade({
-        datum: "",
-        wert: "",
-        art: "",
-        gewichtung: "",
-        ausbildungsfach: "",
-        //lernfeld: ''
+        datum: '',
+        wert: '',
+        art: '',
+        gewichtung: '',
+        ausbildungsfach: '',
+        lernfeld: '',
       });
-      setError("");
+      setError('');
     } catch (err) {
-      setError("Fehler beim Hinzufügen der Note");
+      setError('Fehler beim Hinzufügen der Note');
     }
   };
 
@@ -56,65 +77,51 @@ const NotenPage = () => {
           <h1 className="text-3xl font-bold text-gray-900">Notenverwaltung</h1>
         </div>
       </header>
-      <main>
-        <div className="max-w-7xl mx-4 py-6 sm:px-6 lg:px-8">
-          {" "}
-          {/*Größe von dotted border*/}
-          <div className="px-8 py-6 sm:px-0">
-            <div className="border-4 px-4 border-dashed border-gray-200 rounded-lg">
-              <div className="flex justify-between mb-4 w-full">
-                {/* Anzeige der Notenliste */}
-                <h3>Alle Noten</h3>
-                {grades.length === 0 ? (
-                  <p>Keine Noten vorhanden</p>
-                ) : (
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Datum</th>
-                        <th>Note</th>
-                        <th>Art</th>
-                        <th>Gewichtung</th>
-                        <th>Fach</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {grades.map((grade) => (
-                        <tr key={grade.id}>
-                          <td>{grade.datum}</td>
-                          <td>
-                            {grade.ausbildungsfach
-                              ? grade.ausbildungsfach.name
-                              : "Unbekannt"}
-                          </td>
-                          <td>{grade.wert}</td>
-                          <td>{grade.art}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-              </div>
-            </div>
-          </div>
+       {/* Anzeige der Notenliste */}
+       <div className="grades-list">
+        <h3>Alle Noten</h3>
+        {grades.length === 0 ? (
+          <p>Keine Noten vorhanden</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Datum</th>
+                <th>Note</th>
+                <th>Art</th>
+                <th>Gewichtung</th>
+                <th>Fach</th>
+                <th>Lernfeld</th>
+              </tr>
+            </thead>
+            <tbody>
+              {grades.map((grade) => (
+                <tr key={grade.id}>
+                  <td>{grade.datum}</td>
+                  <td>{grade.wert}</td>
+                  <td>{grade.art}</td>
+                  <td>{grade.gewichtung}</td>
+                  <td>{grade.ausbildungsfach ? grade.ausbildungsfach.name : 'Unbekannt'}</td>
+                  <td>{grade.lernfeld || 'Unbekannt'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
         </div>
+      <main>
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <CircularProgress />
+          </div>
+        ) : error ? (
+          <div className="text-red-500">{error}</div>
+        ) : (
+          <Fachliste faecher={faecher} />
+        )}
       </main>
     </div>
   );
 };
 
 export default NotenPage;
-
-{
-  /* Formular zum Hinzufügen einer neuen Note 
-<div className="add-grade-form">
-<h3>Neue Note hinzufügen</h3>
-<input type="date" name="datum" value={newGrade.datum} onChange={handleChange} placeholder="Datum" />
-<input type="number" name="wert" value={newGrade.wert} onChange={handleChange} placeholder="Note (z.B. 1.0)" />
-<input type="text" name="art" value={newGrade.art} onChange={handleChange} placeholder="Art (z.B. Schulaufgabe)" />
-<input type="number" name="gewichtung" value={newGrade.gewichtung} onChange={handleChange} placeholder="Gewichtung" />
-<input type="text" name="ausbildungsfach" value={newGrade.ausbildungsfach} onChange={handleChange} placeholder="Ausbildungsfach" />
-<input type="text" name="lernfeld" value={newGrade.lernfeld} onChange={handleChange} placeholder="Lernfeld" />
-<button onClick={handleAddGrade}>Note hinzufügen</button>
-</div> */
-}
