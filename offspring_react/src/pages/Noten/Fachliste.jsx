@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getFaecherByAusbildungsrichtung } from '../../api/noten/ausbildungsfaecherService';
 import { CircularProgress } from "@mui/material";
 
-const Fachliste = () => {
+const Fachliste = ({ausbildungsrichtung}) => {
   const [faecher, setFaecher] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,8 +11,7 @@ const Fachliste = () => {
     const loadFaecher = async () => {
       setLoading(true);
       try {
-        const response = await getFaecherByAusbildungsrichtung("Büromanagement");
-        console.log("RESPONSE: ", response); // Log the response object
+        const response = await getFaecherByAusbildungsrichtung(ausbildungsrichtung);
         setFaecher(response); // No .data needed here
       } catch (err) {
         setError("Fehler beim Abrufen der Fächer");
@@ -35,7 +34,7 @@ const Fachliste = () => {
       ) : (
         faecher.map((fach) => (
           <div key={fach.id}>
-            <span>ID: {fach.id}</span>
+            <span>ID: {fach.id} </span>
             <span>Name: {fach.name}</span>
           </div>
         ))

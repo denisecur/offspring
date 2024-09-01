@@ -21,9 +21,7 @@ const AppHeader = () => {
       <Space className="auth_buttons">
         {user ? (
           <>
-            <Button className="auth_button_login" href="/profil" type="link">
-              {user.username}
-            </Button>
+    
             <Button
               className="auth_button_signUp"
               type="primary"

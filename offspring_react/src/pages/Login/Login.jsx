@@ -36,7 +36,7 @@ const Login = () => {
         setToken(data.jwt);
 
         // Fetch user details
-        const userResponse = await fetch(`${API}/users/me?populate=Rollen.permissions`, {
+        const userResponse = await fetch(`${API}/users/me?populate=ausbildung, Rollen.permissions`, {
           headers: { Authorization: `Bearer ${data.jwt}` },
         });
         const userData = await userResponse.json();

@@ -23,7 +23,8 @@
     "azubis": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "plugin::users-permissions.user"
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "ausbildung"
     }
   }
 }

@@ -12,23 +12,21 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = getToken();
-    console.log('Token:', token);
 
     if (token) {
-      axios.get(`${API}/users/me?populate=Rollen.permissions`, {
+      axios.get(`${API}/users/me?populate=ausbildung,Rollen.permissions`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(response => {
           const userData = response.data;
-          console.log('User Data:', userData);
           setUser(userData);
           localStorage.setItem('user', JSON.stringify(userData));
 
           const fullAccess = userData.Rollen.some(role => 
             role.permissions.some(permission => permission.full_access)
           );
-          console.log('Has Full Access:', fullAccess);
           setHasFullAccess(fullAccess);
+
         })
         .catch(error => {
           console.error('Error fetching user data:', error);

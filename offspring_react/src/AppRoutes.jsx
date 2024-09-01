@@ -2,7 +2,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import Profil from "./pages/Profil/Profil";
 import Login from "./pages/Login/Login";
 import ListView from "./components/ListView";
 import Berichtshefte from "./pages/Berichtshefte/Berichtshefte";
@@ -24,10 +23,9 @@ const AppRoutes = [
       </ProtectedRoute>
     ),
     children: [
-      { path: "/", element: <Navigate to="/profil" /> },
+      { path: "/", element: <Navigate to="/" /> },
       { path: "noten", element: <ProtectedRoute><NotenPage /></ProtectedRoute> },
       { path: "listView", element: <ProtectedRoute><ListView /></ProtectedRoute> },
-      { path: "profil", element: <ProtectedRoute><Profil /></ProtectedRoute> },
       { path: "berichtshefte", element: <ProtectedRoute><Berichtshefte /></ProtectedRoute> },
       { path: "orders", element: <ProtectedRoute><Orders /></ProtectedRoute> },
       { path: "chef-dashboard", element: <FullAccessRoute><ChefDashboard /></FullAccessRoute> },
