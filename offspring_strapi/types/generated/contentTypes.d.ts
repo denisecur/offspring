@@ -792,6 +792,47 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiAusbildungAusbildung extends Schema.CollectionType {
+  collectionName: 'ausbildungen';
+  info: {
+    singularName: 'ausbildung';
+    pluralName: 'ausbildungen';
+    displayName: 'Ausbildung';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    ausbildungsfaches: Attribute.Relation<
+      'api::ausbildung.ausbildung',
+      'oneToMany',
+      'api::ausbildungsfach.ausbildungsfach'
+    >;
+    azubis: Attribute.Relation<
+      'api::ausbildung.ausbildung',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::ausbildung.ausbildung',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::ausbildung.ausbildung',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiAusbildungsfachAusbildungsfach
   extends Schema.CollectionType {
   collectionName: 'ausbildungsfaecher';
@@ -806,12 +847,6 @@ export interface ApiAusbildungsfachAusbildungsfach
   };
   attributes: {
     name: Attribute.String;
-    lernfelder: Attribute.Relation<
-      'api::ausbildungsfach.ausbildungsfach',
-      'oneToMany',
-      'api::lernfeld.lernfeld'
-    >;
-    fachrichtung: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -879,11 +914,6 @@ export interface ApiLernfeldLernfeld extends Schema.CollectionType {
   };
   attributes: {
     name: Attribute.String;
-    ausbildungsfach: Attribute.Relation<
-      'api::lernfeld.lernfeld',
-      'manyToOne',
-      'api::ausbildungsfach.ausbildungsfach'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1081,6 +1111,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::ausbildung.ausbildung': ApiAusbildungAusbildung;
       'api::ausbildungsfach.ausbildungsfach': ApiAusbildungsfachAusbildungsfach;
       'api::berichtsheft.berichtsheft': ApiBerichtsheftBerichtsheft;
       'api::lernfeld.lernfeld': ApiLernfeldLernfeld;

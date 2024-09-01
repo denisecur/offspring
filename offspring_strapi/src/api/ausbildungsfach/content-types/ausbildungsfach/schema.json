@@ -14,15 +14,6 @@
   "attributes": {
     "name": {
       "type": "string"
-    },
-    "lernfelder": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::lernfeld.lernfeld",
-      "mappedBy": "ausbildungsfach"
-    },
-    "fachrichtung": {
-      "type": "string"
     }
   }
 }
