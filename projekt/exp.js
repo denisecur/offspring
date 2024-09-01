@@ -1200,15 +1200,187 @@ const noten = [
         }
       }
   ];
-  const faecherBueromanagement = Array.from(
-	new Set(
-	  noten
-		.filter(note => 
-		  note.ausbildungsfach && note.ausbildungsfach.fachrichtung === "Büromanagement"
-		)
-		.map(note => note.ausbildungsfach.name)
-	)
-  );
+
+  const data = [
+      {
+        "id": 1,
+        "attributes": {
+          "name": "Versicherungen und Finanzanlagen",
+          "createdAt": "2024-09-01T10:07:31.082Z",
+          "updatedAt": "2024-09-01T11:24:00.441Z",
+          "publishedAt": "2024-09-01T10:11:23.336Z",
+          "ausbildungsfaches": {
+            "data": [
+              {
+                "id": 7,
+                "attributes": {
+                  "name": "Deutsch",
+                  "createdAt": "2024-09-01T10:20:12.762Z",
+                  "updatedAt": "2024-09-01T10:20:15.733Z",
+                  "publishedAt": "2024-09-01T10:20:15.730Z"
+                }
+              },
+              {
+                "id": 8,
+                "attributes": {
+                  "name": "Politik und Gesellschaft",
+                  "createdAt": "2024-09-01T10:20:26.090Z",
+                  "updatedAt": "2024-09-01T10:20:27.470Z",
+                  "publishedAt": "2024-09-01T10:20:27.467Z"
+                }
+              },
+              {
+                "id": 6,
+                "attributes": {
+                  "name": "Religionslehre",
+                  "createdAt": "2024-09-01T10:19:33.947Z",
+                  "updatedAt": "2024-09-01T10:19:36.151Z",
+                  "publishedAt": "2024-09-01T10:19:36.149Z"
+                }
+              },
+              {
+                "id": 10,
+                "attributes": {
+                  "name": "Englisch",
+                  "createdAt": "2024-09-01T10:21:10.229Z",
+                  "updatedAt": "2024-09-01T10:21:12.258Z",
+                  "publishedAt": "2024-09-01T10:21:12.256Z"
+                }
+              },
+              {
+                "id": 11,
+                "attributes": {
+                  "name": "Betriebs- und gesamtwirtschaftliche Prozesse",
+                  "createdAt": "2024-09-01T10:21:31.013Z",
+                  "updatedAt": "2024-09-01T10:21:31.750Z",
+                  "publishedAt": "2024-09-01T10:21:31.748Z"
+                }
+              },
+              {
+                "id": 12,
+                "attributes": {
+                  "name": "Kundengewinnung und Geschäftsprozesse",
+                  "createdAt": "2024-09-01T10:21:45.520Z",
+                  "updatedAt": "2024-09-01T10:21:46.133Z",
+                  "publishedAt": "2024-09-01T10:21:46.130Z"
+                }
+              },
+              {
+                "id": 13,
+                "attributes": {
+                  "name": "Sach- und Vermögensversicherungen",
+                  "createdAt": "2024-09-01T10:21:57.602Z",
+                  "updatedAt": "2024-09-01T10:22:02.181Z",
+                  "publishedAt": "2024-09-01T10:22:02.179Z"
+                }
+              },
+              {
+                "id": 14,
+                "attributes": {
+                  "name": "Personenversicherungen mit Finanzanlagen",
+                  "createdAt": "2024-09-01T10:22:13.154Z",
+                  "updatedAt": "2024-09-01T10:22:14.415Z",
+                  "publishedAt": "2024-09-01T10:22:14.413Z"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": 2,
+        "attributes": {
+          "name": "Büromanagement",
+          "createdAt": "2024-09-01T10:11:20.280Z",
+          "updatedAt": "2024-09-01T10:38:57.110Z",
+          "publishedAt": "2024-09-01T10:11:20.869Z",
+          "ausbildungsfaches": {
+            "data": [
+              {
+                "id": 7,
+                "attributes": {
+                  "name": "Deutsch",
+                  "createdAt": "2024-09-01T10:20:12.762Z",
+                  "updatedAt": "2024-09-01T10:20:15.733Z",
+                  "publishedAt": "2024-09-01T10:20:15.730Z"
+                }
+              },
+              {
+                "id": 8,
+                "attributes": {
+                  "name": "Politik und Gesellschaft",
+                  "createdAt": "2024-09-01T10:20:26.090Z",
+                  "updatedAt": "2024-09-01T10:20:27.470Z",
+                  "publishedAt": "2024-09-01T10:20:27.467Z"
+                }
+              },
+              {
+                "id": 6,
+                "attributes": {
+                  "name": "Religionslehre",
+                  "createdAt": "2024-09-01T10:19:33.947Z",
+                  "updatedAt": "2024-09-01T10:19:36.151Z",
+                  "publishedAt": "2024-09-01T10:19:36.149Z"
+                }
+              },
+              {
+                "id": 9,
+                "attributes": {
+                  "name": "Sport",
+                  "createdAt": "2024-09-01T10:20:33.467Z",
+                  "updatedAt": "2024-09-01T10:20:35.544Z",
+                  "publishedAt": "2024-09-01T10:20:35.542Z"
+                }
+              },
+              {
+                "id": 17,
+                "attributes": {
+                  "name": "Kaufmännische Steuerung und Kontrolle",
+                  "createdAt": "2024-09-01T10:30:07.490Z",
+                  "updatedAt": "2024-09-01T10:30:08.187Z",
+                  "publishedAt": "2024-09-01T10:30:08.185Z"
+                }
+              },
+              {
+                "id": 16,
+                "attributes": {
+                  "name": "Geschäftsprozesse und Kommunikation",
+                  "createdAt": "2024-09-01T10:29:55.831Z",
+                  "updatedAt": "2024-09-01T10:29:56.593Z",
+                  "publishedAt": "2024-09-01T10:29:56.591Z"
+                }
+              },
+              {
+                "id": 15,
+                "attributes": {
+                  "name": "Büromanagementprozesse",
+                  "createdAt": "2024-09-01T10:29:43.991Z",
+                  "updatedAt": "2024-09-01T10:29:45.188Z",
+                  "publishedAt": "2024-09-01T10:29:45.186Z"
+                 }
+              }
+            ]
+          }
+        }
+      }
+    ];
+
   
-  console.log(faecherBueromanagement);
-  
+
+  // Funktion zum Filtern der Fachinformationen nach Fachrichtung
+const filterFaecher = (fachrichtung) => {
+  return data
+    .filter(item => item.attributes.name === fachrichtung)
+    .flatMap(item => item.attributes.ausbildungsfaches.data.map(fach => ({
+      id: fach.id,
+      name: fach.attributes.name
+    })));
+};
+
+// Fächer für Büromanagement filtern
+const faecherBueromanagement = filterFaecher("Büromanagement");
+console.log("Büromanagement Fächer:", faecherBueromanagement);
+
+// Fächer für Versicherungen filtern
+const faecherVersicherungen = filterFaecher("Versicherungen und Finanzanlagen");
+console.log("Versicherungen Fächer:", faecherVersicherungen);

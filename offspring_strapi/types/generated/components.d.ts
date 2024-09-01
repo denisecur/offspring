@@ -1,19 +1,5 @@
 import type { Schema, Attribute } from '@strapi/strapi';
 
-export interface BerechtigungenPermissions extends Schema.Component {
-  collectionName: 'components_berechtigungen_permissions';
-  info: {
-    displayName: 'permissions';
-    description: '';
-  };
-  attributes: {
-    app: Attribute.String;
-    full_access: Attribute.Boolean &
-      Attribute.Required &
-      Attribute.DefaultTo<false>;
-  };
-}
-
 export interface AusbildungSchule extends Schema.Component {
   collectionName: 'components_ausbildung_schules';
   info: {
@@ -89,14 +75,28 @@ export interface AusbildungAusbildung extends Schema.Component {
   };
 }
 
+export interface BerechtigungenPermissions extends Schema.Component {
+  collectionName: 'components_berechtigungen_permissions';
+  info: {
+    displayName: 'permissions';
+    description: '';
+  };
+  attributes: {
+    app: Attribute.String;
+    full_access: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.DefaultTo<false>;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface Components {
-      'berechtigungen.permissions': BerechtigungenPermissions;
       'ausbildung.schule': AusbildungSchule;
       'ausbildung.noten': AusbildungNoten;
       'ausbildung.berichtsheft': AusbildungBerichtsheft;
       'ausbildung.ausbildung': AusbildungAusbildung;
+      'berechtigungen.permissions': BerechtigungenPermissions;
     }
   }
 }
