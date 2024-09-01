@@ -70,6 +70,12 @@
       "relation": "manyToMany",
       "target": "api::rolle.rolle",
       "inversedBy": "users"
+    },
+    "ausbildung": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::ausbildung.ausbildung",
+      "inversedBy": "azubis"
     }
   }
 }

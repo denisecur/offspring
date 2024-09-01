@@ -7,8 +7,10 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
+import { useAuthContext } from "../../context/AuthContext";
 
 const NotenPage = () => {
+  const {user} = useAuthContext();
   const [faecher, setFaecher] = useState([]);
   const [grades, setGrades] = useState([]);
   const [newGrade, setNewGrade] = useState({
@@ -21,6 +23,8 @@ const NotenPage = () => {
   });
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState("");
+  const ausbildungsrichtung = user?.ausbildung?.name;
+
 
   const kennzahlenItem = (items) => {
     return items.map((item, index) => (
@@ -35,9 +39,7 @@ const NotenPage = () => {
     ));
   };
 
-  const fachAuswahl = (items) => {
-    return items.map()
-  }
+
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -181,7 +183,7 @@ const NotenPage = () => {
       </div>
       <main>
 
-          <Fachliste  />
+          <Fachliste ausbildungsrichtung={ausbildungsrichtung} />
       
       </main>
     </div>
