@@ -1,4 +1,13 @@
 import React from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
 
 // Funktion zur Berechnung des Schuljahres im Format YYYY/YY
 const getSchoolYear = (datum) => {
@@ -12,30 +21,37 @@ const getSchoolYear = (datum) => {
 
 // Funktion zur Berechnung des gewichteten Durchschnitts einer Notenliste
 const calculateAverage = (grades) => {
-  if (grades.length === 0) return " ";
-  const totalWeightedSum = grades.reduce((sum, grade) => sum + grade.wert * grade.gewichtung, 0);
+  if (grades.length === 0) return ' ';
+  const totalWeightedSum = grades.reduce(
+    (sum, grade) => sum + grade.wert * grade.gewichtung,
+    0
+  );
   const totalWeight = grades.reduce((sum, grade) => sum + grade.gewichtung, 0);
   return (totalWeightedSum / totalWeight).toFixed(2);
 };
 
 // Durchschnitt berechnen nach Fach und Schuljahr
 const calculateAverageByFachAndSchuljahr = (grades, fachName, schuljahr) => {
-  const filteredGrades = grades.filter(grade => 
-    grade.ausbildungsfach.name === fachName && getSchoolYear(grade.datum) === schuljahr
+  const filteredGrades = grades.filter(
+    (grade) =>
+      grade.ausbildungsfach.name === fachName &&
+      getSchoolYear(grade.datum) === schuljahr
   );
   return calculateAverage(filteredGrades);
 };
 
 // Durchschnitt pro Jahr (über alle Fächer)
 const calculateAverageByYear = (grades, schuljahr) => {
-  const filteredGrades = grades.filter(grade => getSchoolYear(grade.datum) === schuljahr);
+  const filteredGrades = grades.filter(
+    (grade) => getSchoolYear(grade.datum) === schuljahr
+  );
   return calculateAverage(filteredGrades);
 };
 
 // Hauptkomponente zur Anzeige der Liste der Fächer mit Notendurchschnitten
 const DurchschnittsListe = ({ grades }) => {
   // Dynamisch die Schuljahre aus den Noten ermitteln
-  const schuljahrs = [...new Set(grades.map(grade => getSchoolYear(grade.datum)))];
+  const schuljahrs = [...new Set(grades.map((grade) => getSchoolYear(grade.datum)))];
 
   // Schuljahre nach dem ersten Jahr sortieren
   const sortedSchuljahrs = schuljahrs.sort((a, b) => {
@@ -45,48 +61,54 @@ const DurchschnittsListe = ({ grades }) => {
   });
 
   // Dynamisch alle Fächer aus den Noten ermitteln
-  const fachs = [...new Set(grades.map(grade => grade.ausbildungsfach.name))];
+  const fachs = [...new Set(grades.map((grade) => grade.ausbildungsfach.name))];
 
   return (
-    <table className="text-sm table-auto w-full">
-      <thead>
-        <tr>
-          <th className="px-4 py-2 text-left font-semibold">Fach</th>
-          {sortedSchuljahrs.map((schuljahr) => (
-            <th key={schuljahr} className="px-4 py-2 text-left font-semibold">
-               {schuljahr}
-            </th>
-          ))}
-          <th className="px-4 py-2 text-left font-semibold">Fachdurchschnitt</th>
-        </tr>
-      </thead>
-      <tbody>
-        {fachs.map((fachName) => (
-          <tr key={fachName} className="border-t border-gray-200">
-            <td className="px-4 py-2 font-light">{fachName}</td>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="Durchschnittstabelle">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ fontWeight: 'bold' }}>Fach</TableCell>
             {sortedSchuljahrs.map((schuljahr) => (
-              <td key={schuljahr} className="px-4 py-2 font-light">
-                {calculateAverageByFachAndSchuljahr(grades, fachName, schuljahr)}
-              </td>
+              <TableCell key={schuljahr} sx={{ fontWeight: 'bold' }}>
+                {schuljahr}
+              </TableCell>
             ))}
-            {/* Fachdurchschnitt über alle Schuljahre hinweg */}
-            <td className="px-4 py-2 font-light">
-              {calculateAverage(grades.filter(grade => grade.ausbildungsfach.name === fachName))}
-            </td>
-          </tr>
-        ))}
-        {/* Durchschnitt für jedes Schuljahr (Jahresdurchschnitt) */}
-        <tr className="border-t border-gray-200">
-          <td className="px-4 py-2 font-semibold">Jahresdurchschnitt</td>
-          {sortedSchuljahrs.map((schuljahr) => (
-            <td key={schuljahr} className="px-4 py-2 font-semibold">
-              {calculateAverageByYear(grades, schuljahr)}
-            </td>
+            <TableCell sx={{ fontWeight: 'bold' }}>Fachdurchschnitt</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {fachs.map((fachName) => (
+            <TableRow key={fachName}>
+              <TableCell component="th" scope="row">
+                {fachName}
+              </TableCell>
+              {sortedSchuljahrs.map((schuljahr) => (
+                <TableCell key={schuljahr}>
+                  {calculateAverageByFachAndSchuljahr(grades, fachName, schuljahr)}
+                </TableCell>
+              ))}
+              {/* Fachdurchschnitt über alle Schuljahre hinweg */}
+              <TableCell>
+                {calculateAverage(
+                  grades.filter((grade) => grade.ausbildungsfach.name === fachName)
+                )}
+              </TableCell>
+            </TableRow>
           ))}
-          <td className="px-4 py-2"></td> {/* Leere Zelle für die letzte Spalte */}
-        </tr>
-      </tbody>
-    </table>
+          {/* Durchschnitt für jedes Schuljahr (Jahresdurchschnitt) */}
+          <TableRow>
+            <TableCell sx={{ fontWeight: 'bold' }}>Jahresdurchschnitt</TableCell>
+            {sortedSchuljahrs.map((schuljahr) => (
+              <TableCell key={schuljahr} sx={{ fontWeight: 'bold' }}>
+                {calculateAverageByYear(grades, schuljahr)}
+              </TableCell>
+            ))}
+            <TableCell />
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
