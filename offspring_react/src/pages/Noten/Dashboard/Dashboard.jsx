@@ -13,6 +13,7 @@ import MyHeading from "../../../components/MyHeading";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import FilterComponent from "../FilterComponent";
+import GradeTableWithCharts from "./GradeTableWithCharts";
 
 const Dashboard = () => {
   const { user } = useAuthContext();
@@ -149,6 +150,7 @@ const Dashboard = () => {
 
   return (
     <div>
+ 
       {/* Buttons zum Wechseln der Ansicht */}
       <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
         <ButtonGroup variant="contained">
@@ -203,7 +205,7 @@ const Dashboard = () => {
       {activeView === "chart" && (
         <div>
           {/* FachDurchschnittChart anzeigen */}
-          <FachDurchschnittChart grades={grades} />
+          <GradeTableWithCharts grades={grades} />
         </div>
       )}
 
