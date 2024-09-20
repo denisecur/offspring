@@ -25,6 +25,11 @@
       "relation": "oneToMany",
       "target": "plugin::users-permissions.user",
       "mappedBy": "ausbildung"
+    },
+    "leistungsnachweise": {
+      "type": "component",
+      "repeatable": true,
+      "component": "ausbildung.leistungsnachweis"
     }
   }
 }

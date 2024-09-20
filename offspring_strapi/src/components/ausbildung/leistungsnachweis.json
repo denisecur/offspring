@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_ausbildung_leistungsnachweis",
+  "info": {
+    "displayName": "leistungsnachweis"
+  },
+  "options": {},
+  "attributes": {
+    "art": {
+      "type": "string"
+    },
+    "gewichtung": {
+      "type": "decimal"
+    }
+  }
+}

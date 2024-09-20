@@ -16,7 +16,7 @@
       "type": "date"
     },
     "wert": {
-      "type": "integer"
+      "type": "decimal"
     },
     "art": {
       "type": "enumeration",
@@ -24,9 +24,7 @@
         "Schulaufgabe",
         "Kurzarbeit",
         "Stegreifaufgabe",
-        "Muendliche Leistung",
-        "Projekt",
-        "Praesentation"
+        "Mündliche Leistung"
       ]
     },
     "gewichtung": {

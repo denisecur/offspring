@@ -16,6 +16,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GridViewIcon from '@mui/icons-material/GridView';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+
 const navItemsAzubi = [
   { name: "Dashboard A", path: "/azubi-dashboard", icon: <GridViewIcon/> },
   { name: "Berichtshefte", path: "/berichtshefte", icon: <MenuBookIcon/> },
@@ -40,9 +41,10 @@ function DrawerAppBar(props) {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <div >
+    <Box sx={{ display: 'flex'}}>
       <CssBaseline />
-      <AppBar component="nav">
+      <AppBar component="nav" sx={{ backgroundColor: 'ochre.t1'}}>
         <Toolbar>
           <Tooltip
             title={
@@ -81,6 +83,7 @@ function DrawerAppBar(props) {
         <Toolbar />
       </Box>
     </Box>
+  </div>
   );
 }
 

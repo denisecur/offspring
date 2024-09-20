@@ -1,38 +1,70 @@
+// api/noten/notenService.js
 import { getToken } from '../../helpers'; 
 import { API } from '../../constant';
-
-/**
- * Fetches the educational subjects from the API.
- * @returns {Promise<Object>} The data from the API response.
- */
-export const fetchAusbildungsfaecher = async () => {
-  const url = `${API}/ausbildungen?populate=ausbildungsfaches`;
+export const fetchAusbildungsfaecher = async (ausbildungsrichtung) => {
+  const url = `${API}/ausbildungen?filters[name][$eq]=${ausbildungsrichtung}&populate=ausbildungsfaches`; // Passe die Filterung auf die Ausbildungsrichtung an
   const token = getToken();
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error('Fehler beim Abrufen der Daten');
+    if (!response.ok) {
+      throw new Error('Fehler beim Abrufen der Fächer');
+    }
+
+    const data = await response.json();
+    // Extrahiere nur die Fächer aus der Antwort
+    const faecher = data.data[0]?.attributes.ausbildungsfaches?.data.map(fach => ({
+      id: fach.id,
+      name: fach.attributes.name,
+    })) || [];
+
+    console.log('Fächer erfolgreich abgerufen:', faecher);
+    return faecher;
+  } catch (error) {
+    console.error('Fehler in fetchAusbildungsfaecher:', error);
+    throw error;
   }
-
-  return response.json(); // Return the data object
 };
 
-/**
- * Filters and maps the educational subjects based on the specified direction.
- * @param {string} ausbildungsrichtung - The direction of education (e.g., "Büromanagement").
- * @returns {Promise<Array>} The array of subjects with their IDs and names.
- */
-export const getFaecherByAusbildungsrichtung = async (ausbildungsrichtung) => {
-  const data = await fetchAusbildungsfaecher(); // Wait for the data
-  return data.data // Assuming data.data contains the array
-    .filter(item => item.attributes.name === ausbildungsrichtung)
-    .flatMap(item => item.attributes.ausbildungsfaches.data.map(fach => ({
+export const fetchAusbildungsDetails = async (ausbildungsrichtung) => {
+  const url = `${API}/ausbildungen?filters[name][$eq]=${ausbildungsrichtung}&populate=ausbildungsfaches,leistungsnachweise`; // Fächer und Leistungsnachweise holen
+  const token = getToken();
+  
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Fehler beim Abrufen der Ausbildungsdetails');
+    }
+
+    const data = await response.json();
+    
+    const ausbildung = data.data[0]; // Erste Ausbildungsrichtung (passend zur Auswahl)
+    
+    const faecher = ausbildung.attributes.ausbildungsfaches.data.map(fach => ({
       id: fach.id,
-      name: fach.attributes.name
-    })));
+      name: fach.attributes.name,
+    }));
+
+    const leistungsnachweise = ausbildung.attributes.leistungsnachweise.map(ln => ({
+      id: ln.id,
+      art: ln.art,
+      gewichtung: ln.gewichtung,
+    }));
+
+    return { faecher, leistungsnachweise };
+  } catch (error) {
+    console.error('Fehler in fetchAusbildungsDetails:', error);
+    throw error;
+  }
 };

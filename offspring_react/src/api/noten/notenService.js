@@ -21,8 +21,10 @@ export const fetchUserGrades = async () => {
 };
 
 export const addUserGrade = async (gradeData) => {
-  const url = `${API}/user/note`;
+  const url = `${API}/noten?populate=*`;
   const token = getToken();
+  console.log({gradeData});
+
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -30,13 +32,13 @@ export const addUserGrade = async (gradeData) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      note: {
-        datum: gradeData.datum,
+      data: {
         wert: gradeData.wert,
         art: gradeData.art,
-        gewichtung: gradeData.gewichtung,
-        ausbildungsfach: gradeData.ausbildungsfach,
-        lernfeld: gradeData.lernfeld,
+        datum: gradeData.datum,
+        ausbildungsfach: {
+          id: gradeData.ausbildungsfach,  // Hier wird die Fach-ID übermittelt
+        },
       },
     }),
   });
@@ -48,6 +50,8 @@ export const addUserGrade = async (gradeData) => {
   const data = await response.json();
   return data;
 };
+
+
 
 export const fetchGradesByFach = async (fachId) => {
   const token = getToken();

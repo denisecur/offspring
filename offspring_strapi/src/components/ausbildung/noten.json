@@ -19,9 +19,7 @@
         "Schulaufgabe",
         "Kurzarbeit",
         "Stegreifaufgabe",
-        "Muendliche Leistung",
-        "Projekt",
-        "Praesentation"
+        "Mündliche Leistung"
       ],
       "required": true
     },

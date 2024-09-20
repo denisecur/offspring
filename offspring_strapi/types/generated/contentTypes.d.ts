@@ -820,6 +820,10 @@ export interface ApiAusbildungAusbildung extends Schema.CollectionType {
       'oneToMany',
       'plugin::users-permissions.user'
     >;
+    leistungsnachweise: Attribute.Component<
+      'ausbildung.leistungsnachweis',
+      true
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -950,15 +954,13 @@ export interface ApiNoteNote extends Schema.CollectionType {
   };
   attributes: {
     datum: Attribute.Date;
-    wert: Attribute.Integer;
+    wert: Attribute.Decimal;
     art: Attribute.Enumeration<
       [
         'Schulaufgabe',
         'Kurzarbeit',
         'Stegreifaufgabe',
-        'Muendliche Leistung',
-        'Projekt',
-        'Praesentation'
+        'M\u00FCndliche Leistung'
       ]
     >;
     gewichtung: Attribute.Decimal;

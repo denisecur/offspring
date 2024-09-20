@@ -41,9 +41,7 @@ export interface AusbildungNoten extends Schema.Component {
         'Schulaufgabe',
         'Kurzarbeit',
         'Stegreifaufgabe',
-        'Muendliche Leistung',
-        'Projekt',
-        'Praesentation'
+        'M\u00FCndliche Leistung'
       ]
     > &
       Attribute.Required;
@@ -58,6 +56,17 @@ export interface AusbildungNoten extends Schema.Component {
       'oneToOne',
       'api::lernfeld.lernfeld'
     >;
+  };
+}
+
+export interface AusbildungLeistungsnachweis extends Schema.Component {
+  collectionName: 'components_ausbildung_leistungsnachweis';
+  info: {
+    displayName: 'leistungsnachweis';
+  };
+  attributes: {
+    art: Attribute.String;
+    gewichtung: Attribute.Decimal;
   };
 }
 
@@ -95,6 +104,7 @@ declare module '@strapi/types' {
       'berechtigungen.permissions': BerechtigungenPermissions;
       'ausbildung.schule': AusbildungSchule;
       'ausbildung.noten': AusbildungNoten;
+      'ausbildung.leistungsnachweis': AusbildungLeistungsnachweis;
       'ausbildung.berichtsheft': AusbildungBerichtsheft;
       'ausbildung.ausbildung': AusbildungAusbildung;
     }
