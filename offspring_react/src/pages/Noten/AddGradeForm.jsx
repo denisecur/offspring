@@ -1,81 +1,183 @@
-import React, { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { addUserGrade } from "../../api/noten/notenService"; // Backend-Funktion importieren
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import {
+  Box,
+  Button,
+  TextField,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+  Typography,
+} from '@mui/material';
+import { addUserGrade } from '../../api/noten/notenService';
 
-export default function AddGradeForm({ faecher, leistungsnachweise, onAddGrade }) {
-  const { control, register, handleSubmit, formState: { errors } } = useForm();
-  const [selectedDate, setSelectedDate] = useState(null); // Verwende state für das Datum
-  
+const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [selectedDate, setSelectedDate] = useState(null);
+
   const onSubmit = async (data) => {
     try {
       const gradeData = {
         datum: selectedDate ? selectedDate.toISOString() : null,
         wert: data.Note,
         art: data.Art,
-        ausbildungsfach: data.Fach, 
+        ausbildungsfach: data.Fach,
       };
-  
+
       console.log({ gradeData });
-  
+
       const response = await addUserGrade(gradeData);
-  
-      // Überprüfe, ob eine Antwort von der API kommt, bevor der Callback aufgerufen wird
+
       if (response && response.data) {
-        console.log("Note erfolgreich hinzugefügt", response.data);
+        console.log('Note erfolgreich hinzugefügt', response.data);
         if (onAddGrade) {
-          onAddGrade(response.data);  // Übergebe nur die API-Antwort an die Elternkomponente
+          onAddGrade(response.data);
         }
       }
     } catch (error) {
-      console.error("Fehler beim Hinzufügen der Note:", error);
+      console.error('Fehler beim Hinzufügen der Note:', error);
     }
   };
-  
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <select {...register("Fach", { required: true })}>
-        {faecher.map((fach) => (
-          <option key={fach.id} value={fach.id}>
-            {fach.name}
-          </option>
-        ))}
-      </select>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '100%' },
+        maxWidth: 500,
+        mx: 'auto',
+        p: 2,
+        backgroundColor: '#f9f9f9',
+        borderRadius: 2,
+        boxShadow: 3,
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <Typography variant="h5" sx={{ mb: 2, textAlign: 'center' }}>
+        Neue Note hinzufügen
+      </Typography>
 
-      <input
+      {/* Fach Auswahl */}
+      <FormControl
+        fullWidth
+        margin="normal"
+        error={Boolean(errors.Fach)}
+        sx={{ m: 1 }}
+      >
+        <InputLabel id="fach-label">Fach</InputLabel>
+        <Select
+          labelId="fach-label"
+          id="fach-select"
+          label="Fach"
+          defaultValue=""
+          {...register('Fach', { required: 'Bitte wählen Sie ein Fach aus' })}
+        >
+          {faecher.map((fach) => (
+            <MenuItem key={fach.id} value={fach.id}>
+              {fach.name}
+            </MenuItem>
+          ))}
+        </Select>
+        {errors.Fach && <FormHelperText>{errors.Fach.message}</FormHelperText>}
+      </FormControl>
+
+      {/* Note Eingabe */}
+      <TextField
+        label="Note"
         type="number"
-        placeholder="Note"
-        {...register("Note", { required: true, max: 6, min: 0, maxLength: 1 })}
+        inputProps={{ step: 0.1, min: 0, max: 6 }}
+        fullWidth
+        margin="normal"
+        sx={{ m: 1 }}
+        error={Boolean(errors.Note)}
+        helperText={errors.Note ? errors.Note.message : ''}
+        {...register('Note', {
+          required: 'Bitte geben Sie eine Note ein',
+          min: { value: 0, message: 'Die Note muss mindestens 0 sein' },
+          max: { value: 6, message: 'Die Note darf höchstens 6 sein' },
+        })}
       />
 
-      <select {...register("Art", { required: true })}>
-        {leistungsnachweise.map((leistungsnachweis) => (
-          <option key={leistungsnachweis.id} value={leistungsnachweis.art}>
-            {leistungsnachweis.art}
-          </option>
-        ))}
-      </select>
+      {/* Art des Leistungsnachweises */}
+      <FormControl
+        fullWidth
+        margin="normal"
+        error={Boolean(errors.Art)}
+        sx={{ m: 1 }}
+      >
+        <InputLabel id="art-label">Art des Leistungsnachweises</InputLabel>
+        <Select
+          labelId="art-label"
+          id="art-select"
+          label="Art des Leistungsnachweises"
+          defaultValue=""
+          {...register('Art', { required: 'Bitte wählen Sie die Art aus' })}
+        >
+          {leistungsnachweise.map((leistungsnachweis) => (
+            <MenuItem key={leistungsnachweis.id} value={leistungsnachweis.art}>
+              {leistungsnachweis.art}
+            </MenuItem>
+          ))}
+        </Select>
+        {errors.Art && <FormHelperText>{errors.Art.message}</FormHelperText>}
+      </FormControl>
 
-      {/* DatePicker-Komponente zur Auswahl des Datums */}
-      <Controller
-        control={control}
-        name="Datum"
-        render={({ field }) => (
-          <DatePicker
-            placeholderText="Wähle ein Datum"
-            selected={selectedDate}
-            onChange={(date) => {
-              setSelectedDate(date);  // Speichert das ausgewählte Datum im state
-              field.onChange(date);
-            }}
-            dateFormat="yyyy-MM-dd"
-          />
-        )}
-      />
+      {/* Datum Auswahl mit react-datepicker */}
+      <FormControl
+        fullWidth
+        margin="normal"
+        error={Boolean(errors.Datum)}
+        sx={{ m: 1 }}
+      >
+        <Controller
+          control={control}
+          name="Datum"
+          rules={{ required: 'Bitte wählen Sie ein Datum aus' }}
+          render={({ field }) => (
+            <DatePicker
+              placeholderText="Datum auswählen"
+              selected={selectedDate}
+              onChange={(date) => {
+                setSelectedDate(date);
+                field.onChange(date);
+              }}
+              dateFormat="dd.MM.yyyy"
+              customInput={
+                <TextField
+                  label="Datum"
+                  fullWidth
+                  error={Boolean(errors.Datum)}
+                  helperText={errors.Datum ? errors.Datum.message : ''}
+                />
+              }
+            />
+          )}
+        />
+      </FormControl>
 
-      <input type="submit" />
-    </form>
+      {/* Submit Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        fullWidth
+        sx={{ mt: 3, mb: 2, m: 1 }}
+      >
+        Note hinzufügen
+      </Button>
+    </Box>
   );
-}
+};
+
+export default AddGradeForm;

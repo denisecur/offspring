@@ -24,9 +24,7 @@ const navItemsAzubi = [
 ];
 
 const navItemsChef = [
-  { name: "Dashboard C", path: "/azubi-dashboard", icon: <GridViewIcon/> },
-  { name: "Berichtshefte", path: "/berichtshefte", icon: <MenuBookIcon/> },
-  { name: "Noten", path: "/noten", icon: <SchoolIcon/> },
+  { name: "Dashboard C", path: "/chef-dashboard", icon: <GridViewIcon/> },
 ];
 
 function DrawerAppBar(props) {

@@ -37,7 +37,7 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
       "Schulaufgabe": 2,
       "Kurzarbeit": 1.5,
       "Stegreifaufgabe": 1,
-      "Mündliche Leistung": 1
+      "Mündliche Leistung": 0.5
     };
   
     const user = ctx.state.user;
@@ -90,15 +90,15 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
     let noten;
   
     if (hasFullAccess) {
-      // Chef role: can see all noten
+      // Chef role: sieht alles von allen
       noten = await strapi.entityService.findMany("api::note.note", {
-        populate: ["owner"],
+        populate: ["owner", "ausbildungsfach"],
       });
     } else {
-      // Azubi role: can see only their own noten
+      // Azubi role: sehen alles von sich selbst
       noten = await strapi.entityService.findMany("api::note.note", {
         filters: { owner: user.id },
-        populate: ["owner", "ausbildungsfach"], // wenn man hier etwas rausnimmt, kann man in Thunder/Insomnia populaten wie man will und es wird nicht in der API-Antwort erscheinen :-)
+        populate: ["owner", "ausbildungsfach"], // wenn man hier etwas rausnimmt, kann man in Thunder/Insomnia populaten wie man will und es wird nicht in der API-Antwort erscheinen :-), nimmt man es wiederum rein, dann braucht man nicht mal populaten
       });
     }
   

@@ -1,4 +1,14 @@
-import React from "react";
+import React from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from '@mui/material';
 
 const GradeTable = ({ grades, filter, faecher }) => {
   // Aktive Filter sammeln
@@ -19,62 +29,61 @@ const GradeTable = ({ grades, filter, faecher }) => {
     activeFilters.push(`Schuljahr: ${filter.jahr}`);
   }
 
-  // **Definition von showFachColumn**
+  // Definition von showFachColumn
   const showFachColumn = !filter.fach; // Zeigt die Spalte "Fach" nur an, wenn kein Fach gefiltert ist
 
   return (
-    <div className="overflow-x-auto">
+    <div>
       {/* Aktive Filter anzeigen */}
       {activeFilters.length > 0 && (
-        <div className="mb-4">
-          <span className="font-semibold">Aktive Filter:</span>{" "}
-          {activeFilters.join(", ")}
-        </div>
+        <Typography variant="subtitle1" gutterBottom>
+          <strong>Aktive Filter:</strong> {activeFilters.join(', ')}
+        </Typography>
       )}
 
       {/* Tabelle */}
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            {showFachColumn && (
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Fach
-              </th>
-            )}
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Note
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Art
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Datum
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Gewichtung
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {grades.map((grade) => (
-            <tr key={grade.id}>
+      <TableContainer component={Paper}>
+        <Table aria-label="Notentabelle">
+          <TableHead>
+            <TableRow>
               {showFachColumn && (
-                <td className="px-6 py-2 whitespace-nowrap">
-                  {grade.ausbildungsfach
-                    ? grade.ausbildungsfach.name
-                    : "Nicht zugeordnet"}
-                </td>
+                <TableCell>
+                  <strong>Fach</strong>
+                </TableCell>
               )}
-              <td className="px-6 py-2 whitespace-nowrap">{grade.wert}</td>
-              <td className="px-6 py-2 whitespace-nowrap">{grade.art}</td>
-              <td className="px-6 py-2 whitespace-nowrap">{grade.datum}</td>
-              <td className="px-6 py-2 whitespace-nowrap">
-                {grade.gewichtung}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              <TableCell>
+                <strong>Note</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Art</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Datum</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Gewichtung</strong>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {grades.map((grade) => (
+              <TableRow key={grade.id}>
+                {showFachColumn && (
+                  <TableCell>
+                    {grade.ausbildungsfach
+                      ? grade.ausbildungsfach.name
+                      : 'Nicht zugeordnet'}
+                  </TableCell>
+                )}
+                <TableCell>{grade.wert}</TableCell>
+                <TableCell>{grade.art}</TableCell>
+                <TableCell>{grade.datum}</TableCell>
+                <TableCell>{grade.gewichtung}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
