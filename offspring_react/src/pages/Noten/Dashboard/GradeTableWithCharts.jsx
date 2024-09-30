@@ -10,17 +10,30 @@ import {
   LineElement,
   Tooltip,
   Legend,
+  Filler,
+  Title,
 } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 
-// Registrierung der ChartJS-Komponenten
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+// Registrierung der ChartJS-Komponenten und Plugins
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+  Filler,
+  Title,
+  annotationPlugin
+);
 
 const GradeTableWithCharts = ({ grades }) => {
   // Datenvorbereitung: Noten nach Fach gruppieren
   const data = useMemo(() => {
     const fachMap = {};
 
-    grades.forEach((grade) => {
+    grades?.forEach((grade) => {
       const fachName = grade.ausbildungsfach ? grade.ausbildungsfach.name : 'Nicht zugeordnet';
       if (!fachMap[fachName]) {
         fachMap[fachName] = {
@@ -33,7 +46,6 @@ const GradeTableWithCharts = ({ grades }) => {
 
     // Umwandlung des fachMap in ein Array
     return Object.values(fachMap).map((fachData) => {
-      const gradeValues = fachData.grades.map((g) => g.wert);
       const totalWeight = fachData.grades.reduce((sum, g) => sum + g.gewichtung, 0);
       const weightedSum = fachData.grades.reduce((sum, g) => sum + g.wert * g.gewichtung, 0);
       const averageGrade = (weightedSum / totalWeight).toFixed(2);
@@ -116,10 +128,19 @@ const GradeTableWithCharts = ({ grades }) => {
               backgroundColor: 'lightblue',
               tension: 0.1,
             },
+            {
+              label: 'Durchschnitt',
+              data: fachGrades.map(() => parseFloat(fachData.averageGrade)),
+              borderColor: 'red',
+              borderDash: [5, 5],
+              pointRadius: 0,
+              borderWidth: 2,
+            },
           ],
         };
 
         const chartOptions = {
+          maintainAspectRatio: false, // Damit wir die Größe anpassen können
           scales: {
             y: {
               beginAtZero: true,
@@ -131,12 +152,19 @@ const GradeTableWithCharts = ({ grades }) => {
               },
             },
           },
+          plugins: {
+            legend: {
+              display: true,
+            },
+          },
         };
 
         return (
           <Box sx={{ padding: 2 }}>
             <Typography variant="h6">Notenverlauf für {fachData.fach}</Typography>
-            <Line data={chartData} options={chartOptions} />
+            <div style={{ height: '300px' }}>
+              <Line data={chartData} options={chartOptions} />
+            </div>
           </Box>
         );
       }}
