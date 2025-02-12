@@ -1,11 +1,11 @@
-// console.log('DATABASE_CLIENT:', process.env.DATABASE_CLIENT);
-// console.log('DATABASE_HOST:', process.env.DATABASE_HOST);
-// console.log('DATABASE_PASSWORD:', process.env.DATABASE_PASSWORD);
-// console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('DATABASE_CLIENT:', process.env.DATABASE_CLIENT);
+console.log('DATABASE_HOST:', process.env.DATABASE_HOST);
+console.log('DATABASE_PASSWORD:', process.env.DATABASE_PASSWORD);
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
 const path = require('path');
 
 module.exports = ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+  const client = env('DATABASE_CLIENT', 'mysql2');
 // fallback werte, werden nicht verwendet, solange die entsprechenden Variablen in der .env vorhanden sind. vllt 
   const connections = {
     mysql: {
