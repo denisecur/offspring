@@ -9,8 +9,8 @@ const ThemeSwitcher = () => {
     <select onChange={(e) => changeTheme(e.target.value)}>
       <option value="cp1">CP1</option>
       <option value="cp2">CP2</option>
-      {/* Weitere Themes hier hinzufügen */}
-    </select>
+      <option value="basic">BASIC</option> 
+          </select>
   );
 };
 
