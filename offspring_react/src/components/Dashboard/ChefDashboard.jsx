@@ -1,9 +1,9 @@
 // ChefDashboard.jsx
-import React, { useEffect, useState } from 'react';
-import { SplitScreen } from '../Layout/SplitScreen';
-import AzubiListe from '../AzubiListe';
-import AzubiMonitor from './AzubiMonitor';
-import { fetchAzubis } from '../../api/azubis/azubiService';
+import React, { useEffect, useState } from "react";
+import { SplitScreen } from "../Layout/SplitScreen";
+import AzubiListe from "../AzubiListe";
+import AzubiMonitor from "./AzubiMonitor";
+import { fetchAzubis } from "../../api/azubis/azubiService";
 import {
   ToggleButtonGroup,
   ToggleButton,
@@ -14,39 +14,39 @@ import {
 
 const ChefDashboard = () => {
   const [azubis, setAzubis] = useState([]);
-  const [modeTab, setModeTab] = useState('single') // Einzelansicht: single oder Alle-Azubis: multi
+  const [modeTab, setModeTab] = useState("single"); // Einzelansicht: single oder Alle-Azubis: multi
   const [selectedAzubi, setSelectedAzubi] = useState(null); // innerhalb Einzelansicht
 
-
   const handleModeTabs = (event, newView) => {
-    if(newView !== null) {
+    if (newView !== null) {
       setModeTab(newView);
     }
   };
 
   const renderModeTabsContent = () => {
     switch (modeTab) {
-      case 'single':
+      case "single":
         return (
           <SplitScreen leftWeight={1} rightWeight={3}>
-          <AzubiListe azubis={azubis} onSelectAzubi={setSelectedAzubi} />
-          <AzubiMonitor azubi={selectedAzubi} />
-        </SplitScreen>
+            <AzubiListe azubis={azubis} onSelectAzubi={setSelectedAzubi} />
+            <AzubiMonitor azubi={selectedAzubi} />
+          </SplitScreen>
         );
-      case 'multi':
+      case "multi":
         return (
           <SplitScreen leftWeight={1} rightWeight={3}>
-            <Typography variant='body1'>Hier wird die Statsliste sein.</Typography>
-            <Typography variant='body1'>Hier werden dann die zugehörigen Charts angezeigt.</Typography>
-
-        </SplitScreen>
+            <Typography variant="body1">
+              Hier wird die Statsliste sein.
+            </Typography>
+            <Typography variant="body1">
+              Hier werden dann die zugehörigen Charts angezeigt.
+            </Typography>
+          </SplitScreen>
         );
-        default:
-          return (
-            <p>Es ist kein Tab ausgewählt.</p>
-          );
+      default:
+        return <p>Es ist kein Tab ausgewählt.</p>;
     }
-  }
+  };
 
   useEffect(() => {
     const loadAzubis = async () => {
@@ -54,7 +54,7 @@ const ChefDashboard = () => {
         const response = await fetchAzubis();
         setAzubis(response);
       } catch (error) {
-        console.error('Fehler beim Laden der Azubis:', error);
+        console.error("Fehler beim Laden der Azubis:", error);
       }
     };
 
@@ -63,26 +63,25 @@ const ChefDashboard = () => {
 
   return (
     <div>
-    <ToggleButtonGroup
-    value={modeTab}
-    exclusive
-    onChange={handleModeTabs}
-    aria-label="modeTab-Ansichtsauswahl"
-    sx={{ ml: "auto" }}
-  >
-    <ToggleButton value="single" aria-label="single">
-      Single
-    </ToggleButton>
+      <ToggleButtonGroup
+        value={modeTab}
+        exclusive
+        onChange={handleModeTabs}
+        aria-label="modeTab-Ansichtsauswahl"
+        sx={{ ml: "auto" }}
+      >
+        <ToggleButton value="single" aria-label="single">
+          Single
+        </ToggleButton>
 
-    <ToggleButton value="multi" aria-label="multi">
-      Multi
-    </ToggleButton>
+        <ToggleButton value="multi" aria-label="multi">
+          Multi
+        </ToggleButton>
+      </ToggleButtonGroup>
 
-  </ToggleButtonGroup>
-
-  {/* Dynamischer Inhalt basierend auf ausgewähltem Tab */}
-  <Box sx={{ mt: 2 }}>{renderModeTabsContent()}</Box>
-  </div>
+      {/* Dynamischer Inhalt basierend auf ausgewähltem Tab */}
+      <Box sx={{ mt: 2 }}>{renderModeTabsContent()}</Box>
+    </div>
   );
 };
 

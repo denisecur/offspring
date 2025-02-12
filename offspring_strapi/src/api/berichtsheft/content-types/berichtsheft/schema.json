@@ -15,9 +15,10 @@
     "pdf": {
       "type": "media",
       "multiple": false,
-      "required": true,
+      "required": false,
       "allowedTypes": [
-        "files"
+        "files",
+        "images"
       ]
     },
     "woche_vom": {
