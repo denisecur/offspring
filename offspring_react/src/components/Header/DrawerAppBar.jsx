@@ -1,7 +1,7 @@
 // src/components/DrawerAppBar.jsx
-import ThemeSwitcher from "../../ThemeSwitcher";
 import React from "react";
 import PropTypes from "prop-types";
+import { useLocation, Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -9,8 +9,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import { Link } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
+import ThemeSwitcher from "../ThemeSwitcher";
 import nachwuchsOffspring from "../../assets/nachwuchs_offspring.png";
 import SchoolIcon from "@mui/icons-material/School";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
@@ -31,8 +31,10 @@ const navItemsChef = [
 function DrawerAppBar(props) {
   const { window } = props;
   const { user, logout, hasFullAccess } = useAuthContext();
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login";
 
-  const navItems = hasFullAccess ? navItemsChef : navItemsAzubi; // Headermenü Items laden abhängig von access-type
+  const navItems = hasFullAccess ? navItemsChef : navItemsAzubi;
 
   const handleLogout = () => {
     logout();
@@ -40,7 +42,7 @@ function DrawerAppBar(props) {
 
   return (
     <div>
-      <Box sx={{ display: "flex", height:"200" }}>
+      <Box sx={{ display: "flex", height: "200" }}>
         <CssBaseline />
         <AppBar component="nav">
           <Toolbar>
@@ -59,7 +61,7 @@ function DrawerAppBar(props) {
                 component="div"
                 sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
               >
-                <img src={OFFSPRING}></img>
+                <img src={OFFSPRING} alt="Logo" />
               </Typography>
             </Tooltip>
 
@@ -77,17 +79,14 @@ function DrawerAppBar(props) {
             </Box>
             {user ? (
               <>
-                <ThemeSwitcher />
+                {/* Den ThemeSwitcher nur anzeigen, wenn wir nicht auf der Login-Seite sind */}
+                {!isLoginPage && <ThemeSwitcher />}
                 <Button sx={{ color: "text.primary" }} onClick={handleLogout}>
                   <LogoutIcon />
                 </Button>
               </>
             ) : (
-              <Button
-                sx={{ color: "text.primary" }}
-                component={Link}
-                to="/login"
-              >
+              <Button sx={{ color: "text.primary" }} component={Link} to="/login">
                 Login
               </Button>
             )}
