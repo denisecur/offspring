@@ -3,13 +3,12 @@ import { addWeeks, format, getMonth } from 'date-fns';
 import { getToken } from '../../helpers';
 import 'tailwindcss/tailwind.css';
 
-
 const WeeklyReports = () => {
   const token = getToken();
 
   const [selectedYear, setSelectedYear] = useState(1);
   const [selectedMonth, setSelectedMonth] = useState(0); // Default to September
-  const [reports, setReports] = useState({}); // Mock data for reports
+  const [reports, setReports] = useState({}); // Hier werden die Berichtshefte gespeichert
 
   const startDates = [
     new Date(2023, 8, 1), // Jahr 1 Startdatum (1. September 2023)
@@ -36,7 +35,6 @@ const WeeklyReports = () => {
     return Math.floor(diffInMs / oneWeekInMs) + 1;
   };
   
-
   const months = [
     'September', 'Oktober', 'November', 'Dezember',
     'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August'
@@ -72,13 +70,11 @@ const WeeklyReports = () => {
           // Extrahieren der PDF-URL
           let pdfUrl = null;
           const pdfData = report.pdf;
-  
           if (pdfData && pdfData.url) {
             pdfUrl = pdfData.url.startsWith('http')
               ? pdfData.url
               : `http://localhost:1337${pdfData.url}`;
           }
-  
           fetchedReports[weekKey] = pdfUrl;
         });
   
@@ -91,7 +87,6 @@ const WeeklyReports = () => {
     fetchReports();
   }, [token]);
   
-
   const generateWeekKey = (reportDate) => {
     const yearNumber = getYearNumber(reportDate);
     const weekNumber = getWeekNumber(reportDate, yearNumber);
@@ -104,16 +99,13 @@ const WeeklyReports = () => {
     }
   };
   
-
   const uploadBerichtsheft = async (file, reportDate) => {
     console.log('uploadBerichtsheft - reportDate:', reportDate);
     try {
       const formData = new FormData();
       const wocheVom = format(reportDate, 'yyyy-MM-dd');
       console.log('woche_vom:', wocheVom);
-      formData.append('data', JSON.stringify({
-        woche_vom: wocheVom,
-      }));
+      formData.append('data', JSON.stringify({ woche_vom: wocheVom }));
       formData.append('files.pdf', file);
   
       const response = await fetch('http://localhost:1337/api/berichtshefte', {
@@ -133,21 +125,15 @@ const WeeklyReports = () => {
       const result = await response.json();
       console.log('Upload erfolgreich:', result);
   
-      // PDF-URL extrahieren
       let pdfUrl = null;
-  
       try {
         const pdfData = result.data.attributes.pdf;
-  
         if (pdfData && pdfData.data) {
-          // Prüfe, ob pdf.data ein Array oder ein Objekt ist
           if (Array.isArray(pdfData.data)) {
-            // Falls es ein Array ist
             if (pdfData.data.length > 0) {
               pdfUrl = pdfData.data[0].attributes.url;
             }
           } else {
-            // Falls es ein Objekt ist
             pdfUrl = pdfData.data.attributes.url;
           }
         }
@@ -156,7 +142,6 @@ const WeeklyReports = () => {
           throw new Error('PDF-URL nicht gefunden');
         }
   
-        // Basis-URL hinzufügen, falls erforderlich
         if (!pdfUrl.startsWith('http')) {
           pdfUrl = `http://localhost:1337${pdfUrl}`;
         }
@@ -172,11 +157,8 @@ const WeeklyReports = () => {
     }
   };
   
-
-
   const handleFileChange = async (event, weekKey, reportDate) => {
     console.log('handleFileChange - weekKey:', weekKey, 'reportDate:', reportDate);
-  
     const file = event.target.files[0];
     if (file) {
       const pdfUrl = await uploadBerichtsheft(file, reportDate);
@@ -189,7 +171,6 @@ const WeeklyReports = () => {
     }
   };
   
-
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <header className="bg-white shadow">
@@ -239,55 +220,54 @@ const WeeklyReports = () => {
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
-        {Array.from({ length: 52 }, (_, i) => {
-          const reportDate = calculateWeekDate(startDates[selectedYear - 1], i + 1);
-          const academicMonthIndex = (getMonth(reportDate) + 4) % 12;
-          const weekKey = `year${selectedYear}-week${i + 1}`;
-
-          if (academicMonthIndex === selectedMonth) {
-            // Hilfsfunktion definieren
-            const handleFileInputChange = (e) => {
-              handleFileChange(e, weekKey, reportDate);
-            };
-
-            return (
-              <div key={i} className="bg-white p-4 shadow-md rounded-lg">
-                <div className="flex justify-between items-center">
-                  <div className="font-bold">
-                    {format(reportDate, 'dd.MM.yyyy')}
-                  </div>
-                  <button
-                    onClick={() => handleUploadClick(weekKey)}
-                    className="text-blue-500 hover:underline"
-                  >
-                    {reports[weekKey] ? 'Update' : 'Upload'}
-                  </button>
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    style={{ display: 'none' }}
-                    ref={(el) => (fileInputRefs.current[weekKey] = el)}
-                    onChange={handleFileInputChange}
-                  />
-                </div>
-                <div className="mt-2">
-                  {reports[weekKey] ? (
-                    <a
-                      href={reports[weekKey]}
-                      className="text-blue-500 hover:underline"
-                    >
-                      View
-                    </a>
-                  ) : (
-                    <div className="text-gray-500">ausstehend</div>
-                  )}
-                </div>
+                {Array.from({ length: 52 }, (_, i) => {
+                  const reportDate = calculateWeekDate(startDates[selectedYear - 1], i + 1);
+                  const academicMonthIndex = (getMonth(reportDate) + 4) % 12;
+                  const weekKey = `year${selectedYear}-week${i + 1}`;
+  
+                  if (academicMonthIndex === selectedMonth) {
+                    const handleFileInputChange = (e) => {
+                      handleFileChange(e, weekKey, reportDate);
+                    };
+  
+                    return (
+                      <div key={i} className="bg-white p-4 shadow-md rounded-lg">
+                        <div className="flex justify-between items-center">
+                          <div className="font-bold">
+                            {format(reportDate, 'dd.MM.yyyy')}
+                          </div>
+                          <button
+                            onClick={() => handleUploadClick(weekKey)}
+                            className="text-blue-500 hover:underline"
+                          >
+                            {reports[weekKey] ? 'Update' : 'Upload'}
+                          </button>
+                          <input
+                            type="file"
+                            accept="application/pdf"
+                            className="hidden"
+                            ref={(el) => (fileInputRefs.current[weekKey] = el)}
+                            onChange={handleFileInputChange}
+                          />
+                        </div>
+                        <div className="mt-2">
+                          {reports[weekKey] ? (
+                            <a
+                              href={reports[weekKey]}
+                              className="text-blue-500 hover:underline"
+                            >
+                              View
+                            </a>
+                          ) : (
+                            <div className="text-gray-500">ausstehend</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
               </div>
-            );
-          }
-          return null;
-        })}
-      </div>
             </div>
           </div>
         </div>
