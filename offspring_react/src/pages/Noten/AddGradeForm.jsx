@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTheme } from "@mui/material/styles";
+
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
@@ -16,6 +18,8 @@ import {
 import { addUserGrade } from '../../api/noten/notenService';
 
 const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
+    const theme = useTheme();
+  
   const {
     control,
     register,
@@ -52,15 +56,10 @@ const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '100%' },
-        maxWidth: 500,
-        mx: 'auto',
-        p: 2,
-        backgroundColor: '#f9f9f9',
-        borderRadius: 2,
-        boxShadow: 3,
-      }}
+      style={{ borderColor: theme.palette.secondary,
+        backgroundColor: theme.palette.neutral,
+        boxShadow: "0px 0px 15px #05d9e8",}}
+     
       noValidate
       autoComplete="off"
     >

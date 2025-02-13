@@ -40,9 +40,9 @@ function DrawerAppBar(props) {
 
   return (
     <div>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", height:"200" }}>
         <CssBaseline />
-        <AppBar component="nav" sx={{ backgroundColor: "ochre.t1" }}>
+        <AppBar component="nav">
           <Toolbar>
             <Tooltip
               title={

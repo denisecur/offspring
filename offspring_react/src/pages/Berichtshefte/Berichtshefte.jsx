@@ -262,7 +262,6 @@ const WeeklyReports = () => {
                   >
                     {reports[weekKey] ? 'Update' : 'Upload'}
                   </button>
-                  {/* Versteckter Datei-Input */}
                   <input
                     type="file"
                     accept="application/pdf"
