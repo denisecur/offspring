@@ -27,8 +27,8 @@ export const themes = {
     text: "#ffffff",
   },
   basicLight: {
-    primary: "#007bff",
-    secondary: "#6c757d",
+    primary: "#1B2025",//"#007bff",
+    secondary: "#151F30",// 
     accent: "#17a2b8",
     neutral: "#f8f9fa",
     "base-100": "#ffffff",
@@ -36,7 +36,7 @@ export const themes = {
     success: "#28a745",
     warning: "#ffc107",
     error: "#dc3545",
-    text: "#212529",
+    text: "#151F30",
   }
 };
 

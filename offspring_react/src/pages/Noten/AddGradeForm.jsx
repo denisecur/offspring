@@ -14,7 +14,7 @@ import {
   FormHelperText,
   Typography,
 } from '@mui/material';
-import { addUserGrade } from '../../api/noten/notenService';
+import { addUserGrade } from '../../api_services/noten/notenService';
 
 const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
   const theme = useTheme();

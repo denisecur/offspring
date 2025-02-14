@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DATE_OPTIONS } from '../constant';
-import { addUserGrade } from '../api/noten/notenService';
+import { addUserGrade } from '../api_services/noten/notenService';
 
 const ListView = ({ selectedFach, filteredGrades }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

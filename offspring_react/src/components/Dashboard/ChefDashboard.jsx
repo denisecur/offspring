@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { SplitScreen } from "../Layout/SplitScreen";
 import AzubiListe from "../AzubiListe";
 import AzubiMonitor from "./AzubiMonitor";
-import { fetchAzubis } from "../../api/azubis/azubiService";
+import { fetchAzubis } from "../../api_services/azubis/azubiService";
 import {
   ToggleButtonGroup,
   ToggleButton,

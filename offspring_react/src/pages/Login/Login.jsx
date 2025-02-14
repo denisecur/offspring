@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
 import { API } from "../../constant";
 import { setToken } from "../../helpers";
-import OFFSPRING from "../../../public/text-1739362619826 (1).svg";
+import OFFSPRING from "../../../public/offspring_pink.svg";
 
 const Login = () => {
   // Wir entfernen die Nutzung des ThemeContext und erzwingen "basicLight"
@@ -61,7 +61,7 @@ const Login = () => {
     // Wir verwenden hier fixedTheme als key, damit React die Komponente bei Theme-Änderungen nicht neu mounted.
     <div key={fixedTheme} className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-base-100 to-neutral text-text">
       <div className="mb-8 max-w-md w-full flex justify-center">
-        <img src={OFFSPRING} alt="Offspring Logo" className="w-full max-w-[300px] h-auto" />
+        <img src={OFFSPRING} alt="Offspring Logo" className="w-full max-w-[500px] h-auto" />
       </div>
 
       <Card className="w-full max-w-md rounded-lg shadow-lg p-6 border-2 border-accent bg-neutral text-center">

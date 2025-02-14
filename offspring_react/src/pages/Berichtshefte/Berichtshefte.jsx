@@ -1,21 +1,30 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { addWeeks, format, getMonth } from 'date-fns';
-import { getToken } from '../../helpers';
-import 'tailwindcss/tailwind.css';
+import React, { useState, useRef, useEffect } from "react";
+import { addWeeks, format, getMonth } from "date-fns";
+import { getToken } from "../../helpers";
+import getThemeColors from "../../config/theme";
+// Importiere die ausgelagerten API-Funktionen
+import { fetchReports, uploadReport } from "../../api_services/berichtshefte/berichtshefteService.js";
 
 const WeeklyReports = () => {
   const token = getToken();
 
   const [selectedYear, setSelectedYear] = useState(1);
-  const [selectedMonth, setSelectedMonth] = useState(0); // Default to September
-  const [reports, setReports] = useState({}); // Hier werden die Berichtshefte gespeichert
+  const [selectedMonth, setSelectedMonth] = useState(0); // Default: September
+  const [reports, setReports] = useState({}); // Speichert die Berichtshefte
 
   const startDates = [
-    new Date(2023, 8, 1), // Jahr 1 Startdatum (1. September 2023)
-    new Date(2024, 8, 1), // Jahr 2 Startdatum (1. September 2024)
-    new Date(2025, 8, 1), // Jahr 3 Startdatum (1. September 2025)
+    new Date(2023, 8, 1), // Jahr 1: 1. September 2023
+    new Date(2024, 8, 1), // Jahr 2: 1. September 2024
+    new Date(2025, 8, 1), // Jahr 3: 1. September 2025
   ];
-  
+
+  // Theme-Initialisierung: Setzt die CSS-Variablen aus deinem Theme
+  useEffect(() => {
+    const themeName = localStorage.getItem("theme") || "basicLight";
+    getThemeColors(themeName);
+  }, []);
+
+  // Hilfsfunktionen zur Ermittlung von Jahr- und Wochennummern
   const getYearNumber = (date) => {
     for (let i = 0; i < startDates.length; i++) {
       const startDate = startDates[i];
@@ -27,138 +36,106 @@ const WeeklyReports = () => {
     }
     return null;
   };
-  
+
   const getWeekNumber = (date, yearNumber) => {
     const startDate = startDates[yearNumber - 1];
     const diffInMs = date - startDate;
     const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
     return Math.floor(diffInMs / oneWeekInMs) + 1;
   };
-  
+
   const months = [
-    'September', 'Oktober', 'November', 'Dezember',
-    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August'
+    "September",
+    "Oktober",
+    "November",
+    "Dezember",
+    "Januar",
+    "Februar",
+    "März",
+    "April",
+    "Mai",
+    "Juni",
+    "Juli",
+    "August",
   ];
 
-  const calculateWeekDate = (startDate, weekNumber) => addWeeks(startDate, weekNumber - 1);
+  const calculateWeekDate = (startDate, weekNumber) =>
+    addWeeks(startDate, weekNumber - 1);
 
   // Refs für Datei-Inputs
   const fileInputRefs = useRef({});
-  
+
+  // Berichtshefte abrufen
   useEffect(() => {
-    const fetchReports = async () => {
+    const loadReports = async () => {
       try {
-        const response = await fetch('http://localhost:1337/api/berichtshefte', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-  
-        if (!response.ok) {
-          throw new Error('Fehler beim Laden der Berichtshefte');
-        }
-  
-        const result = await response.json();
-        console.log('Result:', result);
-  
+        const result = await fetchReports(token);
         const fetchedReports = {};
         result.data.forEach((report) => {
-          console.log('Report:', report);
           const reportDate = new Date(report.woche_vom);
           const weekKey = generateWeekKey(reportDate);
-  
-          // Extrahieren der PDF-URL
+
+          // Extrahiere die PDF-URL
           let pdfUrl = null;
           const pdfData = report.pdf;
           if (pdfData && pdfData.url) {
-            pdfUrl = pdfData.url.startsWith('http')
+            pdfUrl = pdfData.url.startsWith("http")
               ? pdfData.url
               : `http://localhost:1337${pdfData.url}`;
           }
           fetchedReports[weekKey] = pdfUrl;
         });
-  
         setReports(fetchedReports);
       } catch (error) {
-        console.error('Fehler beim Laden der Berichtshefte:', error);
+        console.error("Fehler beim Laden der Berichtshefte:", error);
       }
     };
-  
-    fetchReports();
+
+    loadReports();
   }, [token]);
-  
+
   const generateWeekKey = (reportDate) => {
     const yearNumber = getYearNumber(reportDate);
     const weekNumber = getWeekNumber(reportDate, yearNumber);
     return `year${yearNumber}-week${weekNumber}`;
   };
-  
+
   const handleUploadClick = (weekKey) => {
     if (fileInputRefs.current[weekKey]) {
       fileInputRefs.current[weekKey].click();
     }
   };
-  
+
   const uploadBerichtsheft = async (file, reportDate) => {
-    console.log('uploadBerichtsheft - reportDate:', reportDate);
     try {
-      const formData = new FormData();
-      const wocheVom = format(reportDate, 'yyyy-MM-dd');
-      console.log('woche_vom:', wocheVom);
-      formData.append('data', JSON.stringify({ woche_vom: wocheVom }));
-      formData.append('files.pdf', file);
-  
-      const response = await fetch('http://localhost:1337/api/berichtshefte', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Server Error:', errorData);
-        throw new Error(errorData.error.message || 'Upload fehlgeschlagen');
-      }
-  
-      const result = await response.json();
-      console.log('Upload erfolgreich:', result);
-  
+      const result = await uploadReport(token, file, reportDate);
       let pdfUrl = null;
       try {
         const pdfData = result.data.attributes.pdf;
         if (pdfData && pdfData.data) {
-          if (Array.isArray(pdfData.data)) {
-            if (pdfData.data.length > 0) {
-              pdfUrl = pdfData.data[0].attributes.url;
-            }
+          if (Array.isArray(pdfData.data) && pdfData.data.length > 0) {
+            pdfUrl = pdfData.data[0].attributes.url;
           } else {
             pdfUrl = pdfData.data.attributes.url;
           }
         }
-  
         if (!pdfUrl) {
-          throw new Error('PDF-URL nicht gefunden');
+          throw new Error("PDF-URL nicht gefunden");
         }
-  
-        if (!pdfUrl.startsWith('http')) {
+        if (!pdfUrl.startsWith("http")) {
           pdfUrl = `http://localhost:1337${pdfUrl}`;
         }
       } catch (e) {
-        console.error('Konnte die PDF-URL nicht extrahieren:', e);
-        throw new Error('PDF-URL nicht gefunden');
+        throw new Error("PDF-URL nicht gefunden");
       }
-  
       return pdfUrl;
     } catch (error) {
-      console.error('Fehler beim Upload des Berichtsheftes:', error);
-      alert('Fehler beim Upload des Berichtsheftes: ' + error.message);
+      console.error("Fehler beim Upload des Berichtsheftes:", error);
+      alert("Fehler beim Upload des Berichtsheftes: " + error.message);
     }
   };
-  
+
   const handleFileChange = async (event, weekKey, reportDate) => {
-    console.log('handleFileChange - weekKey:', weekKey, 'reportDate:', reportDate);
     const file = event.target.files[0];
     if (file) {
       const pdfUrl = await uploadBerichtsheft(file, reportDate);
@@ -170,31 +147,45 @@ const WeeklyReports = () => {
       }
     }
   };
-  
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div
+      className="min-h-screen p-6"
+      style={{ backgroundColor: "var(--color-base-100)" }}
+    >
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">Ausbildungsnachweise</h1>
+          <h1
+            className="text-3xl font-bold"
+            style={{ color: "var(--color-text)" }}
+          >
+            Ausbildungsnachweise
+          </h1>
         </div>
       </header>
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
-            <div className="border-4 border-dashed border-gray-200 rounded-lg">
+            <div
+              className="border-4 border-dashed rounded-lg p-6"
+              style={{ borderColor: "var(--color-primary)" }}
+            >
               <div className="flex justify-between mb-4 w-full">
                 <div className="flex justify-between space-x-2 w-full">
                   {[1, 2, 3].map((year) => (
                     <button
                       key={year}
-                      className={`flex-grow py-2 px-4 rounded ${
-                        selectedYear === year
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200'
-                      }`}
+                      className="flex-grow py-2 px-4 rounded"
+                      style={{
+                        backgroundColor:
+                          selectedYear === year
+                            ? "var(--color-primary)"
+                            : "#e5e7eb",
+                        color: selectedYear === year ? "#fff" : "#000",
+                      }}
                       onClick={() => {
                         setSelectedYear(year);
-                        setSelectedMonth(0); // Reset to September
+                        setSelectedMonth(0);
                       }}
                     >
                       Jahr {year}
@@ -207,11 +198,14 @@ const WeeklyReports = () => {
                   {months.map((month, index) => (
                     <button
                       key={month}
-                      className={`flex-grow py-2 px-4 rounded ${
-                        selectedMonth === index
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-200'
-                      }`}
+                      className="flex-grow py-2 px-4 rounded"
+                      style={{
+                        backgroundColor:
+                          selectedMonth === index
+                            ? "var(--color-accent)"
+                            : "#e5e7eb",
+                        color: selectedMonth === index ? "#fff" : "#000",
+                      }}
                       onClick={() => setSelectedMonth(index)}
                     >
                       {month}
@@ -221,26 +215,41 @@ const WeeklyReports = () => {
               </div>
               <div className="grid grid-cols-3 gap-4">
                 {Array.from({ length: 52 }, (_, i) => {
-                  const reportDate = calculateWeekDate(startDates[selectedYear - 1], i + 1);
+                  const reportDate = calculateWeekDate(
+                    startDates[selectedYear - 1],
+                    i + 1
+                  );
                   const academicMonthIndex = (getMonth(reportDate) + 4) % 12;
                   const weekKey = `year${selectedYear}-week${i + 1}`;
-  
+
                   if (academicMonthIndex === selectedMonth) {
                     const handleFileInputChange = (e) => {
                       handleFileChange(e, weekKey, reportDate);
                     };
-  
+
                     return (
-                      <div key={i} className="bg-white p-4 shadow-md rounded-lg">
+                      <div
+                        key={i}
+                        className="bg-white p-4 shadow-md rounded-lg"
+                        style={{
+                          backgroundColor: "var(--color-neutral)",
+                          color: "var(--color-text)",
+                        }}
+                      >
                         <div className="flex justify-between items-center">
                           <div className="font-bold">
-                            {format(reportDate, 'dd.MM.yyyy')}
+                            {format(reportDate, "dd.MM.yyyy")}
                           </div>
                           <button
                             onClick={() => handleUploadClick(weekKey)}
-                            className="text-blue-500 hover:underline"
+                            style={{
+                              color: reports[weekKey]
+                                ? "var(--color-success)"
+                                : "var(--color-error)",
+                            }}
+                            className="py-2 px-4 rounded hover:underline"
                           >
-                            {reports[weekKey] ? 'Update' : 'Upload'}
+                            {reports[weekKey] ? "Update 🔄" : "Upload ⬆️"}
                           </button>
                           <input
                             type="file"
@@ -254,9 +263,10 @@ const WeeklyReports = () => {
                           {reports[weekKey] ? (
                             <a
                               href={reports[weekKey]}
-                              className="text-blue-500 hover:underline"
+                              style={{ color: "var(--color-success)" }}
+                              className="hover:font-bold"
                             >
-                              View
+                              Vorschau
                             </a>
                           ) : (
                             <div className="text-gray-500">ausstehend</div>

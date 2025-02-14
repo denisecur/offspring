@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { fetchUserGrades, addUserGrade } from "../../../api/noten/notenService";
+import { fetchUserGrades, addUserGrade } from "../../../api_services/noten/notenService";
 import { useAuthContext } from "../../../context/AuthContext";
 import GradeTable from "../GradeTable";
 import FachDurchschnittChart from "./FachDurchschnittChart";
 import AddGradeForm from "../AddGradeForm";
 import Loading from "../LoadingMessage";
 import ErrorMessage from "../ErrorMessage";
-import { fetchAusbildungsDetails } from "../../../api/noten/ausbildungsfaecherService";
+import { fetchAusbildungsDetails } from "../../../api_services/noten/ausbildungsfaecherService";
 import Box from "@mui/material/Box";
 import DurchschnittListe from "./DurchschnittListe";
 import MyHeading from "../../../components/MyHeading";

@@ -24,7 +24,7 @@ import {
 } from '@mui/material';
 import { BarChart, TableChart } from '@mui/icons-material';
 import { useTheme } from "@mui/material/styles";
-import { getSchoolYear, calculateAverage, calculateAverageByFach, calculateAverageBySchuljahr } from "../../../api/noten/calculations";
+import { getSchoolYear, calculateAverage, calculateAverageByFach, calculateAverageBySchuljahr } from "../../../api_services/noten/calculations";
 
 const getGradeColor = (value) => {
   if (!value || value === "Keine Daten") return "gray";
