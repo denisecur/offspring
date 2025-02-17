@@ -28,6 +28,10 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
+    },
+    "kw": {
+      "type": "integer",
+      "required": false
     }
   }
 }

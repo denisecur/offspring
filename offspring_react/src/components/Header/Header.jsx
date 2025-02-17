@@ -63,7 +63,7 @@ function DrawerAppBar() {
             <img
               src={OFFSPRING}
               alt="Logo"
-              style={{ height: "50px", width: "auto" }} // Logo-Größe anpassen
+              style={{ marginLeft: "7%", height: "50px", width: "auto" }} // Logo-Größe anpassen
             />
           </Box>
 
