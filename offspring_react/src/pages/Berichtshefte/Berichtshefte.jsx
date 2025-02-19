@@ -13,13 +13,14 @@ const Berichtshefte = () => {
   const token = getToken();
   getThemeColors(localStorage.getItem("theme") || "basicLight");
 
+  // Zustände für Jahr- und Monatsauswahl
   const [selectedYear, setSelectedYear] = useState(1);
-  const [selectedMonth, setSelectedMonth] = useState(0); // Default: September
+  const [selectedMonth, setSelectedMonth] = useState(0);
 
   // Custom Hook zum Laden der Berichtshefte
   const { reports, loading, error, setReports } = useBerichtshefte(token);
 
-  // Basisstartdaten (z. B. 1. September) und Umwandlung in den Montag der entsprechenden Woche
+  // Basisstartdaten und Berechnung des Wochenstarts
   const baseDates = [
     new Date(2023, 8, 1),
     new Date(2024, 8, 1),
@@ -27,20 +28,26 @@ const Berichtshefte = () => {
   ];
   const startDates = baseDates.map(date => getStartOfWeekFromDate(date));
 
-  // File-Input Refs
+  // File-Input Refs, um die versteckten Input-Felder anzusprechen
   const fileInputRefs = useRef({});
 
-  // Zustände für PDF-Vorschau/Upload-Confirmation
+  // Zustände für PDF-Vorschau und Upload
   const [showPreview, setShowPreview] = useState(false);
   const [selectedPdfUrl, setSelectedPdfUrl] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedReportDate, setSelectedReportDate] = useState(null);
   const [selectedWeekKey, setSelectedWeekKey] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
-  // Beim Datei-Select: Speichere die Datei und zeige die Vorschau (Confirmation-Modus)
-  const handleFileChange = async (event, weekKey, reportDate) => {
+  // Beim Datei-Select: Speichere die Datei, prüfe den Typ und zeige die Vorschau
+  const handleFileChange = (event, weekKey, reportDate) => {
     const file = event.target.files[0];
     if (file) {
+      // Nur PDF-Dateien erlauben
+      if (file.type !== "application/pdf") {
+        alert("Bitte wähle eine PDF-Datei aus.");
+        return;
+      }
       setSelectedFile(file);
       setSelectedReportDate(reportDate);
       setSelectedWeekKey(weekKey);
@@ -50,13 +57,15 @@ const Berichtshefte = () => {
     }
   };
 
-  // Bestätigung: Führe den echten Upload aus
+  // Bestätigung: Führe den Upload aus
   const handleConfirmUpload = async () => {
     setShowPreview(false);
+    setUploading(true);
     try {
       const result = await uploadReport(token, selectedFile, selectedReportDate);
       let pdfUrl = null;
       const pdfData = result.data.attributes.pdf;
+      // Je nach Strapi-Antwortstruktur:
       if (pdfData && pdfData.data) {
         if (Array.isArray(pdfData.data) && pdfData.data.length > 0) {
           pdfUrl = pdfData.data[0].attributes.url;
@@ -70,12 +79,14 @@ const Berichtshefte = () => {
       if (!pdfUrl.startsWith("http")) {
         pdfUrl = `http://localhost:1337${pdfUrl}`;
       }
+      // Aktualisiere den Zustand der Berichtshefte mit der neuen PDF-URL
       setReports(prev => ({ ...prev, [selectedWeekKey]: pdfUrl }));
     } catch (err) {
       console.error("Fehler beim Upload:", err);
       alert("Fehler beim Upload: " + err.message);
     } finally {
-      // Zurücksetzen der selektierten Zustände
+      // Setze alle selektierten Zustände zurück
+      setUploading(false);
       setSelectedFile(null);
       setSelectedPdfUrl(null);
       setSelectedReportDate(null);
@@ -168,9 +179,13 @@ const Berichtshefte = () => {
               );
             })}
           </div>
+
+          {/* Anzeige, wenn gerade hochgeladen wird */}
+          {uploading && <div className="mt-4 text-center">Upload läuft...</div>}
         </div>
       </main>
-      {/* PdfPreview wird im Confirmation-Modus angezeigt */}
+
+      {/* PDF-Vorschau im Confirmation-Modus */}
       {showPreview && selectedPdfUrl && (
         <PdfPreview
           pdfUrl={selectedPdfUrl}

@@ -11,7 +11,7 @@ const BerichtshefteCard = ({
   uploading,
   uploadError,
 }) => {
-  const kw = getISOWeek(reportDate);
+  const kalenderwoche = getISOWeek(reportDate);
   return (
     <div
       className="bg-white p-4 shadow-md rounded-lg"
@@ -37,7 +37,7 @@ const BerichtshefteCard = ({
           onChange={onFileChange}
         />
       </div>
-      <div className="mt-1 text-sm">KW: {kw}</div>
+      <div className="mt-1 text-sm">KW: {kalenderwoche}</div>
       <div className="mt-2">
         {reportUrl ? (
           <a

@@ -458,7 +458,7 @@ export interface ApiBerichtsheftBerichtsheft extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
-    kw: Attribute.Integer;
+    kalenderwoche: Attribute.BigInteger;
     owner: Attribute.Relation<
       'api::berichtsheft.berichtsheft',
       'oneToOne',

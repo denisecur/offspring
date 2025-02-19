@@ -25,7 +25,7 @@ export const ThemeProviderCustom = ({ children }) => {
 
     // Hole die aktiven Farbwerte aus deiner themes-Konfiguration
     const activeThemeColors = themes[themeName] || themes["basicLight"];
-    console.log("activeThemeColors for", themeName, ":", activeThemeColors);
+    //console.log("activeThemeColors for", themeName, ":", activeThemeColors);
 
     // Setze die CSS-Variablen im Dokument (mit "important", um Überschreibungen zu verhindern)
     Object.entries(activeThemeColors).forEach(([key, value]) => {
@@ -34,7 +34,7 @@ export const ThemeProviderCustom = ({ children }) => {
 
     // Aktualisiere das MUI-Theme anhand des aktuellen themeName
     const newMuiTheme = getThemeColors(themeName);
-    console.log("Updating muiTheme for:", themeName, newMuiTheme);
+    //console.log("Updating muiTheme for:", themeName, newMuiTheme);
     setMuiTheme(newMuiTheme);
 
     // Überprüfe, ob das data-theme-Attribut korrekt gesetzt wurde

@@ -29,8 +29,8 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
     },
-    "kw": {
-      "type": "integer",
+    "kalenderwoche": {
+      "type": "biginteger",
       "required": false
     }
   }
