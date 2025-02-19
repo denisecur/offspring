@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTheme } from "@mui/material/styles";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
@@ -13,9 +14,10 @@ import {
   FormHelperText,
   Typography,
 } from '@mui/material';
-import { addUserGrade } from '../../api/noten/notenService';
+import { addUserGrade } from '../../api_services/noten/notenService';
 
 const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
+  const theme = useTheme();
   const {
     control,
     register,
@@ -34,14 +36,10 @@ const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
       };
 
       console.log({ gradeData });
-
       const response = await addUserGrade(gradeData);
-
       if (response && response.data) {
         console.log('Note erfolgreich hinzugefügt', response.data);
-        if (onAddGrade) {
-          onAddGrade(response.data);
-        }
+        if (onAddGrade) onAddGrade(response.data);
       }
     } catch (error) {
       console.error('Fehler beim Hinzufügen der Note:', error);
@@ -52,29 +50,16 @@ const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '100%' },
-        maxWidth: 500,
-        mx: 'auto',
-        p: 2,
-        backgroundColor: '#f9f9f9',
-        borderRadius: 2,
-        boxShadow: 3,
-      }}
+      className="border border-[var(--border-secondary)] bg-[var(--bg-neutral)] shadow-[var(--custom-box-shadow)] p-3"
       noValidate
       autoComplete="off"
     >
-      <Typography variant="h5" sx={{ mb: 2, textAlign: 'center' }}>
+      <Typography variant="h5" className="mb-2 text-center">
         Neue Note hinzufügen
       </Typography>
 
       {/* Fach Auswahl */}
-      <FormControl
-        fullWidth
-        margin="normal"
-        error={Boolean(errors.Fach)}
-        sx={{ m: 1 }}
-      >
+      <FormControl fullWidth margin="normal" error={Boolean(errors.Fach)} className="m-1">
         <InputLabel id="fach-label">Fach</InputLabel>
         <Select
           labelId="fach-label"
@@ -99,7 +84,7 @@ const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
         inputProps={{ step: 0.1, min: 0, max: 6 }}
         fullWidth
         margin="normal"
-        sx={{ m: 1 }}
+        className="m-1"
         error={Boolean(errors.Note)}
         helperText={errors.Note ? errors.Note.message : ''}
         {...register('Note', {
@@ -110,12 +95,7 @@ const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
       />
 
       {/* Art des Leistungsnachweises */}
-      <FormControl
-        fullWidth
-        margin="normal"
-        error={Boolean(errors.Art)}
-        sx={{ m: 1 }}
-      >
+      <FormControl fullWidth margin="normal" error={Boolean(errors.Art)} className="m-1">
         <InputLabel id="art-label">Art des Leistungsnachweises</InputLabel>
         <Select
           labelId="art-label"
@@ -134,12 +114,7 @@ const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
       </FormControl>
 
       {/* Datum Auswahl mit react-datepicker */}
-      <FormControl
-        fullWidth
-        margin="normal"
-        error={Boolean(errors.Datum)}
-        sx={{ m: 1 }}
-      >
+      <FormControl fullWidth margin="normal" error={Boolean(errors.Datum)} className="m-1">
         <Controller
           control={control}
           name="Datum"
@@ -172,7 +147,7 @@ const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
         color="primary"
         type="submit"
         fullWidth
-        sx={{ mt: 3, mb: 2, m: 1 }}
+        className="mt-3 mb-2 m-1"
       >
         Note hinzufügen
       </Button>

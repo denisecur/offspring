@@ -7,8 +7,8 @@ import {
   } from "@mui/material";
   import React, { useEffect, useState } from "react";
   import GradeTableWithCharts from "../../pages/Noten/Dashboard/GradeTableWithCharts";
-  import { fetchUserGrades } from "../../api/noten/notenService";
-  import { fetchAusbildungsDetails } from "../../api/noten/ausbildungsfaecherService";
+  import { fetchUserGrades } from "../../api_services/noten/notenService";
+  import { fetchAusbildungsDetails } from "../../api_services/noten/ausbildungsfaecherService";
   
   const AzubiMonitor = ({ azubi }) => {
     const [singleModeTabs, setSingleModeTabs] = useState("leistungsstand");

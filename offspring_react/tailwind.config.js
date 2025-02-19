@@ -1,63 +1,22 @@
 module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./pages/**/*.{html,js}",
-    "./components/**/*.{html,js}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./src/config/theme.js"], 
   theme: {
     extend: {
       colors: {
-        primary: "#2563eb",
-        secondary: "#f472b6",
-        accent: "#34d399",
-        neutral: "#5eead4",
-        base100: "#ffffff",
-        info: "#fde047",
-        success: "#4ade80",
-        warning: "#fb923c",
-        error: "#ef4444",
-        t1: "#453edb",
-        allgemeinFach: "#8492a6",
-        fachlichFach: "#7e5bef",
-      },
-      screens: {
-        sm: "640px",
-        // => @media (min-width: 640px) { ... }
-
-        md: "768px",
-        // => @media (min-width: 768px) { ... }
-
-        lg: "1024px",
-        // => @media (min-width: 1024px) { ... }
-
-        xl: "1280px",
-        // => @media (min-width: 1280px) { ... }
-
-        "2xl": "1536px",
-        // => @media (min-width: 1536px) { ... }
+        primary: "var(--color-primary)",
+        secondary: "var(--color-secondary)",
+        accent: "var(--color-accent)",
+        neutral: "var(--color-neutral)",
+        "base-100": "var(--color-base-100)",
+        info: "var(--color-info)",
+        success: "var(--color-success)",
+        warning: "var(--color-warning)",
+        error: "var(--color-error)",
+        text: "var(--color-text)",
       },
     },
   },
   daisyui: {
-    themes: [
-      {
-        mytheme: {
-          primary: "#2563eb",
-          secondary: "#f472b6",
-          accent: "#34d399",
-          neutral: "#5eead4",
-          base100: "#ffffff",
-          info: "#fde047",
-          success: "#4ade80",
-          warning: "#fb923c",
-          error: "#ef4444",
-          t1: "#453edb",
-          allgemeinFach: "#8492a6",
-          fachlichFach: "#7e5bef",
-        },
-      },
-    ],
+    //themes: ["mytheme"], // 🔥 Verhindert, dass DaisyUI seine eigenen Themes lädt!
   },
-  plugins: [require("daisyui")],
 };

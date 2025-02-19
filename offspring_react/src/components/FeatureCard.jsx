@@ -3,13 +3,17 @@ import { Card, CardContent, Typography } from '@mui/material';
 
 const FeatureCard = ({ title, description, image, scale }) => {
   return (
-    <Card className=" w-80 h-96 p-4 bg-base-100 shadow-xl flex flex-col">
+    <Card className='flex flex-col items-center justify-between text-center rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105'>
       <div className="flex-shrink-0 h-48 w-full overflow-hidden flex justify-center items-center">
-        <img src={image} alt={title} className="object-contain h-full w-full transform" 
-          style={{ transform: `scale(${scale})` }}  />
+      <img
+  src={image}
+  alt={title}
+  className={`object-contain h-full w-full transform scale-[${scale}]`}
+/>
+
       </div>
       <CardContent className="flex flex-col items-center text-center mt-4 flex-grow">
-        <Typography variant="h5" component="div" className="text-xl font-bold">
+        <Typography variant="h7" component="div" className="text-xl font-bold">
           {title}
         </Typography>
         <Typography variant="body2" color="textSecondary" className="mt-2">

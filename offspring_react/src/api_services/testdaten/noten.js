@@ -1,3 +1,4 @@
+//inzwischen gibts nen bulk (12.02.2025)
 export const noten = [
     {
         "id": 992,

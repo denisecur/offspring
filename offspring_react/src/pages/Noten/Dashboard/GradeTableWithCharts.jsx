@@ -77,10 +77,12 @@ const GradeTableWithCharts = ({ grades }) => {
         enableColumnFilter: false,
         Cell: ({ cell }) => {
           const value = parseFloat(cell.getValue());
-          let color = 'inherit';
-          if (value <= 1.5) color = 'green';
-          else if (value >= 4) color = 'red';
-          return <span style={{ color, fontWeight: 'bold' }}>{value}</span>;
+          // Nutze dein Theme: Bei guten Noten success, bei schlechten error; sonst text
+          let colorClass = '';
+          if (value <= 1.5) colorClass = 'text-[var(--color-success)]';
+          else if (value >= 4) colorClass = 'text-[var(--color-error)]';
+          else colorClass = 'text-[var(--color-text)]';
+          return <span className={`font-bold ${colorClass}`}>{value}</span>;
         },
       },
       {
@@ -89,10 +91,11 @@ const GradeTableWithCharts = ({ grades }) => {
         enableColumnFilter: false,
         Cell: ({ cell }) => {
           const value = parseFloat(cell.getValue());
-          let color = 'inherit';
-          if (value <= 1.5) color = 'green';
-          else if (value >= 4) color = 'red';
-          return <span style={{ color }}>{value}</span>;
+          let colorClass = '';
+          if (value <= 1.5) colorClass = 'text-[var(--color-success)]';
+          else if (value >= 4) colorClass = 'text-[var(--color-error)]';
+          else colorClass = 'text-[var(--color-text)]';
+          return <span className={colorClass}>{value}</span>;
         },
       },
       {
@@ -144,7 +147,7 @@ const GradeTableWithCharts = ({ grades }) => {
           scales: {
             y: {
               beginAtZero: true,
-              reverse: true, // Bei Noten macht es Sinn, die Skala umzukehren (1 ist besser als 6)
+              reverse: true, // Bei Noten ist eine umgekehrte Skala sinnvoll (1 ist besser als 6)
               ticks: {
                 stepSize: 1,
                 min: 1,
@@ -162,7 +165,8 @@ const GradeTableWithCharts = ({ grades }) => {
         return (
           <Box sx={{ padding: 2 }}>
             <Typography variant="h6">Notenverlauf für {fachData.fach}</Typography>
-            <div style={{ height: '300px' }}>
+            {/* Ersetze inline style für Höhe mit Tailwind */}
+            <div className="h-[300px]">
               <Line data={chartData} options={chartOptions} />
             </div>
           </Box>

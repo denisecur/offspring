@@ -1,300 +1,201 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { addWeeks, format, getMonth } from 'date-fns';
-import { getToken } from '../../helpers';
-import 'tailwindcss/tailwind.css';
+// src/components/Berichtshefte.jsx
+import React, { useState, useRef } from "react";
+import { getMonth } from "date-fns";
+import { getToken } from "../../helpers";
+import getThemeColors from "../../config/theme";
+import { calculateWeekDate, getStartOfWeekFromDate, generateWeekKey } from "../../utils/dateUtils";
+import { useBerichtshefte } from "../../hooks/useBerichtshefte";
+import BerichtshefteCard from "../../components/Berichtshefte/BerichtsheftCard";
+import PdfPreview from "../../components/PdfPreview";
+import { uploadReport } from "../../api_services/berichtshefte/berichtshefteService";
 
-
-const WeeklyReports = () => {
+const Berichtshefte = () => {
   const token = getToken();
+  getThemeColors(localStorage.getItem("theme") || "basicLight");
 
+  // Zustände für Jahr- und Monatsauswahl
   const [selectedYear, setSelectedYear] = useState(1);
-  const [selectedMonth, setSelectedMonth] = useState(0); // Default to September
-  const [reports, setReports] = useState({}); // Mock data for reports
+  const [selectedMonth, setSelectedMonth] = useState(0);
 
-  const startDates = [
-    new Date(2023, 8, 1), // Jahr 1 Startdatum (1. September 2023)
-    new Date(2024, 8, 1), // Jahr 2 Startdatum (1. September 2024)
-    new Date(2025, 8, 1), // Jahr 3 Startdatum (1. September 2025)
+  // Custom Hook zum Laden der Berichtshefte
+  const { reports, loading, error, setReports } = useBerichtshefte(token);
+
+  // Basisstartdaten und Berechnung des Wochenstarts
+  const baseDates = [
+    new Date(2023, 8, 1),
+    new Date(2024, 8, 1),
+    new Date(2025, 8, 1),
   ];
-  
-  const getYearNumber = (date) => {
-    for (let i = 0; i < startDates.length; i++) {
-      const startDate = startDates[i];
-      const endDate = new Date(startDate);
-      endDate.setFullYear(endDate.getFullYear() + 1);
-      if (date >= startDate && date < endDate) {
-        return i + 1;
-      }
-    }
-    return null;
-  };
-  
-  const getWeekNumber = (date, yearNumber) => {
-    const startDate = startDates[yearNumber - 1];
-    const diffInMs = date - startDate;
-    const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
-    return Math.floor(diffInMs / oneWeekInMs) + 1;
-  };
-  
+  const startDates = baseDates.map(date => getStartOfWeekFromDate(date));
 
-  const months = [
-    'September', 'Oktober', 'November', 'Dezember',
-    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August'
-  ];
-
-  const calculateWeekDate = (startDate, weekNumber) => addWeeks(startDate, weekNumber - 1);
-
-  // Refs für Datei-Inputs
+  // File-Input Refs, um die versteckten Input-Felder anzusprechen
   const fileInputRefs = useRef({});
-  
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const response = await fetch('http://localhost:1337/api/berichtshefte', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-  
-        if (!response.ok) {
-          throw new Error('Fehler beim Laden der Berichtshefte');
-        }
-  
-        const result = await response.json();
-        console.log('Result:', result);
-  
-        const fetchedReports = {};
-        result.data.forEach((report) => {
-          console.log('Report:', report);
-          const reportDate = new Date(report.woche_vom);
-          const weekKey = generateWeekKey(reportDate);
-  
-          // Extrahieren der PDF-URL
-          let pdfUrl = null;
-          const pdfData = report.pdf;
-  
-          if (pdfData && pdfData.url) {
-            pdfUrl = pdfData.url.startsWith('http')
-              ? pdfData.url
-              : `http://localhost:1337${pdfData.url}`;
-          }
-  
-          fetchedReports[weekKey] = pdfUrl;
-        });
-  
-        setReports(fetchedReports);
-      } catch (error) {
-        console.error('Fehler beim Laden der Berichtshefte:', error);
-      }
-    };
-  
-    fetchReports();
-  }, [token]);
-  
 
-  const generateWeekKey = (reportDate) => {
-    const yearNumber = getYearNumber(reportDate);
-    const weekNumber = getWeekNumber(reportDate, yearNumber);
-    return `year${yearNumber}-week${weekNumber}`;
-  };
-  
-  const handleUploadClick = (weekKey) => {
-    if (fileInputRefs.current[weekKey]) {
-      fileInputRefs.current[weekKey].click();
-    }
-  };
-  
+  // Zustände für PDF-Vorschau und Upload
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedPdfUrl, setSelectedPdfUrl] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedReportDate, setSelectedReportDate] = useState(null);
+  const [selectedWeekKey, setSelectedWeekKey] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
-  const uploadBerichtsheft = async (file, reportDate) => {
-    console.log('uploadBerichtsheft - reportDate:', reportDate);
-    try {
-      const formData = new FormData();
-      const wocheVom = format(reportDate, 'yyyy-MM-dd');
-      console.log('woche_vom:', wocheVom);
-      formData.append('data', JSON.stringify({
-        woche_vom: wocheVom,
-      }));
-      formData.append('files.pdf', file);
-  
-      const response = await fetch('http://localhost:1337/api/berichtshefte', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Server Error:', errorData);
-        throw new Error(errorData.error.message || 'Upload fehlgeschlagen');
-      }
-  
-      const result = await response.json();
-      console.log('Upload erfolgreich:', result);
-  
-      // PDF-URL extrahieren
-      let pdfUrl = null;
-  
-      try {
-        const pdfData = result.data.attributes.pdf;
-  
-        if (pdfData && pdfData.data) {
-          // Prüfe, ob pdf.data ein Array oder ein Objekt ist
-          if (Array.isArray(pdfData.data)) {
-            // Falls es ein Array ist
-            if (pdfData.data.length > 0) {
-              pdfUrl = pdfData.data[0].attributes.url;
-            }
-          } else {
-            // Falls es ein Objekt ist
-            pdfUrl = pdfData.data.attributes.url;
-          }
-        }
-  
-        if (!pdfUrl) {
-          throw new Error('PDF-URL nicht gefunden');
-        }
-  
-        // Basis-URL hinzufügen, falls erforderlich
-        if (!pdfUrl.startsWith('http')) {
-          pdfUrl = `http://localhost:1337${pdfUrl}`;
-        }
-      } catch (e) {
-        console.error('Konnte die PDF-URL nicht extrahieren:', e);
-        throw new Error('PDF-URL nicht gefunden');
-      }
-  
-      return pdfUrl;
-    } catch (error) {
-      console.error('Fehler beim Upload des Berichtsheftes:', error);
-      alert('Fehler beim Upload des Berichtsheftes: ' + error.message);
-    }
-  };
-  
-
-
-  const handleFileChange = async (event, weekKey, reportDate) => {
-    console.log('handleFileChange - weekKey:', weekKey, 'reportDate:', reportDate);
-  
+  // Beim Datei-Select: Speichere die Datei, prüfe den Typ und zeige die Vorschau
+  const handleFileChange = (event, weekKey, reportDate) => {
     const file = event.target.files[0];
     if (file) {
-      const pdfUrl = await uploadBerichtsheft(file, reportDate);
-      if (pdfUrl) {
-        setReports((prevReports) => ({
-          ...prevReports,
-          [weekKey]: pdfUrl,
-        }));
+      // Nur PDF-Dateien erlauben
+      if (file.type !== "application/pdf") {
+        alert("Bitte wähle eine PDF-Datei aus.");
+        return;
       }
+      setSelectedFile(file);
+      setSelectedReportDate(reportDate);
+      setSelectedWeekKey(weekKey);
+      const fileUrl = URL.createObjectURL(file);
+      setSelectedPdfUrl(fileUrl);
+      setShowPreview(true);
     }
   };
-  
+
+  // Bestätigung: Führe den Upload aus
+  const handleConfirmUpload = async () => {
+    setShowPreview(false);
+    setUploading(true);
+    try {
+      const result = await uploadReport(token, selectedFile, selectedReportDate);
+      let pdfUrl = null;
+      const pdfData = result.data.attributes.pdf;
+      // Je nach Strapi-Antwortstruktur:
+      if (pdfData && pdfData.data) {
+        if (Array.isArray(pdfData.data) && pdfData.data.length > 0) {
+          pdfUrl = pdfData.data[0].attributes.url;
+        } else {
+          pdfUrl = pdfData.data.attributes.url;
+        }
+      }
+      if (!pdfUrl) {
+        throw new Error("PDF-URL nicht gefunden");
+      }
+      if (!pdfUrl.startsWith("http")) {
+        pdfUrl = `http://localhost:1337${pdfUrl}`;
+      }
+      // Aktualisiere den Zustand der Berichtshefte mit der neuen PDF-URL
+      setReports(prev => ({ ...prev, [selectedWeekKey]: pdfUrl }));
+    } catch (err) {
+      console.error("Fehler beim Upload:", err);
+      alert("Fehler beim Upload: " + err.message);
+    } finally {
+      // Setze alle selektierten Zustände zurück
+      setUploading(false);
+      setSelectedFile(null);
+      setSelectedPdfUrl(null);
+      setSelectedReportDate(null);
+      setSelectedWeekKey(null);
+    }
+  };
+
+  // Abbruch: Schließe die Vorschau und verwerfe die Auswahl
+  const handleCancelUpload = () => {
+    setShowPreview(false);
+    setSelectedFile(null);
+    setSelectedPdfUrl(null);
+    setSelectedReportDate(null);
+    setSelectedWeekKey(null);
+  };
+
+  const months = [
+    "September", "Oktober", "November", "Dezember",
+    "Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August",
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen p-6" style={{ backgroundColor: "var(--color-base-100)" }}>
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">Ausbildungsnachweise</h1>
+          <h1 className="text-3xl font-bold" style={{ color: "var(--color-text)" }}>
+            Ausbildungsnachweise
+          </h1>
         </div>
       </header>
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="px-4 py-6 sm:px-0">
-            <div className="border-4 border-dashed border-gray-200 rounded-lg">
-              <div className="flex justify-between mb-4 w-full">
-                <div className="flex justify-between space-x-2 w-full">
-                  {[1, 2, 3].map((year) => (
-                    <button
-                      key={year}
-                      className={`flex-grow py-2 px-4 rounded ${
-                        selectedYear === year
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200'
-                      }`}
-                      onClick={() => {
-                        setSelectedYear(year);
-                        setSelectedMonth(0); // Reset to September
-                      }}
-                    >
-                      Jahr {year}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="flex justify-between items-center mb-4 w-full">
-                <div className="flex justify-between space-x-2 w-full">
-                  {months.map((month, index) => (
-                    <button
-                      key={month}
-                      className={`flex-grow py-2 px-4 rounded ${
-                        selectedMonth === index
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-200'
-                      }`}
-                      onClick={() => setSelectedMonth(index)}
-                    >
-                      {month}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-        {Array.from({ length: 52 }, (_, i) => {
-          const reportDate = calculateWeekDate(startDates[selectedYear - 1], i + 1);
-          const academicMonthIndex = (getMonth(reportDate) + 4) % 12;
-          const weekKey = `year${selectedYear}-week${i + 1}`;
+          {loading && <div>Lade Berichtshefte...</div>}
+          {error && <div className="text-red-500">Fehler: {error}</div>}
 
-          if (academicMonthIndex === selectedMonth) {
-            // Hilfsfunktion definieren
-            const handleFileInputChange = (e) => {
-              handleFileChange(e, weekKey, reportDate);
-            };
-
-            return (
-              <div key={i} className="bg-white p-4 shadow-md rounded-lg">
-                <div className="flex justify-between items-center">
-                  <div className="font-bold">
-                    {format(reportDate, 'dd.MM.yyyy')}
-                  </div>
-                  <button
-                    onClick={() => handleUploadClick(weekKey)}
-                    className="text-blue-500 hover:underline"
-                  >
-                    {reports[weekKey] ? 'Update' : 'Upload'}
-                  </button>
-                  {/* Versteckter Datei-Input */}
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    style={{ display: 'none' }}
-                    ref={(el) => (fileInputRefs.current[weekKey] = el)}
-                    onChange={handleFileInputChange}
-                  />
-                </div>
-                <div className="mt-2">
-                  {reports[weekKey] ? (
-                    <a
-                      href={reports[weekKey]}
-                      className="text-blue-500 hover:underline"
-                    >
-                      View
-                    </a>
-                  ) : (
-                    <div className="text-gray-500">ausstehend</div>
-                  )}
-                </div>
-              </div>
-            );
-          }
-          return null;
-        })}
-      </div>
-            </div>
+          {/* Jahr-Auswahl */}
+          <div className="flex justify-between mb-4">
+            {[1, 2, 3].map(year => (
+              <button
+                key={year}
+                className="py-2 px-4 rounded flex-grow"
+                style={{
+                  backgroundColor: selectedYear === year ? "var(--color-primary)" : "#e5e7eb",
+                  color: selectedYear === year ? "#fff" : "#000"
+                }}
+                onClick={() => { setSelectedYear(year); setSelectedMonth(0); }}
+              >
+                Jahr {year}
+              </button>
+            ))}
           </div>
+
+          {/* Monats-Auswahl */}
+          <div className="flex justify-between mb-4">
+            {months.map((month, index) => (
+              <button
+                key={month}
+                className="py-2 px-4 rounded flex-grow"
+                style={{
+                  backgroundColor: selectedMonth === index ? "var(--color-accent)" : "#e5e7eb",
+                  color: selectedMonth === index ? "#fff" : "#000"
+                }}
+                onClick={() => setSelectedMonth(index)}
+              >
+                {month}
+              </button>
+            ))}
+          </div>
+
+          {/* Anzeige der Berichtskarten */}
+          <div className="grid grid-cols-3 gap-4">
+            {Array.from({ length: 52 }, (_, i) => {
+              const reportDate = calculateWeekDate(startDates[selectedYear - 1], i + 1);
+              const academicMonthIndex = (getMonth(reportDate) + 4) % 12;
+              if (academicMonthIndex !== selectedMonth) return null;
+              const weekKey = generateWeekKey(reportDate);
+              return (
+                <BerichtshefteCard
+                  key={i}
+                  reportDate={reportDate}
+                  reportUrl={reports[weekKey]}
+                  onUploadClick={() => {
+                    if (fileInputRefs.current[weekKey]) {
+                      fileInputRefs.current[weekKey].click();
+                    }
+                  }}
+                  fileInputRef={el => fileInputRefs.current[weekKey] = el}
+                  onFileChange={(e) => handleFileChange(e, weekKey, reportDate)}
+                />
+              );
+            })}
+          </div>
+
+          {/* Anzeige, wenn gerade hochgeladen wird */}
+          {uploading && <div className="mt-4 text-center">Upload läuft...</div>}
         </div>
       </main>
+
+      {/* PDF-Vorschau im Confirmation-Modus */}
+      {showPreview && selectedPdfUrl && (
+        <PdfPreview
+          pdfUrl={selectedPdfUrl}
+          mode="confirmation"
+          onConfirm={handleConfirmUpload}
+          onCancel={handleCancelUpload}
+        />
+      )}
     </div>
   );
 };
 
-export default WeeklyReports;
+export default Berichtshefte;

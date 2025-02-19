@@ -5,7 +5,7 @@ import { useAuthContext } from '../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuthContext();
-  console.log('ProtectedRoute: user', user);
+  //console.log('ProtectedRoute: user', user);
   
   if (!user) {
     console.log('Redirecting to login');
