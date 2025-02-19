@@ -85,7 +85,7 @@ function DrawerAppBar() {
           {/* Logout-Button */}
           {user ? (
             <Button
-              sx={{ color: "text.primary" }}
+              sx={{ color: "#fff", marginRight: "60px;"}}
               onClick={handleLogout}
               startIcon={<LogoutIcon />}
             >

@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vorlagen",
+  "info": {
+    "singularName": "vorlage",
+    "pluralName": "vorlagen",
+    "displayName": "Vorlage",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pdf": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "name": {
+      "type": "string"
+    }
+  }
+}

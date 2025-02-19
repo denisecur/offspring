@@ -666,6 +666,38 @@ export interface ApiRolleRolle extends Schema.CollectionType {
   };
 }
 
+export interface ApiVorlageVorlage extends Schema.CollectionType {
+  collectionName: 'vorlagen';
+  info: {
+    description: '';
+    displayName: 'Vorlage';
+    pluralName: 'vorlagen';
+    singularName: 'vorlage';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::vorlage.vorlage',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    name: Attribute.String;
+    pdf: Attribute.Media<'files'>;
+    publishedAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::vorlage.vorlage',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease extends Schema.CollectionType {
   collectionName: 'strapi_releases';
   info: {
@@ -1119,6 +1151,7 @@ declare module '@strapi/types' {
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::rolle.rolle': ApiRolleRolle;
+      'api::vorlage.vorlage': ApiVorlageVorlage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
