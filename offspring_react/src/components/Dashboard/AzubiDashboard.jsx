@@ -6,10 +6,8 @@ import ausbildung from "../../assets/ausbildung_card_icon.svg";
 
 const AzubiDashboard = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 text-white bg-[var(--bg-default)]">
-      {/* Beschreibung in einer "Terminal"-Box  */}
-      <div
-        className="mt-10 border-4 rounded-lg p-6 text-center shadow-[0_0_15px_#05d9e8] border-[var(--color-secondary)] bg-[var(--color-neutral)]"
+    <div className="min-h-screen p-6" style={{ backgroundColor: "var(--color-base-100)" }}>      <div
+        className="m-3 border-4 rounded-lg p-6 text-center shadow-[0_0_15px_#05d9e8] border-[var(--color-secondary)] bg-[var(--color-neutral)]"
       >
         <p className="text-base md:text-base lg:text-xl leading-relaxed text-[var(--color-secondary)]">
           Verwalte deine schulischen Leistungen und Berichtshefte bequem an einem
@@ -18,10 +16,12 @@ const AzubiDashboard = () => {
           dem richtigen Weg zu bleiben.
         </p>
       </div>
+      <div>
+      </div>
 
       {/* "Terminal"-Rahmen für Feature Cards */}
       <div
-        className="mt-10 border-4 rounded-lg p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 shadow-[0_0_15px_#05d9e8] border-[var(--color-secondary)] bg-[var(--color-neutral)]"
+        className="mt-10 m-3 border-4 rounded-lg p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 shadow-[0_0_15px_#05d9e8] border-[var(--color-secondary)] bg-[var(--color-neutral)]"
       > 
         <FeatureCard
           title="Berichtshefte"
@@ -42,7 +42,7 @@ const AzubiDashboard = () => {
           scale={0.8}
         />
       </div>
-    </div>
+      </div>
   );
 };
 
