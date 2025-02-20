@@ -37,7 +37,6 @@ const GradeChart = ({ grades, faecher }) => {
       return {
         datum: new Date(grade.datum).toLocaleDateString(),
         note,
-        color: note <= 2 ? "#4CAF50" : note >= 5 ? "#F44336" : "#8884d8", // Grüne, rote oder standard Farbe
       };
     })
     .sort((a, b) => new Date(a.datum) - new Date(b.datum));
@@ -97,26 +96,12 @@ const GradeChart = ({ grades, faecher }) => {
           <Area
             type="monotone"
             dataKey="note"
-            stroke="#4CAF50"
-            fill="#4CAF50"
             fillOpacity={0.3}
             strokeWidth={2}
             activeDot={{ r: 8 }}
             stackId="1"
-            hide={chartData.every((d) => d.note > 2)} // Nur anzeigen, wenn Noten <= 2 vorhanden sind
           />
-          {/* Roter Bereich für Noten 5-6 */}
-          <Area
-            type="monotone"
-            dataKey="note"
-            stroke="#F44336"
-            fill="#F44336"
-            fillOpacity={0.3}
-            strokeWidth={2}
-            activeDot={{ r: 8 }}
-            stackId="2"
-            hide={chartData.every((d) => d.note < 5)} // Nur anzeigen, wenn Noten >= 5 vorhanden sind
-          />
+        
           {/* Standard-Linie für den Rest */}
           <Line
             type="monotone"
