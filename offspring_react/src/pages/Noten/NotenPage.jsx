@@ -1,6 +1,5 @@
 import React from "react";
 import Dashboard from "./Dashboard/Dashboard";
-import ColorPalette from "./ColorPalette";
 
 const NotenPage = () => {
   return (

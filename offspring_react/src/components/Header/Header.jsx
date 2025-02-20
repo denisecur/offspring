@@ -12,7 +12,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import GridViewIcon from "@mui/icons-material/GridView";
 import LogoutIcon from "@mui/icons-material/Logout";
-import OFFSPRING from "../../../public/offspring_gelb.svg";
+import OFFSPRING from "../../assets/offspring_pink.svg"
 
 // Navigationselemente für Azubi und Chef
 const navItemsAzubi = [
@@ -22,7 +22,7 @@ const navItemsAzubi = [
 ];
 
 const navItemsChef = [
-  { name: "Dashboard C", path: "/chef-dashboard", icon: <GridViewIcon /> },
+  { name: "Dashboard", path: "/chef-dashboard", icon: <GridViewIcon /> },
 ];
 
 function DrawerAppBar() {

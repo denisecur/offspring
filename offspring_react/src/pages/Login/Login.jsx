@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
 import { API } from "../../constant";
 import { setToken } from "../../helpers";
-import OFFSPRING from "../../../public/offspring_pink.svg";
+import OFFSPRING from "../../assets/offspring_pink.svg";
 
 const Login = () => {
   // Wir entfernen die Nutzung des ThemeContext und erzwingen "basicLight"
