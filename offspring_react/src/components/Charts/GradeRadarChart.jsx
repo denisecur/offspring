@@ -35,7 +35,7 @@ import {
     });
   
     return (
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="50%" height={400}>
         <RadarChart data={data}>
           <PolarGrid />
           <PolarAngleAxis dataKey="subject" />

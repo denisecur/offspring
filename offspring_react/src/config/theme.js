@@ -27,6 +27,7 @@ export const themes = {
     text: "#ffffff",
   },
   basicLight: {
+    main: "#007bff",
     primary: "#1B2025",//"#007bff",
     secondary: "#151F30",// 
     accent: "#17a2b8",

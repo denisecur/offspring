@@ -56,8 +56,6 @@ const GradeTableWithCharts = ({ grades }) => {
       return {
         fach: fachData.fach,
         averageGrade,
-        latestGrade,
-        numberOfGrades: fachData.grades.length,
         grades: fachData.grades,
       };
     });
@@ -84,24 +82,6 @@ const GradeTableWithCharts = ({ grades }) => {
           else colorClass = 'text-[var(--color-text)]';
           return <span className={`font-bold ${colorClass}`}>{value}</span>;
         },
-      },
-      {
-        accessorKey: 'latestGrade',
-        header: 'Letzte Note',
-        enableColumnFilter: false,
-        Cell: ({ cell }) => {
-          const value = parseFloat(cell.getValue());
-          let colorClass = '';
-          if (value <= 1.5) colorClass = 'text-[var(--color-success)]';
-          else if (value >= 4) colorClass = 'text-[var(--color-error)]';
-          else colorClass = 'text-[var(--color-text)]';
-          return <span className={colorClass}>{value}</span>;
-        },
-      },
-      {
-        accessorKey: 'numberOfGrades',
-        header: 'Anzahl Noten',
-        enableColumnFilter: false,
       },
     ],
     []
@@ -163,13 +143,10 @@ const GradeTableWithCharts = ({ grades }) => {
         };
 
         return (
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="h6">Notenverlauf für {fachData.fach}</Typography>
-            {/* Ersetze inline style für Höhe mit Tailwind */}
-            <div className="h-[300px]">
-              <Line data={chartData} options={chartOptions} />
-            </div>
-          </Box>
+          <div style={{ height: '237x', width: '666px'}}>
+  <Line data={chartData} options={chartOptions} />
+</div>
+
         );
       }}
       muiTableBodyRowProps={{
