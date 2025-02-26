@@ -16,6 +16,8 @@ import {Grid} from "@mui/material";
 import LineGraph from "./components/Dashboard/LineGraph";
 import Rahmen1 from "./components/Rahmen1";
 import CompetitiveComparison from "./pages/Noten/Dashboard/CompetitiveComparison";
+import CompetitiveComparisonBarChart from "./pages/Noten/Dashboard/CompetitiveComparisonBarChart";
+import CompetitiveOverview from "./pages/Noten/Dashboard/CompetitiveOverview";
 
 const AzubiMonitor = ({ azubi }) => {
   const [singleModeTabs, setSingleModeTabs] = useState("leistungsstand");
@@ -149,7 +151,15 @@ const AzubiMonitor = ({ azubi }) => {
             <CompetitiveComparison allGrades={grades} faecher={faecher} />
           </Paper>
         );
-      case "berichtshefte":
+        case "competitiveBar":
+          return (
+            
+              <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
+                <CompetitiveComparisonBarChart allGrades={grades} faecher={faecher} />
+              </Paper>
+            
+          );
+        case "berichtshefte":
         return (
           <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
             <Typography variant="h6" gutterBottom>
@@ -160,6 +170,12 @@ const AzubiMonitor = ({ azubi }) => {
             </Typography>
           </Paper>
         );
+        case "competitiveOverview":
+  return (
+    <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
+      <CompetitiveOverview allGrades={grades} faecher={faecher} />
+    </Paper>
+  );
       default:
         return null;
     }
@@ -195,10 +211,16 @@ const AzubiMonitor = ({ azubi }) => {
           Leistungsstand
         </ToggleButton>
         <ToggleButton value="competitive" aria-label="competitive">
-          Competitive
+          Competitive I
+        </ToggleButton>
+        <ToggleButton value="competitiveBar" aria-label="competitiveBar">
+          Competitive II
         </ToggleButton>
         <ToggleButton value="berichtshefte" aria-label="berichtshefte">
           Berichtshefte
+        </ToggleButton>
+        <ToggleButton value="competitiveOverview" aria-label="competitiveOverview">
+        Competitive III
         </ToggleButton>
       </ToggleButtonGroup>
   
