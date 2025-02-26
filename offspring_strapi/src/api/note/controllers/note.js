@@ -31,13 +31,12 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
     return note;
   },
 
-  
+  // TODO hier will SL mir noch sagen wie und was
   async create(ctx) {
     const gewichtungMap = {
       "Schulaufgabe": 2,
       "Kurzarbeit": 1.5,
       "Stegreifaufgabe": 1,
-      "Mündliche Leistung": 0.5
     };
   
     const user = ctx.state.user;
