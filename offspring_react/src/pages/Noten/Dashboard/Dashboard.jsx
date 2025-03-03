@@ -64,10 +64,8 @@ const Dashboard = () => {
   if (error) return <ErrorMessage message={error} />;
 
   return (
-    <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Notenübersicht
-      </Typography>
+    <Box>
+   
 
       {/* Button-Navigation */}
       <ButtonGroup variant="contained" sx={{ mb: 3 }}>

@@ -1,22 +1,31 @@
 import React from 'react';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 
 const FeatureCard = ({ title, description, image, scale }) => {
   return (
-    <Card className='flex flex-col items-center justify-between text-center rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105'>
-      <div className="flex-shrink-0 h-48 w-full overflow-hidden flex justify-center items-center">
-      <img
-  src={image}
-  alt={title}
-  className={`object-contain h-full w-full transform scale-[${scale}]`}
-/>
+    <Card sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
+      {/* Linke Box für das Bild */}
+      <Box
+        sx={{
+          width: '33%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <img
+          src={image}
+          alt={title}
+          style={{ transform: `scale(${scale ?? 1})`, height: "200px" }}
+        />
+      </Box>
 
-      </div>
-      <CardContent className="flex flex-col items-center text-center mt-4 flex-grow">
-        <Typography variant="h7" component="div" className="text-xl font-bold">
+      {/* Rechte Box für Text */}
+      <CardContent sx={{ width: '67%' }}>
+        <Typography variant="h6" gutterBottom>
           {title}
         </Typography>
-        <Typography variant="body2" color="textSecondary" className="mt-2">
+        <Typography variant="body2" color="text.secondary">
           {description}
         </Typography>
       </CardContent>

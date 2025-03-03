@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Paper, Card, CardContent, Typography, Box, Button } from '@mui/material';
 import CompetitiveComparisonBarChart from './CompetitiveComparisonBarChart';
 // Entferne den Import von Leaderboard, da wir unsere eigene lokale Komponente verwenden
-// import Leaderboard from './Leaderboard';
+import Leaderboard from './Leaderboard';
 
 // Platzhalter-Komponente für Leaderboard / Rangliste
 const LeaderboardPlaceholder = ({ allGrades, faecher }) => (
@@ -13,7 +13,7 @@ const LeaderboardPlaceholder = ({ allGrades, faecher }) => (
         [Hier erscheint eine Rangliste der Top-Performer pro Fach oder insgesamt.]
       </Typography>
       {/* Hier könntest du später die tatsächliche Leaderboard-Komponente rendern */}
-      {/* <Leaderboard allGrades={allGrades} faecher={faecher} /> */}
+      { <Leaderboard allGrades={allGrades} faecher={faecher} /> }
     </CardContent>
   </Card>
 );

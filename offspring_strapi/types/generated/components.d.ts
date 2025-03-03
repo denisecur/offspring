@@ -47,12 +47,7 @@ export interface AusbildungNoten extends Schema.Component {
   };
   attributes: {
     art: Attribute.Enumeration<
-      [
-        'Schulaufgabe',
-        'Kurzarbeit',
-        'Stegreifaufgabe',
-        'M\u00FCndliche Leistung'
-      ]
+      ['Schulaufgabe', 'Kurzarbeit', 'Stegreifaufgabe']
     > &
       Attribute.Required;
     ausbildungsfach: Attribute.Relation<

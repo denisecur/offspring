@@ -36,7 +36,7 @@ const GradeOverview = ({ grades, faecher }) => {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "primary.main" }}>
+      <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold", color: "primary.main" }}>
         Notenübersicht
       </Typography>
 
@@ -60,10 +60,10 @@ const GradeOverview = ({ grades, faecher }) => {
       {/* Gesamtdurchschnitt */}
       <Card sx={{ mb: 3, backgroundColor: "background.paper" }}>
         <CardContent>
-          <Typography variant="h6" sx={{ color: "text.secondary" }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             Gesamtdurchschnitt {selectedYear && `(${selectedYear})`}
           </Typography>
-          <Typography variant="h4" sx={{ fontWeight: "bold", color: "primary.main" }}>
+          <Typography variant="body" sx={{ fontWeight: "bold", color: "primary.main" }}>
             {calculateAverage(filteredGrades)}
           </Typography>
         </CardContent>
@@ -79,10 +79,11 @@ const GradeOverview = ({ grades, faecher }) => {
             <Grid item xs={12} sm={6} md={4} key={fach.id}>
               <Card sx={{ height: "100%", backgroundColor: "background.paper" }}>
                 <CardContent>
-                  <Typography variant="h6" sx={{ color: "text.secondary" }}>
+                  
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     {fach.name}
                   </Typography>
-                  <Typography variant="h5" sx={{ fontWeight: "bold", color: "primary.main" }}>
+                  <Typography variant="body" sx={{ fontWeight: "bold", color: "primary.main" }}>
                     {fachAverage}
                   </Typography>
                 </CardContent>
