@@ -1,6 +1,25 @@
 import React, { useState } from "react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ReferenceLine } from "recharts";
-import { Typography, Paper, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Area,
+  AreaChart,
+  ReferenceLine,
+} from "recharts";
+import {
+  Typography,
+  Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+} from "@mui/material";
 
 const GradeChart = ({ grades, faecher }) => {
   const [selectedFach, setSelectedFach] = useState(faecher[0]?.id || "");
@@ -20,10 +39,16 @@ const GradeChart = ({ grades, faecher }) => {
     .filter((grade) => !selectedYear || getSchoolYear(grade.datum) === selectedYear);
 
   // Berechne den Gesamtdurchschnitt des Faches (über alle Jahre)
-  const calculateAverage = (grades) => {
-    if (grades.length === 0) return 0;
-    const sum = grades.reduce((total, grade) => total + parseFloat(grade.wert) * grade.gewichtung, 0);
-    const totalWeight = grades.reduce((total, grade) => total + parseFloat(grade.gewichtung), 0);
+  const calculateAverage = (gradesArr) => {
+    if (gradesArr.length === 0) return 0;
+    const sum = gradesArr.reduce(
+      (total, grade) => total + parseFloat(grade.wert) * grade.gewichtung,
+      0
+    );
+    const totalWeight = gradesArr.reduce(
+      (total, grade) => total + parseFloat(grade.gewichtung),
+      0
+    );
     return (sum / totalWeight).toFixed(2);
   };
 
@@ -47,52 +72,54 @@ const GradeChart = ({ grades, faecher }) => {
   ].sort();
 
   return (
-    <Paper sx={{ p: 3, mb: 4, backgroundColor: "background.paper" }}>
-      <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold", color: "primary.main" }}>
-        Notenverlauf
-      </Typography>
+    <Paper sx={{ p: 4, mb: 4, backgroundColor: "background.paper" }}>
+      {/* Grid-Container für Fach- und Schuljahr-Auswahl */}
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        {/* Fach-Auswahl */}
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth variant="outlined" size="small">
+            <InputLabel>Fach auswählen</InputLabel>
+            <Select
+              value={selectedFach}
+              onChange={(e) => setSelectedFach(e.target.value)}
+              label="Fach auswählen"
+            >
+              {faecher.map((fach) => (
+                <MenuItem key={fach.id} value={fach.id}>
+                  {fach.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
 
-      {/* Fach-Auswahl */}
-      <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel>Fach auswählen</InputLabel>
-        <Select
-          value={selectedFach}
-          onChange={(e) => setSelectedFach(e.target.value)}
-          label="Fach auswählen"
-        >
-          {faecher.map((fach) => (
-            <MenuItem key={fach.id} value={fach.id}>
-              {fach.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      {/* Schuljahr-Auswahl */}
-      <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel>Schuljahr auswählen</InputLabel>
-        <Select
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(e.target.value)}
-          label="Schuljahr auswählen"
-        >
-          <MenuItem value="">Alle Jahre</MenuItem>
-          {schoolYears.map((year) => (
-            <MenuItem key={year} value={year}>
-              {year}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        {/* Schuljahr-Auswahl */}
+        <Grid item xs={12} sm={6}>
+          <FormControl fullWidth variant="outlined" size="small">
+            <InputLabel>Schuljahr auswählen</InputLabel>
+            <Select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              label="Schuljahr auswählen"
+            >
+              <MenuItem value="">Alle Jahre</MenuItem>
+              {schoolYears.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
 
       {/* Liniendiagramm mit farbigem Hintergrund und Durchschnittslinie */}
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={250}>
         <AreaChart data={chartData}>
           <XAxis dataKey="datum" />
           <YAxis domain={[1, 6]} />
           <Tooltip />
           <Legend />
-          {/* Grüner Bereich für Noten 1-2 */}
           <Area
             type="monotone"
             dataKey="note"
@@ -101,16 +128,13 @@ const GradeChart = ({ grades, faecher }) => {
             activeDot={{ r: 8 }}
             stackId="1"
           />
-        
-          {/* Standard-Linie für den Rest */}
           <Line
             type="monotone"
             dataKey="note"
             stroke="#8884d8"
             strokeWidth={2}
-            dot={false}
+            dot={true}
           />
-          {/* Durchschnittslinie */}
           <ReferenceLine
             y={fachAverage}
             stroke="#FFC107"

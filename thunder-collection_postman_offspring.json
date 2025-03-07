@@ -1,0 +1,624 @@
+{
+    "info": {
+        "_postman_id": "5fdf91cc-13ee-46c2-9659-5ba4d0e4ce98",
+        "name": "offspring",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "role:Auszubildende",
+            "item": [
+                {
+                    "name": "auth",
+                    "item": [
+                        {
+                            "name": "user auth",
+                            "request": {
+                                "method": "POST",
+                                "url": {
+                                    "raw": "http://localhost:1337/api/auth/local",
+                                    "path": [
+                                        "api",
+                                        "auth",
+                                        "local"
+                                    ],
+                                    "protocol": "http",
+                                    "host": [
+                                        "localhost"
+                                    ],
+                                    "port": "1337"
+                                },
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "identifier",
+                                            "value": "{{testmail}}",
+                                            "type": "default"
+                                        },
+                                        {
+                                            "key": "password",
+                                            "value": "{{testpw}}",
+                                            "type": "default"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "noten",
+                    "item": [
+                        {
+                            "name": "populate noten",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/users/me?populate=ausbildung.noten,ausbildung.noten.ausbildungsfach",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": "ausbildung.noten,ausbildung.noten.ausbildungsfach"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "users",
+                                        "me"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "noten mit lernfelder",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/users/me?populate=ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": "ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "users",
+                                        "me"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "enum ausbildungsfaecher ",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/ausbildungsfaecher?populate=lernfelder",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": "lernfelder"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "ausbildungsfaecher"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "enum lernfelder (andersrum geht es irgendwie nicht)",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/lernfelder?populate=ausbildungsfach",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": "ausbildungsfach"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "lernfelder"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "enum ausbildungsfaecher  Copy Copy",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/ausbildungsfaecher?populate[lernfelder][populate]=*",
+                                    "query": [
+                                        {
+                                            "key": "populate[lernfelder][populate]",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "ausbildungsfaecher"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "fachbyid",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/users/me?populate?filters[ausbildungsfach][id][$eq]=$1`;",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": ""
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "users",
+                                        "me"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "berichtshefte",
+                    "item": [
+                        {
+                            "name": "get berichtshefte mit user",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/users/me?populate=rollen, rollen.permissions",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": "rollen, rollen.permissions"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "users",
+                                        "me"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "berichtshefte participant",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/az-berichtshefte?populate=*",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "az-berichtshefte"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [
+                                        {
+                                            "key": "identifier",
+                                            "value": "{{testmail}}",
+                                            "type": "default"
+                                        },
+                                        {
+                                            "key": "password",
+                                            "value": "{{testpw}}",
+                                            "type": "default"
+                                        }
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "user",
+                    "item": [
+                        {
+                            "name": "user me",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/users/me?populate=*",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": "*"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "users",
+                                        "me"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{bearer_auth_customer}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "rollen",
+                    "item": [
+                        {
+                            "name": "user und rolle",
+                            "request": {
+                                "method": "GET",
+                                "url": {
+                                    "raw": "{{API}}/users/me?populate=ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld",
+                                    "query": [
+                                        {
+                                            "key": "populate",
+                                            "value": "ausbildung.noten,ausbildung.noten.ausbildungsfach,ausbildung.noten.lernfeld"
+                                        }
+                                    ],
+                                    "variable": [],
+                                    "path": [
+                                        "users",
+                                        "me"
+                                    ],
+                                    "host": [
+                                        "{{api}}"
+                                    ]
+                                },
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{jwt}}",
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Berichtshefte",
+            "item": [
+                {
+                    "name": "getAll",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{API}}/berichtshefte",
+                            "path": [
+                                "berichtshefte"
+                            ],
+                            "host": [
+                                "{{api}}"
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{bearer_auth_customer}}"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "noten",
+            "item": [
+                {
+                    "name": "noten azubi",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:1337/api/noten?",
+                            "path": [
+                                "api",
+                                "noten"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "1337"
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{bearer_auth_customer}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Note",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{API}}/noten?populate=*",
+                            "query": [
+                                {
+                                    "key": "populate",
+                                    "value": "*"
+                                }
+                            ],
+                            "variable": [],
+                            "path": [
+                                "noten"
+                            ],
+                            "host": [
+                                "{{api}}"
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{bearer_auth_customer}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n  \"data\": \n    {\n  \n        \"datum\": \"2022-09-22\",\n        \"wert\": 1,\n        \"art\": \"Schulaufgabe\",\n        \"gewichtung\": 2,\n        \"ausbildungsfach\": {\n            \"id\": 3\n        },\n          \"owner\": 1\n    \n    }\n    \n  \n}\n"
+                        }
+                    }
+                },
+                {
+                    "name": "noten chef",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{API}}/noten",
+                            "path": [
+                                "noten"
+                            ],
+                            "host": [
+                                "{{api}}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{bearer_auth_chef}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "facher",
+            "item": [
+                {
+                    "name": "GetFaecher",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{API}}/ausbildungen?populate=ausbildungsfaches",
+                            "query": [
+                                {
+                                    "key": "populate",
+                                    "value": "ausbildungsfaches"
+                                }
+                            ],
+                            "variable": [],
+                            "path": [
+                                "ausbildungen"
+                            ],
+                            "host": [
+                                "{{api}}"
+                            ]
+                        },
+                        "header": [
+                            {
+                                "key": "Bearer",
+                                "value": "{{bearer_auth_customer}}",
+                                "disabled": true
+                            }
+                        ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{bearer_auth_customer}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ausbildung",
+            "item": [
+                {
+                    "name": "get",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{API}}/users/me?populate=ausbildung, Rollen.permissions",
+                            "query": [
+                                {
+                                    "key": "populate",
+                                    "value": "ausbildung, Rollen.permissions"
+                                }
+                            ],
+                            "variable": [],
+                            "path": [
+                                "users",
+                                "me"
+                            ],
+                            "host": [
+                                "{{api}}"
+                            ]
+                        },
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{bearer_auth_customer}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

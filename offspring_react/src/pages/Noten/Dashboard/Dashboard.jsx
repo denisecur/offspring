@@ -1,20 +1,25 @@
 // src/components/DeinPfad/Dashboard.js
 import React, { useState, useEffect } from "react";
 import {
-  fetchUserGrades,
-  addUserGrade
-} from "../../../api_services/noten/notenService";
+  Box,
+  Button,
+  ButtonGroup,
+} from "@mui/material";
+
+import { fetchUserGrades, addUserGrade } from "../../../api_services/noten/notenService";
 import { useAuthContext } from "../../../context/AuthContext";
 import { fetchAusbildungsDetails } from "../../../api_services/noten/ausbildungsfaecherService";
-import { Box, Button, ButtonGroup, Typography } from "@mui/material";
-import GradeOverview from "./GradeOverview";
-import GradeChart from "./GradeChart";
-import GradeList from "./GradeList";
-import AddGradeForm from "../AddGradeForm";
-import GradeRadarChart from "./../../../components/Charts/GradeRadarChart"
+
+// Eigene Komponenten
+import NotenStand from "./NotenStand";
+import NotenVerwaltung from "./NotenVerwaltung";
 import Loading from "../LoadingMessage";
 import ErrorMessage from "../ErrorMessage";
 
+/**
+ * Dashboard: Lädt Noten & Fächer aus dem Backend und
+ * stellt unterschiedliche Views zur Verfügung
+ */
 const Dashboard = () => {
   const { user } = useAuthContext();
   const [grades, setGrades] = useState([]);
@@ -22,17 +27,29 @@ const Dashboard = () => {
   const [leistungsnachweise, setLeistungsnachweise] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activeView, setActiveView] = useState("overview");
+  const [activeView, setActiveView] = useState("notenstand");
 
+  // Zentraler Schuljahr-Filter auf Dashboard-Ebene
+  const [selectedYear, setSelectedYear] = useState("");
+
+  // Hilfsfunktion: Schuljahr bestimmen (z. B. "2023/2024")
+  const getSchoolYear = (date) => {
+    const currentDate = new Date(date);
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    return month >= 8 ? `${year}/${year + 1}` : `${year - 1}/${year}`;
+  };
+
+  // Daten laden
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
-        // Noten laden
+        // 1) Noten laden
         const gradesResponse = await fetchUserGrades();
         setGrades(gradesResponse.data);
 
-        // Ausbildungsdetails (Fächer, Leistungsnachweise)
+        // 2) Ausbildungsdetails (Fächer, Leistungsnachweise)
         const { faecher, leistungsnachweise } = await fetchAusbildungsDetails(
           user?.ausbildung?.name
         );
@@ -47,12 +64,17 @@ const Dashboard = () => {
     loadData();
   }, [user]);
 
-  // Neue Note hinzufügen
+  // Dynamisch verfügbare Schuljahre aus den Noten extrahieren
+  const allYears = [
+    ...new Set(grades.map((g) => getSchoolYear(g.datum))),
+  ].sort();
+
+  // Neue Note hinzufügen (wird in "AddGradeForm" genutzt)
   const handleAddGrade = async (newGrade) => {
     try {
       const response = await addUserGrade(newGrade);
       if (response && response.data) {
-        // Lokal anfügen, ohne neu zu laden
+        // Lokal anfügen, ohne erneut zu laden
         setGrades((prevGrades) => [...prevGrades, response.data]);
       }
     } catch (err) {
@@ -60,68 +82,44 @@ const Dashboard = () => {
     }
   };
 
+  // Loading / Error
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
 
   return (
-    <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Notenübersicht
-      </Typography>
-
+    <Box sx={{ p: 2 }}>
       {/* Button-Navigation */}
-      <ButtonGroup variant="contained" sx={{ mb: 3 }}>
+      <ButtonGroup variant="contained" sx={{ ml: 2,
+         mb: 3 }}>
         <Button
-          onClick={() => setActiveView("overview")}
-          disabled={activeView === "overview"}
+          onClick={() => setActiveView("notenstand")}
+          disabled={activeView === "notenstand"}
         >
-          Übersicht
+          Notenstand
         </Button>
         <Button
-          onClick={() => setActiveView("chart")}
-          disabled={activeView === "chart"}
+          onClick={() => setActiveView("notenverwaltung")}
+          disabled={activeView === "notenverwaltung"}
         >
-          Liniendiagramm
-        </Button>
-        <Button
-          onClick={() => setActiveView("radar")}
-          disabled={activeView === "radar"}
-        >
-          Radar
-        </Button>
-        <Button
-          onClick={() => setActiveView("list")}
-          disabled={activeView === "list"}
-        >
-          Notenliste
-        </Button>
-        <Button
-          onClick={() => setActiveView("add")}
-          disabled={activeView === "add"}
-        >
-          Note hinzufügen
+          NotenVerwaltung
         </Button>
       </ButtonGroup>
 
-      {/* Inhalte je nach activeView */}
-      {activeView === "overview" && <GradeOverview grades={grades} faecher={faecher} />}
-      {activeView === "chart" && <GradeChart grades={grades} faecher={faecher} />}
-      {activeView === "radar" && (
-        <GradeRadarChart grades={grades} faecher={faecher} />
-      )}
-      {activeView === "list" && (
-        <GradeList
+      {/* View-Wechsel */}
+      {activeView === "notenstand" && (
+        <NotenStand
           grades={grades}
-          setGrades={setGrades} // <- sehr wichtig zum lokalen Aktualisieren
           faecher={faecher}
-          leistungsnachweise={leistungsnachweise}
+          selectedYear={selectedYear}
         />
       )}
-      {activeView === "add" && (
-        <AddGradeForm
+      {activeView === "notenverwaltung" && (
+        <NotenVerwaltung
+          grades={grades}
+          setGrades={setGrades}
           faecher={faecher}
           leistungsnachweise={leistungsnachweise}
-          onAddGrade={handleAddGrade}
+          onAddGrade={handleAddGrade} // Übergabe der Funktion zum Hinzufügen
         />
       )}
     </Box>

@@ -27,9 +27,7 @@ const ListView = ({ selectedFach, filteredGrades }) => {
     let newGewichtung = 1;
     if (value === 'Schulaufgabe') {
       newGewichtung = 2;
-    } else if (value === 'Stegreifaufgabe' || value === 'Muendliche Leistung') {
-      newGewichtung = 0.5;
-    }
+    } 
     setGewichtung(newGewichtung);
   };
 
@@ -51,9 +49,10 @@ const ListView = ({ selectedFach, filteredGrades }) => {
       setDatum('');
       setWert('');
       setArt('');
-      setGewichtung(1);
+      setGewichtung(1);  
       setLernfeld(selectedFach?.lernfelder[0]?.name || '');
       setIsModalOpen(false);
+
     } catch (error) {
       alert('Fehler beim Hinzufügen der Note');
     }
@@ -145,10 +144,7 @@ const ListView = ({ selectedFach, filteredGrades }) => {
                   <option value="">Bitte auswählen</option>
                   <option value="Schulaufgabe">Schulaufgabe</option>
                   <option value="Kurzarbeit">Kurzarbeit</option>
-                  <option value="Stegreifaufgabe">Stegreifaufgabe</option>
                   <option value="Muendliche Leistung">Muendliche Leistung</option>
-                  <option value="Projekt">Projekt</option>
-                  <option value="Praesentation">Praesentation</option>
                 </select>
               </div>
               {/* Gewichtung */}

@@ -50,8 +50,8 @@ export interface AusbildungNoten extends Schema.Component {
       [
         'Schulaufgabe',
         'Kurzarbeit',
-        'Stegreifaufgabe',
-        'M\u00FCndliche Leistung'
+        'M\u00FCndliche Leistung',
+        'Stegreifaufgabe'
       ]
     > &
       Attribute.Required;

@@ -1,12 +1,26 @@
-// AzubiListe.jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Paper,
+} from "@mui/material";
 
 const AzubiListe = ({ azubis, onSelectAzubi }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [fachrichtungFilter, setFachrichtungFilter] = useState([]);
 
   // Beispielhafte Fachrichtungen
-  const fachrichtungen = ['Büromanagement', 'Versicherungen und Finanzanlagen']; //TODO über api call: ausbildung
+  const fachrichtungen = [
+    "Büromanagement",
+    "Versicherungen und Finanzanlagen",
+  ]; // TODO: Evtl. über API laden
 
   // Handler für Fachrichtungsfilter
   const handleFachrichtungToggle = (fachrichtung) => {
@@ -17,11 +31,10 @@ const AzubiListe = ({ azubis, onSelectAzubi }) => {
     );
   };
 
-  // Gefilterte und gefilterte Azubi-Liste
+  // Filtere Azubis
   const filteredAzubis = azubis.filter((azubi) => {
-    const fullName = `${azubi.username}`.toLowerCase();
-    const matchesSearch = fullName.includes(searchTerm.toLowerCase());
-
+    const nameLower = (azubi.username || "").toLowerCase();
+    const matchesSearch = nameLower.includes(searchTerm.toLowerCase());
     const matchesFachrichtung =
       fachrichtungFilter.length === 0 ||
       fachrichtungFilter.includes(azubi.fachrichtung);
@@ -30,44 +43,54 @@ const AzubiListe = ({ azubis, onSelectAzubi }) => {
   });
 
   return (
-    <div className="azubi-liste">
-      <h2>Liste aller Auszubildenden</h2>
+    <Paper sx={{ p: 2, height: "100%", overflowY: "auto" }}>
+      <Typography variant="h6" gutterBottom>
+        Liste aller Auszubildenden
+      </Typography>
 
       {/* Suchleiste */}
-      <input
-        type="text"
-        placeholder="Suche nach Name..."
+      <TextField
+        label="Suche nach Name..."
+        variant="outlined"
+        size="small"
+        fullWidth
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{ mb: 2 }}
       />
 
       {/* Fachrichtungsfilter */}
-      <div className="filter">
+      <Box sx={{ display: "flex", flexDirection: "column", mb: 2 }}>
+        <Typography variant="subtitle1">Fachrichtung filtern:</Typography>
         {fachrichtungen.map((fachrichtung) => (
-          <label key={fachrichtung}>
-            <input
-              type="checkbox"
-              checked={fachrichtungFilter.includes(fachrichtung)}
-              onChange={() => handleFachrichtungToggle(fachrichtung)}
-            />
-            {fachrichtung}
-          </label>
+          <FormControlLabel
+            key={fachrichtung}
+            control={
+              <Checkbox
+                checked={fachrichtungFilter.includes(fachrichtung)}
+                onChange={() => handleFachrichtungToggle(fachrichtung)}
+              />
+            }
+            label={fachrichtung}
+          />
         ))}
-      </div>
+      </Box>
 
       {/* Azubi-Liste */}
-      <ul>
+      <List>
         {filteredAzubis.map((azubi) => (
-          <li key={azubi.id} onClick={() => onSelectAzubi(azubi)}>
-     
-            {/* Vor- und Nachname */}
-            <span>{`${azubi.username}`}</span>
-
-        
-          </li>
+          <ListItem
+            key={azubi.id}
+            disablePadding
+            onClick={() => onSelectAzubi(azubi)}
+          >
+            <ListItemButton>
+              <ListItemText primary={azubi.username} />
+            </ListItemButton>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Paper>
   );
 };
 

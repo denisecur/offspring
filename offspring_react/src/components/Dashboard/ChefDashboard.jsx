@@ -1,21 +1,32 @@
-// ChefDashboard.jsx
 import React, { useEffect, useState } from "react";
 import { SplitScreen } from "../Layout/SplitScreen";
 import AzubiListe from "../AzubiListe";
-import AzubiMonitor from "./AzubiMonitor";
+import AzubiMonitor from "../../AzubiMonitor";
 import { fetchAzubis } from "../../api_services/azubis/azubiService";
+
 import {
   ToggleButtonGroup,
   ToggleButton,
   Box,
   Typography,
   Paper,
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+  AppBar,
+  Toolbar,
 } from "@mui/material";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 
 const ChefDashboard = () => {
   const [azubis, setAzubis] = useState([]);
-  const [modeTab, setModeTab] = useState("single"); // Einzelansicht: single oder Alle-Azubis: multi
-  const [selectedAzubi, setSelectedAzubi] = useState(null); // innerhalb Einzelansicht
+  const [modeTab, setModeTab] = useState("single"); // Einzelansicht oder Multi-Ansicht
+  const [selectedAzubi, setSelectedAzubi] = useState(null);
 
   const handleModeTabs = (event, newView) => {
     if (newView !== null) {
@@ -35,16 +46,22 @@ const ChefDashboard = () => {
       case "multi":
         return (
           <SplitScreen leftWeight={1} rightWeight={3}>
-            <Typography variant="body1">
-              Hier wird die Statsliste sein.
-            </Typography>
-            <Typography variant="body1">
-              Hier werden dann die zugehörigen Charts angezeigt.
-            </Typography>
+            <Paper sx={{ p: 2, mr: 2 }}>
+              <Typography variant="h6">Statistik-Liste</Typography>
+              <Typography variant="body1">
+                Hier könnte z.B. eine Übersichtstabelle aller Azubis stehen.
+              </Typography>
+            </Paper>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="h6">Charts</Typography>
+              <Typography variant="body1">
+                Hier könnten die zugehörigen Diagramme eingefügt werden.
+              </Typography>
+            </Paper>
           </SplitScreen>
         );
       default:
-        return <p>Es ist kein Tab ausgewählt.</p>;
+        return <Typography>Es ist kein Tab ausgewählt.</Typography>;
     }
   };
 
@@ -62,26 +79,54 @@ const ChefDashboard = () => {
   }, []);
 
   return (
-    <div>
-      <ToggleButtonGroup
-        value={modeTab}
-        exclusive
-        onChange={handleModeTabs}
-        aria-label="modeTab-Ansichtsauswahl"
-        sx={{ ml: "auto" }}
-      >
-        <ToggleButton value="single" aria-label="single">
-          Single
-        </ToggleButton>
+    <>
+      {/* AppBar / Toolbar – top navigation with a "command center" feel */}
+      <AppBar position="static" sx={{ mb: 2 }}>
+        <Toolbar>
+          <DashboardIcon fontSize="large" sx={{ mr: 1 }} />
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Chef-Dashboard – Kommandozentrale
+          </Typography>
+          {/* Mode Toggle Buttons in the AppBar for quick switching */}
+          <ToggleButtonGroup
+            value={modeTab}
+            exclusive
+            onChange={handleModeTabs}
+            aria-label="modeTab-Ansichtsauswahl"
+            size="small"
+            sx={{ backgroundColor: "white", borderRadius: 2 }}
+          >
+            <ToggleButton value="single" aria-label="Einzelansicht">
+              <FormatListBulletedIcon sx={{ mr: 1 }} />
+              Einzel
+            </ToggleButton>
+            <ToggleButton value="multi" aria-label="Multiansicht">
+              <QueryStatsIcon sx={{ mr: 1 }} />
+              Multi
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Toolbar>
+      </AppBar>
 
-        <ToggleButton value="multi" aria-label="multi">
-          Multi
-        </ToggleButton>
-      </ToggleButtonGroup>
+      <Container maxWidth="lg">
+       
+        {/* Main content: either single or multi view */}
+        <Paper sx={{ p: 2 }}>
+          <Box 
+            display="flex" 
+            justifyContent="space-between" 
+            alignItems="center"
+          >
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              Überblick
+            </Typography>
+          </Box>
 
-      {/* Dynamischer Inhalt basierend auf ausgewähltem Tab */}
-      <Box sx={{ mt: 2 }}>{renderModeTabsContent()}</Box>
-    </div>
+          {/* Dynamischer Inhalt basierend auf ausgewähltem Tab */}
+          <Box sx={{ mt: 2 }}>{renderModeTabsContent()}</Box>
+        </Paper>
+      </Container>
+    </>
   );
 };
 

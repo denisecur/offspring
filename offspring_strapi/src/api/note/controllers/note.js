@@ -36,8 +36,7 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
     const gewichtungMap = {
       "Schulaufgabe": 2,
       "Kurzarbeit": 1.5,
-      "Stegreifaufgabe": 1,
-      "Mündliche Leistung": 0.5
+      "Mündliche Note": 1,
     };
   
     const user = ctx.state.user;

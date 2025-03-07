@@ -18,8 +18,8 @@
       "enum": [
         "Schulaufgabe",
         "Kurzarbeit",
-        "Stegreifaufgabe",
-        "Mündliche Leistung"
+        "Mündliche Leistung",
+        "Stegreifaufgabe"
       ],
       "required": true
     },

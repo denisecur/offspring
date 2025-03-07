@@ -520,12 +520,7 @@ export interface ApiNoteNote extends Schema.CollectionType {
   };
   attributes: {
     art: Attribute.Enumeration<
-      [
-        'Schulaufgabe',
-        'Kurzarbeit',
-        'Stegreifaufgabe',
-        'M\u00FCndliche Leistung'
-      ]
+      ['Schulaufgabe', 'Kurzarbeit', 'Stegreifaufgabe']
     >;
     ausbildungsfach: Attribute.Relation<
       'api::note.note',

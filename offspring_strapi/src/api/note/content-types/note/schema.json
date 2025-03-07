@@ -23,8 +23,7 @@
       "enum": [
         "Schulaufgabe",
         "Kurzarbeit",
-        "Stegreifaufgabe",
-        "Mündliche Leistung"
+        "Stegreifaufgabe"
       ]
     },
     "gewichtung": {
