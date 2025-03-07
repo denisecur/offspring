@@ -19,7 +19,7 @@ const AzubiDashboard = () => {
         minHeight: '100vh',
         // Heller, neutraler Hintergrund
         bgcolor: 'var(--color-base-100)',
-        py: 4,         // Vertikaler Abstand (oben/unten)
+        py: 0,         // Vertikaler Abstand (oben/unten)
         px: 2,         // Kleiner seitlicher Puffer für schmale Screens
       }}
     >

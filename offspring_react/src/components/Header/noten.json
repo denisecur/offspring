@@ -1,0 +1,157 @@
+{
+    "data": [
+      {
+        "id": 2,
+        "datum": "2024-06-18",
+        "wert": 2,
+        "art": "Stegreifaufgabe",
+        "gewichtung": 0.5,
+        "createdAt": "2024-08-17T08:17:19.829Z",
+        "updatedAt": "2024-09-06T06:49:17.595Z",
+        "publishedAt": "2024-08-17T08:17:21.547Z",
+        "owner": {
+          "id": 2,
+          "username": "a.hanne",
+          "email": "azubi.hanne@sdv.ag"
+        },
+        "ausbildungsfach": {
+          "id": 15,
+          "name": "Büromanagementprozesse"
+        }
+      },
+      {
+        "id": 4,
+        "datum": "2024-02-07",
+        "wert": 1,
+        "art": "Kurzarbeit",
+        "gewichtung": 1,
+        "createdAt": "2024-08-17T08:47:37.828Z",
+        "updatedAt": "2024-09-15T09:19:48.750Z",
+        "publishedAt": "2024-08-17T08:47:39.530Z",
+        "owner": {
+          "id": 2,
+          "username": "a.hanne",
+          "email": "azubi.hanne@sdv.ag"
+        },
+        "ausbildungsfach": {
+          "id": 10,
+          "name": "Englisch"
+        }
+      },
+      {
+        "id": 5,
+        "datum": "2024-08-12",
+        "wert": 1,
+        "art": "Kurzarbeit",
+        "gewichtung": 1,
+        "createdAt": "2024-08-17T08:47:55.082Z",
+        "updatedAt": "2024-09-15T09:20:02.481Z",
+        "publishedAt": "2024-08-17T08:47:58.686Z",
+        "owner": {
+          "id": 2,
+          "username": "a.hanne",
+          "email": "azubi.hanne@sdv.ag"
+        },
+        "ausbildungsfach": {
+          "id": 15,
+          "name": "Büromanagementprozesse"
+        }
+      },
+      {
+        "id": 6,
+        "datum": "2024-02-20",
+        "wert": 6,
+        "art": "Schulaufgabe",
+        "gewichtung": 2,
+        "createdAt": "2024-08-17T09:07:12.309Z",
+        "updatedAt": "2025-03-02T10:13:30.521Z",
+        "publishedAt": "2024-08-17T09:07:13.684Z",
+        "owner": {
+          "id": 2,
+          "username": "a.hanne",
+          "email": "azubi.hanne@sdv.ag"
+        },
+        "ausbildungsfach": {
+          "id": 6,
+          "name": "Religionslehre"
+        }
+      },
+      {
+        "id": 71,
+        "datum": "2024-09-18",
+        "wert": 3,
+        "art": "Stegreifaufgabe",
+        "gewichtung": 1,
+        "createdAt": "2024-09-15T09:24:27.699Z",
+        "updatedAt": "2024-09-15T11:25:20.138Z",
+        "publishedAt": "2024-09-15T09:24:27.696Z",
+        "owner": {
+          "id": 6,
+          "username": "a.max",
+          "email": "azubi.max@sdv.ag"
+        },
+        "ausbildungsfach": {
+          "id": 15,
+          "name": "Büromanagementprozesse"
+        }
+      },
+      {
+        "id": 72,
+        "datum": "2024-09-13",
+        "wert": 1,
+        "art": "Muendliche Leistung",
+        "gewichtung": 1,
+        "createdAt": "2024-09-15T09:24:43.538Z",
+        "updatedAt": "2024-09-15T11:25:45.885Z",
+        "publishedAt": "2024-09-15T09:24:43.536Z",
+        "owner": {
+          "id": 6,
+          "username": "a.max",
+          "email": "azubi.max@sdv.ag"
+        },
+        "ausbildungsfach": {
+          "id": 10,
+          "name": "Englisch"
+        }
+      },
+      {
+        "id": 74,
+        "datum": "2024-03-19",
+        "wert": 2.33,
+        "art": "Kurzarbeit",
+        "gewichtung": 2,
+        "createdAt": "2024-09-15T09:25:54.349Z",
+        "updatedAt": "2024-09-15T13:40:21.316Z",
+        "publishedAt": "2024-09-15T09:25:54.343Z",
+        "owner": {
+          "id": 2,
+          "username": "a.hanne",
+          "email": "azubi.hanne@sdv.ag"
+        },
+        "ausbildungsfach": {
+          "id": 16,
+          "name": "Geschäftsprozesse und Kommunikation"
+        }
+      },
+      {
+        "id": 75,
+        "datum": "2024-09-15",
+        "wert": 1,
+        "art": "Schulaufgabe",
+        "gewichtung": 2,
+        "createdAt": "2024-09-15T09:29:24.570Z",
+        "updatedAt": "2024-09-15T09:29:24.570Z",
+        "publishedAt": "2024-09-15T09:29:24.565Z",
+        "owner": {
+          "id": 2,
+          "username": "a.hanne",
+          "email": "azubi.hanne@sdv.ag"
+        },
+        "ausbildungsfach": {
+          "id": 7,
+          "name": "Deutsch"
+        }
+      }
+    ]
+  }
+  

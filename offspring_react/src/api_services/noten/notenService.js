@@ -44,8 +44,7 @@ export const addUserGrade = async (gradeData) => {
   });
 
   if (!response.ok) {
-    throw new Error("Fehler beim Hinzufügen der Note");
-  }
+    throw new Error("Fehler beim Hinzufügen der Note" + {gradeData});  }
 
   const data = await response.json();
   return data; // { data: { ... } }

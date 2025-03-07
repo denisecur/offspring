@@ -12,7 +12,9 @@ import SchoolIcon from "@mui/icons-material/School";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import GridViewIcon from "@mui/icons-material/GridView";
 import LogoutIcon from "@mui/icons-material/Logout";
+import UserIcon from '@mui/icons-material/PersonOutline';
 import OFFSPRING from "../../assets/offspring_pink.svg";
+import { Typography } from "@mui/material";
 
 function DrawerAppBar() {
   const theme = useTheme(); // Aktuelles Theme abrufen
@@ -35,9 +37,7 @@ function DrawerAppBar() {
 
   // Logout mit Bestätigungsabfrage
   const handleLogout = () => {
-    if (window.confirm("Möchten Sie sich wirklich ausloggen?")) {
       logout();
-    }
   };
 
   return (
@@ -95,7 +95,28 @@ function DrawerAppBar() {
               </Button>
             ))}
           </Box>
-
+          {/* Username Anzeige */}
+          {user ? (
+            <Typography
+              sx={{
+                color: theme.palette.primary.contrastText,
+                marginRight: theme.spacing(7.5), // Beispiel: theme.spacing(7.5) entspricht ca. 60px
+              }}
+              startIcon={<UserIcon />}
+            >
+              {user.username}
+            </Typography>
+          ) : (
+            !isLoginPage && (
+              <Button
+                sx={{ color: theme.palette.text.primary }}
+                component={Link}
+                to="/login"
+              >
+                Login
+              </Button>
+            )
+          )}
           {/* Logout-Button */}
           {user ? (
             <Button
@@ -121,7 +142,7 @@ function DrawerAppBar() {
           )}
         </Toolbar>
       </AppBar>
-      <Box component="main" sx={{ p: 3, flexGrow: 1 }}>
+      <Box component="main" sx={{ flexGrow: 1 }}>
         <Toolbar /> {/* Platzhalter für den AppBar */}
       </Box>
     </Box>

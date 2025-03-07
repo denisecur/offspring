@@ -10,7 +10,7 @@ import {
   Legend,
 } from "recharts";
 import { getSchoolYear, calculateAverage } from "../../api_services/noten/calculations";
-import Rahmen1 from "../Rahmen1";
+
 const LineGraph = ({ grades }) => {
   if (!grades || grades.length === 0) {
     return <div>Keine Daten vorhanden</div>;
@@ -45,7 +45,7 @@ const LineGraph = ({ grades }) => {
         <LineChart data={data} margin={{ top: 10, right: 40, left: -30, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="schoolYear" />
-          <YAxis domain={[0, 6]} />
+          <YAxis domain={[1, 6]} />
           <Tooltip />
           <Legend />
           <Line type="monotone" dataKey="jahresdurchschnitt" stroke="#8884d8" activeDot={{ r: 8 }} />

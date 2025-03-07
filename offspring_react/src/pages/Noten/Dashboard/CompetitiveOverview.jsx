@@ -9,9 +9,6 @@ const LeaderboardPlaceholder = ({ allGrades, faecher }) => (
   <Card sx={{ mb: 2 }}>
     <CardContent>
       <Typography variant="h6">Leaderboard</Typography>
-      <Typography variant="body2">
-        [Hier erscheint eine Rangliste der Top-Performer pro Fach oder insgesamt.]
-      </Typography>
       {/* Hier könntest du später die tatsächliche Leaderboard-Komponente rendern */}
       { <Leaderboard allGrades={allGrades} faecher={faecher} /> }
     </CardContent>

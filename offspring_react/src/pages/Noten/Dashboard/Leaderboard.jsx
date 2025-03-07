@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,19 +8,19 @@ import {
   Paper,
   Typography,
   Box,
+  ButtonGroup,
+  Button,
 } from "@mui/material";
+import StarPurple500Icon from '@mui/icons-material/StarPurple500';
 import { calculateAverage } from "../../../api_services/noten/calculations";
 
 const Leaderboard = ({ allGrades, faecher }) => {
-  // Erstelle für jedes Fach eine Rangliste
   const leaderboardData = useMemo(() => {
     return faecher.map((subject) => {
-      // Filtere alle Noten für dieses Fach
       const subjectGrades = allGrades.filter(
-        (grade) => grade.ausbildungsfach?.id === subject.id
+        (grade) => grade.ausbildungsfach && grade.ausbildungsfach.id === subject.id
       );
 
-      // Gruppiere die Noten nach Azubi (owner)
       const grouped = {};
       subjectGrades.forEach((grade) => {
         if (grade.owner) {
@@ -31,17 +31,14 @@ const Leaderboard = ({ allGrades, faecher }) => {
         }
       });
 
-      // Berechne pro Azubi den Durchschnitt und die Anzahl Bewertungen
       const ranking = Object.values(grouped)
         .map((item) => {
           const avg = calculateAverage(item.grades);
           const count = item.grades.length;
           return { owner: item.owner, avg: avg === "N/A" ? null : parseFloat(avg), count };
         })
-        .filter((item) => item.avg !== null);
-
-      // Sortiere nach Durchschnittsnote (niedriger = besser)
-      ranking.sort((a, b) => a.avg - b.avg);
+        .filter((item) => item.avg !== null)
+        .sort((a, b) => a.avg - b.avg);
 
       return {
         subject: subject.name,
@@ -50,11 +47,33 @@ const Leaderboard = ({ allGrades, faecher }) => {
     });
   }, [allGrades, faecher]);
 
+  const usernameColors = ["#4caf50", "#2196f3", "#9c27b0", "#e91e63", "#795548", "#3f51b5", "#009688"];
+
+  const [view, setView] = useState("all");
+
+  const getDisplayedRankings = (rankings) => {
+    switch (view) {
+      case "top3":
+        return rankings.slice(0, 3);
+      case "top10":
+        return rankings.slice(0, 10);
+      default:
+        return rankings;
+    }
+  };
+
+  const rankColors = ["gold", "silver", "#cd7f32"];
+
   return (
     <Box sx={{ mt: 2 }}>
       <Typography variant="h6" gutterBottom>
         Leaderboard / Rangliste
       </Typography>
+      <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
+        <Button onClick={() => setView("top3")}>Top 3</Button>
+        <Button onClick={() => setView("top10")}>Top 10</Button>
+        <Button onClick={() => setView("all")}>Alle</Button>
+      </ButtonGroup>
       {leaderboardData.map((subjectData, index) => (
         <Paper key={index} sx={{ mb: 2, p: 2 }}>
           <Typography variant="subtitle1" gutterBottom>
@@ -71,20 +90,24 @@ const Leaderboard = ({ allGrades, faecher }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {subjectData.rankings.map((entry, rankIndex) => (
-                <TableRow key={entry.owner.id}>
-                  <TableCell>
-                    {rankIndex === 0 ? "Spitzenreiter" : `Platz ${rankIndex + 1}`}
-                  </TableCell>
-                  <TableCell>{entry.owner.username}</TableCell>
-                  <TableCell>{entry.avg.toFixed(2)}</TableCell>
-                  <TableCell>{entry.count}</TableCell>
-                  <TableCell>
-                    {/* Hier kannst du später das Verbesserungspotenzial berechnen */}
-                    N/A
-                  </TableCell>
-                </TableRow>
-              ))}
+              {getDisplayedRankings(subjectData.rankings).map((entry, rankIndex) => {
+                const userColor = usernameColors[entry.owner.username.length % usernameColors.length];
+
+                return (
+                  <TableRow key={entry.owner.id}>
+                    <TableCell style={{ fontWeight: rankIndex < 3 ? "bold" : "normal" }}>
+                      {rankIndex < 3 && (
+                        <StarPurple500Icon sx={{ color: rankColors[rankIndex], verticalAlign: "middle" }} />
+                      )}
+                      {rankIndex >= 3 && `Platz ${rankIndex + 1}`}
+                    </TableCell>
+                    <TableCell style={{ color: userColor }}>{entry.owner.username}</TableCell>
+                    <TableCell>{entry.avg.toFixed(2)}</TableCell>
+                    <TableCell>{entry.count}</TableCell>
+                    <TableCell>N/A</TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </Paper>

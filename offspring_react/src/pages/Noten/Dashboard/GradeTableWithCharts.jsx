@@ -77,8 +77,8 @@ const GradeTableWithCharts = ({ grades }) => {
           const value = parseFloat(cell.getValue());
           // Nutze dein Theme: Bei guten Noten success, bei schlechten error; sonst text
           let colorClass = '';
-          if (value <= 1.5) colorClass = 'text-[var(--color-success)]';
-          else if (value >= 4) colorClass = 'text-[var(--color-error)]';
+          if (value < 2.50) colorClass = 'text-[var(--color-success)]';
+          else if (value >= 4.20) colorClass = 'text-[var(--color-error)]';
           else colorClass = 'text-[var(--color-text)]';
           return <span className={`font-bold ${colorClass}`}>{value}</span>;
         },

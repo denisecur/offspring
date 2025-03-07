@@ -144,10 +144,7 @@ const ListView = ({ selectedFach, filteredGrades }) => {
                   <option value="">Bitte auswählen</option>
                   <option value="Schulaufgabe">Schulaufgabe</option>
                   <option value="Kurzarbeit">Kurzarbeit</option>
-                  <option value="Stegreifaufgabe">Stegreifaufgabe</option>
                   <option value="Muendliche Leistung">Muendliche Leistung</option>
-                  <option value="Projekt">Projekt</option>
-                  <option value="Praesentation">Praesentation</option>
                 </select>
               </div>
               {/* Gewichtung */}
