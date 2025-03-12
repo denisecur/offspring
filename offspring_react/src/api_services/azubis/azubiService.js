@@ -15,18 +15,11 @@ export const fetchAzubis = async () => {
           }
     );
 
-    console.log("response" + JSON.stringify(response.data));
-
-    // Daten verarbeiten, um das gewünschte Format zu erhalten
     const azubis = response.data.map((user) => ({
       id: user?.id,
       username: user?.username,
       fachrichtung: user?.ausbildung?.name,
     }));
-    console.log(azubis);
-
-   
-
     return azubis;
   } catch (error) {
     console.error('Fehler beim Abrufen der Azubis:', error);

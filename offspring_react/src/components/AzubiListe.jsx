@@ -43,17 +43,16 @@ const AzubiListe = ({ azubis, onSelectAzubi }) => {
   });
 
   return (
-    <Paper sx={{ p: 2, height: "100%", overflowY: "auto" }}>
-      <Typography variant="h6" gutterBottom>
-        Liste aller Auszubildenden
-      </Typography>
+    <div>
+
+     
 
       {/* Suchleiste */}
       <TextField
         label="Suche nach Name..."
         variant="outlined"
         size="small"
-        fullWidth
+      
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         sx={{ mb: 2 }}
@@ -90,7 +89,7 @@ const AzubiListe = ({ azubis, onSelectAzubi }) => {
           </ListItem>
         ))}
       </List>
-    </Paper>
+    </div>
   );
 };
 

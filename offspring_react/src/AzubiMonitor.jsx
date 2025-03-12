@@ -1,3 +1,4 @@
+// src/AzubiMonitor.jsx
 import React, { useEffect, useState } from "react";
 import {
   ToggleButtonGroup,
@@ -7,51 +8,26 @@ import {
   Paper,
   Container,
 } from "@mui/material";
-import GradeTableWithCharts from "./pages/Noten/Dashboard/GradeTableWithCharts";
+import NotenStand from "./pages/Noten/Dashboard/NotenStand";
+import Berichtshefte from "./pages/Berichtshefte/Berichtshefte";
 import { fetchUserGrades } from "./api_services/noten/notenService";
 import { fetchAusbildungsDetails } from "./api_services/noten/ausbildungsfaecherService";
-import AzubiDetails from "./components/Dashboard/AzubiDetails";
-import AzubiStatsOverview from "./components/Dashboard/AzubiStatsOverview";
-import {Grid} from "@mui/material";
-import LineGraph from "./components/Dashboard/LineGraph";
-import Rahmen1 from "./components/Rahmen1";
-import CompetitiveComparison from "./pages/Noten/Dashboard/CompetitiveComparison";
-import CompetitiveComparisonBarChart from "./pages/Noten/Dashboard/CompetitiveComparisonBarChart";
-import CompetitiveOverview from "./pages/Noten/Dashboard/CompetitiveOverview";
 
 const AzubiMonitor = ({ azubi }) => {
-  const [singleModeTabs, setSingleModeTabs] = useState("leistungsstand");
+  const [selectedTab, setSelectedTab] = useState("noten"); // "noten" oder "berichtshefte"
   const [grades, setGrades] = useState([]);
   const [faecher, setFaecher] = useState([]);
-  const [leistungsnachweise, setLeistungsnachweise] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [filteredGrades, setFilteredGrades] = useState([]);
-  const [filter, setFilter] = useState({ jahr: "", fach: "", art: "" });
-  const [schoolYears, setSchoolYears] = useState([]);
 
-  // Hilfsfunktion zur Berechnung des Schuljahres
-  const getSchoolYear = (date) => {
-    const currentDate = new Date(date);
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    return month >= 8 ? `${year}/${year + 1}` : `${year - 1}/${year}`;
-  };
-
-  // Noten aller Azubis laden
+  // Noten laden (für Leistungsstand)
   useEffect(() => {
+    if (!azubi) return;
     const loadGrades = async () => {
       setLoading(true);
       try {
-        const response = await fetchUserGrades(); // Lädt alle Noten
-        const gradesData = response.data;
-
-        // Berechne die Schuljahre für alle Noten
-        const years = [
-          ...new Set(gradesData.map((grade) => getSchoolYear(grade.datum))),
-        ];
-        setSchoolYears(years);
-        setGrades(gradesData);
+        const response = await fetchUserGrades();
+        setGrades(response.data);
       } catch (err) {
         setError("Fehler beim Abrufen der Noten");
       } finally {
@@ -59,66 +35,21 @@ const AzubiMonitor = ({ azubi }) => {
       }
     };
     loadGrades();
-  }, []);
+  }, [azubi]);
 
-  // Filtere Noten nach ausgewähltem Azubi
+  // Ausbildungsdetails laden (für Noten)
   useEffect(() => {
-    if (!azubi || grades.length === 0) {
-      setFilteredGrades([]);
-      return;
-    }
-    // Filtere die Noten basierend auf owner.id
-    const azubiGrades = grades.filter(
-      (grade) => grade.owner && grade.owner.id === azubi.id
-    );
-
-    // Anwenden weiterer Filter (Jahr, Fach, Art)
-    let filtered = azubiGrades;
-
-    // Filter nach Jahr
-    if (filter.jahr) {
-      filtered = filtered.filter(
-        (grade) => getSchoolYear(grade.datum) === filter.jahr
-      );
-    }
-    // Filter nach Fach
-    if (filter.fach) {
-      filtered = filtered.filter(
-        (grade) =>
-          grade.ausbildungsfach &&
-          grade.ausbildungsfach.id === parseInt(filter.fach)
-      );
-    }
-    // Filter nach Art des Leistungsnachweises
-    if (filter.art) {
-      filtered = filtered.filter((grade) => grade.art === filter.art);
-    }
-
-    setFilteredGrades(filtered);
-  }, [azubi, grades, filter]);
-
-  // Ausbildungsdetails (Fächer, Leistungsnachweise) laden
-  useEffect(() => {
-    const loadAusbildungsDetails = async () => {
-      if (!azubi?.fachrichtung) return; // Warte, bis die Fachrichtung verfügbar ist
+    if (!azubi?.fachrichtung) return;
+    const loadDetails = async () => {
       try {
-        const ausbildungsDetails = await fetchAusbildungsDetails(
-          azubi.fachrichtung
-        );
-        setFaecher(ausbildungsDetails.faecher);
-        setLeistungsnachweise(ausbildungsDetails.leistungsnachweise);
+        const details = await fetchAusbildungsDetails(azubi.fachrichtung);
+        setFaecher(details.faecher);
       } catch (err) {
         setError("Fehler beim Abrufen der Ausbildungsdetails");
       }
     };
-    loadAusbildungsDetails();
+    loadDetails();
   }, [azubi]);
-
-  const handleSingleModeTabs = (event, newView) => {
-    if (newView !== null) {
-      setSingleModeTabs(newView);
-    }
-  };
 
   if (!azubi) {
     return (
@@ -128,105 +59,37 @@ const AzubiMonitor = ({ azubi }) => {
     );
   }
 
-  const renderTabContent = () => {
-    switch (singleModeTabs) {
-      case "leistungsstand":
-        return (
-          <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
-            <Typography gutterBottom sx={{ fontSize: "16px" }}>
-              Leistungsstand
-            </Typography>
-            {loading ? (
-              <Typography>Lädt...</Typography>
-            ) : error ? (
-              <Typography color="error">{error}</Typography>
-            ) : (
-              <GradeTableWithCharts grades={filteredGrades} />
-            )}
-          </Paper>
-        );
-      case "competitive":
-        return (
-          <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
-            <CompetitiveComparison allGrades={grades} faecher={faecher} />
-          </Paper>
-        );
-        case "competitiveBar":
-          return (
-            
-              <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
-                <CompetitiveComparisonBarChart allGrades={grades} faecher={faecher} />
-              </Paper>
-            
-          );
-        case "berichtshefte":
-        return (
-          <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Berichtshefte
-            </Typography>
-            <Typography variant="body1">
-              Hier können die Berichtshefte des Azubis eingesehen werden.
-            </Typography>
-          </Paper>
-        );
-        case "competitiveOverview":
   return (
-    <Paper elevation={3} sx={{ p: 2, mt: 2 }}>
-      <CompetitiveOverview allGrades={grades} faecher={faecher} />
-    </Paper>
-  );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <Grid container spacing={2}>
-      
-      <Grid item md={4}>
-        <AzubiDetails
-          username={azubi.username}
-          fachrichtung={azubi.fachrichtung}
-          grades={filteredGrades}
-          faecher={faecher}
-        />
-        <LineGraph grades={filteredGrades} />
-      </Grid>
-      <Grid item md={8}>
-        <AzubiStatsOverview
-          selectedAzubi={azubi}
-          grades={filteredGrades}
-          faecher={faecher}
-        />
-      </Grid>
-  
+    <Container>
       <ToggleButtonGroup
-        value={singleModeTabs}
+        value={selectedTab}
         exclusive
-        onChange={handleSingleModeTabs}
-        aria-label="singleModeAnsichts-Wahl"
+        onChange={(event, newValue) => {
+          if (newValue !== null) setSelectedTab(newValue);
+        }}
+        aria-label="Ansichtsauswahl"
+        sx={{ mb: 2 }}
       >
-        <ToggleButton value="leistungsstand" aria-label="Leistungsstand">
+        <ToggleButton value="noten" aria-label="Leistungsstand">
           Leistungsstand
         </ToggleButton>
-        <ToggleButton value="competitive" aria-label="competitive">
-          Competitive I
-        </ToggleButton>
-        <ToggleButton value="competitiveBar" aria-label="competitiveBar">
-          Competitive II
-        </ToggleButton>
-        <ToggleButton value="berichtshefte" aria-label="berichtshefte">
+        <ToggleButton value="berichtshefte" aria-label="Berichtshefte">
           Berichtshefte
         </ToggleButton>
-        <ToggleButton value="competitiveOverview" aria-label="competitiveOverview">
-        Competitive III
-        </ToggleButton>
       </ToggleButtonGroup>
-  
-      {/* Dynamischer Inhalt basierend auf ausgewähltem Tab */}
-      {renderTabContent()}
-    </Grid>
+      {loading && <Typography>Lade Daten...</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
+      {selectedTab === "noten" ? (
+        <Paper elevation={3} sx={{ p: 2 }}>
+          <NotenStand key={azubi.id} azubi={azubi} grades={grades} faecher={faecher} />
+        </Paper>
+      ) : (
+        <Paper elevation={3} sx={{ p: 2 }}>
+<Berichtshefte key={azubi.id} azubi={azubi} allowUpload={false} />
+</Paper>
+      )}
+    </Container>
   );
-}
+};
+
 export default AzubiMonitor;

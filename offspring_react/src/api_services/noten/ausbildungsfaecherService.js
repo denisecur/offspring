@@ -23,10 +23,8 @@ export const fetchAusbildungsfaecher = async (ausbildungsrichtung) => {
       name: fach.attributes.name,
     })) || [];
 
-    console.log('Fächer erfolgreich abgerufen:', faecher);
     return faecher;
   } catch (error) {
-    console.error('Fehler in fetchAusbildungsfaecher:', error);
     throw error;
   }
 };

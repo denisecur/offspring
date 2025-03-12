@@ -28,7 +28,6 @@ const Ausbildung = () => {
         lernfelder: lernfelder
       };
     });
-    console.log((ausbildungsfaecherData))
     setFaecher(ausbildungsfaecherData);
   };
 
@@ -38,14 +37,12 @@ const Ausbildung = () => {
   useEffect(() => {
     const loadLernfelder = async () => {
       const data = await fetchLernfelder();
-      console.log("data = ", data);
       const lernfelderData = data?.map((item) => ({
         id: item.id,
         name: item.attributes.name,
         ausbildungsfachName: item.attributes.ausbildungsfach?.data?.attributes?.name,
       }));
       setLernfelder(lernfelderData);
-      console.log(lernfelderData)
     };
     loadLernfelder();
   }, []);

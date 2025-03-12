@@ -1,3 +1,4 @@
+// src/pages/Berichtshefte/Berichtshefte.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { getMonth } from "date-fns";
 import { getToken } from "../../helpers";
@@ -13,19 +14,26 @@ import PdfPreview from "../../components/PdfPreview";
 import { uploadReport } from "../../api_services/berichtshefte/berichtshefteService";
 import { fetchVorlage } from "../../api_services/vorlagen/vorlageService";
 
-const Berichtshefte = () => {
+const Berichtshefte = ({ azubi, allowUpload = true }) => {
+  useEffect(() => {
+    console.log("🔄 Berichtshefte wurde neu gerendert mit Azubi:", azubi);
+  }, [azubi]);
+  
+  console.log("Erhaltener Azubi in Berichtshefte:", azubi);
+  if (!azubi) return <div>Lade Azubi-Daten...</div>;
+  
   const token = getToken();
   getThemeColors(localStorage.getItem("theme") || "basicLight");
 
-  // Für die Vorlage (Download)
+  // Vorlage (Download) laden
   const [vorlage, setVorlage] = useState(null);
 
   // Jahr/Monat-Auswahl
   const [selectedYear, setSelectedYear] = useState(1);
   const [selectedMonth, setSelectedMonth] = useState(0);
 
-  // Daten aus Custom Hook
-  const { reports, loading, error, setReports } = useBerichtshefte(token);
+  // Daten aus Custom Hook – hier wird azubi als Parameter übergeben
+  const { reports, loading, error, setReports } = useBerichtshefte(token, azubi);
 
   // Start-Daten für 3 Lehrjahre (je September)
   const baseDates = [
@@ -44,7 +52,7 @@ const Berichtshefte = () => {
   const [selectedWeekKey, setSelectedWeekKey] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Vorlage laden beim Komponentenmout
+  // Vorlage laden beim Mount
   useEffect(() => {
     const getVorlageData = async () => {
       try {
@@ -61,33 +69,26 @@ const Berichtshefte = () => {
     getVorlageData();
   }, []);
 
-  // Download der Vorlage (PDF)
+  // Download der Vorlage (PDF) – hier wird die Vorschau im Modal geöffnet
   const handleDownloadTemplate = () => {
     if (!vorlage || !vorlage.attributes) {
       console.error("Vorlage nicht geladen");
       return;
     }
-
     let pdfUrl = "";
     if (vorlage.attributes.pdf && vorlage.attributes.pdf.data) {
       pdfUrl = vorlage.attributes.pdf.data.attributes.url;
     } else {
       pdfUrl = `/uploads/${vorlage.attributes.name}.pdf`;
     }
-
     if (!pdfUrl.startsWith("http")) {
       pdfUrl = `http://localhost:1337${pdfUrl}`;
     }
-
-    const link = document.createElement("a");
-    link.href = pdfUrl;
-    link.download = vorlage.attributes.name || "Berichtsheft_Vorlage.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    setSelectedPdfUrl(pdfUrl);
+    setShowPreview(true);
   };
 
-  // Upload-Handler
+  // Handler für File Change (Upload & Vorschau)
   const handleFileChange = (event, weekKey, reportDate) => {
     const file = event.target.files[0];
     if (file) {
@@ -96,9 +97,9 @@ const Berichtshefte = () => {
         return;
       }
       setSelectedFile(file);
-      setSelectedReportDate(reportDate);
+      // Umwandeln in ein Date-Objekt
+      setSelectedReportDate(new Date(reportDate));
       setSelectedWeekKey(weekKey);
-
       const fileUrl = URL.createObjectURL(file);
       setSelectedPdfUrl(fileUrl);
       setShowPreview(true);
@@ -125,7 +126,6 @@ const Berichtshefte = () => {
       if (!pdfUrl.startsWith("http")) {
         pdfUrl = `http://localhost:1337${pdfUrl}`;
       }
-
       setReports((prev) => ({ ...prev, [selectedWeekKey]: pdfUrl }));
     } catch (err) {
       console.error("Fehler beim Upload:", err);
@@ -147,7 +147,6 @@ const Berichtshefte = () => {
     setSelectedWeekKey(null);
   };
 
-  // Monatsarray
   const months = [
     "September",
     "Oktober",
@@ -163,27 +162,20 @@ const Berichtshefte = () => {
     "August",
   ];
 
-  // Render
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--color-base-100)" }}>
-      {/* HEADER mit kleinem Download-Button */}
       <header className="bg-white shadow-none">
-        <div className="max-w-7xl mx-auto px-9 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="max-w-6xl pt-4 mx-auto px-9 sm:px-6 lg:px-8 flex items-center justify-between">
           <h1 className="text-xl font-bold" style={{ color: "var(--color-text)" }}>
             Ausbildungsnachweise
           </h1>
-
-          {/* -- Kleiner DOCX-Button -- */}
           <button
             onClick={handleDownloadTemplate}
-            className="flex items-center overflow-hidden shadow-lg hover:shadow-2xl
-                       transition duration-300 cursor-pointer h-auto"
+            className="flex items-center overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 cursor-pointer h-auto"
           >
-            {/* Linker Bereich: Halbkreis mit DOCX, verkleinertes Padding und Font */}
             <span className="bg-blue-600 text-white px-2 py-1 rounded-l-full text-sm font-bold">
               DOCX
             </span>
-            {/* Rechter Bereich: Rechteck mit Text/Icon, ebenfalls kleiner */}
             <span className="bg-blue-200 text-blue-900 px-3 py-1 flex items-center text-sm">
               Berichtsheft Vorlage
               <svg
@@ -196,25 +188,17 @@ const Berichtshefte = () => {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M4 16v1a2 2 0 0 0 2 2h12
-                     a2 2 0 0 0 2-2v-1
-                     M7 10l5 5 5-5
-                     M12 15V3"
+                  d="M4 16v1a2 2 0 0 0 2 2h12 a2 2 0 0 0 2-2v-1 M7 10l5 5 5-5 M12 15V3"
                 />
               </svg>
             </span>
           </button>
         </div>
       </header>
-
-      {/* HAUPTBEREICH */}
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          {/* Ladezustand / Fehler */}
           {loading && <div>Lade Berichtshefte...</div>}
           {error && <div className="text-red-500">Fehler: {error}</div>}
-
-          {/* Jahr-Auswahl */}
           <div className="flex justify-between mb-4">
             {[1, 2, 3].map((year) => (
               <button
@@ -233,8 +217,6 @@ const Berichtshefte = () => {
               </button>
             ))}
           </div>
-
-          {/* Monats-Auswahl */}
           <div className="flex justify-between mb-4">
             {months.map((month, index) => (
               <button
@@ -250,16 +232,12 @@ const Berichtshefte = () => {
               </button>
             ))}
           </div>
-
-          {/* BerichtshefteCards als Grid */}
           <div className="grid grid-cols-3 gap-4">
             {Array.from({ length: 52 }, (_, i) => {
               const reportDate = calculateWeekDate(startDates[selectedYear - 1], i + 1);
               const academicMonthIndex = (getMonth(reportDate) + 4) % 12;
               if (academicMonthIndex !== selectedMonth) return null;
-
               const weekKey = generateWeekKey(reportDate);
-
               return (
                 <BerichtshefteCard
                   key={i}
@@ -272,17 +250,18 @@ const Berichtshefte = () => {
                   }}
                   fileInputRef={(el) => (fileInputRefs.current[weekKey] = el)}
                   onFileChange={(e) => handleFileChange(e, weekKey, reportDate)}
+                  onPreviewClick={(url) => {
+                    setSelectedPdfUrl(url);
+                    setShowPreview(true);
+                  }}
+                  allowUpload={allowUpload}
                 />
               );
             })}
           </div>
-
-          {/* Upload-Indikator */}
           {uploading && <div className="mt-4 text-center">Upload läuft...</div>}
         </div>
       </main>
-
-      {/* PDF-Vorschau / Bestätigung */}
       {showPreview && selectedPdfUrl && (
         <PdfPreview
           pdfUrl={selectedPdfUrl}

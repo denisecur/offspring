@@ -59,11 +59,8 @@ const AddGradeForm = ({ faecher, leistungsnachweise, onAddGrade }) => {
         art: data.Art,
         ausbildungsfach: data.Fach,
       };
-
-      console.log({ gradeData });
       const response = await addUserGrade(gradeData);
       if (response && response.data) {
-        console.log('Note erfolgreich hinzugefügt', response.data);
         setOpenSnackbar(true);
         if (onAddGrade) onAddGrade(response.data);
       }

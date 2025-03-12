@@ -89,7 +89,7 @@ function DrawerAppBar() {
                 }}
                 component={Link}
                 to={item.path}
-                startIcon={item.icon}
+                starticon={item.icon}
               >
                 {item.name}
               </Button>
@@ -102,7 +102,7 @@ function DrawerAppBar() {
                 color: theme.palette.primary.contrastText,
                 marginRight: theme.spacing(7.5), // Beispiel: theme.spacing(7.5) entspricht ca. 60px
               }}
-              startIcon={<UserIcon />}
+              starticon={<UserIcon />}
             >
               {user.username}
             </Typography>

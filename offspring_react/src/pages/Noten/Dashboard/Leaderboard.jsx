@@ -93,7 +93,7 @@ const Leaderboard = ({ allGrades, faecher }) => {
               {getDisplayedRankings(subjectData.rankings).map((entry, rankIndex) => {
                 const userColor = usernameColors[entry.owner.username.length % usernameColors.length];
 
-                return (
+                 return (
                   <TableRow key={entry.owner.id}>
                     <TableCell style={{ fontWeight: rankIndex < 3 ? "bold" : "normal" }}>
                       {rankIndex < 3 && (

@@ -10,7 +10,7 @@ const Pane = styled.div`
   flex: ${(props) =>
     props.weight}; // rechtes und linkes Pane nehmen gleich viel Platz ein
 `;
-export const SplitScreen = ({ children, leftWeight = 1, rightWeight = 1 }) => {
+export const SplitScreen = ({ children, leftWeight = 1, rightWeight = 3 }) => {
   const [left, right] = children;
 
   return (

@@ -11,7 +11,7 @@ module.exports = createCoreController("api::berichtsheft.berichtsheft", ({ strap
     const { id } = ctx.params;
     const user = ctx.state.user;
 
-    // Fetch the berichtsheft
+    // Fetch berichtsheft
     const berichtsheft = await strapi.entityService.findOne("api::berichtsheft.berichtsheft", id, {
       populate: ["owner"],
     });

@@ -41,9 +41,6 @@ const GradeRadarChart = ({ grades, faecher }) => {
 
   return (
     <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
-        Radar-Ansicht
-      </Typography>
       <ResponsiveContainer width="100%" height={300}>
         <RadarChart data={data}>
           <PolarGrid />

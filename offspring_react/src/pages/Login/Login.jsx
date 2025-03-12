@@ -17,7 +17,6 @@ const Login = () => {
   // Setze beim Laden der Login-Seite fix das Theme auf "basicLight"
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", fixedTheme);
-    console.log("Fixed theme for login set to:", fixedTheme);
   }, []);
 
   const onFinish = async (values) => {
@@ -47,8 +46,6 @@ const Login = () => {
         role.permissions.some((permission) => permission.full_access)
       );
       setHasFullAccess(fullAccess);
-
-      message.success(`Willkommen zurück, ${userData.username}!`);
       navigate(fullAccess ? "/chef-dashboard" : "/azubi-dashboard", { replace: true });
     } catch (error) {
       setError(error?.message ?? "Etwas ist schiefgelaufen!");

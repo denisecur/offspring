@@ -60,7 +60,7 @@ const Dashboard = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }; 
     loadData();
   }, [user]);
 

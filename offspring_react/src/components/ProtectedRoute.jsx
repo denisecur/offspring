@@ -8,7 +8,6 @@ const ProtectedRoute = ({ children }) => {
   //console.log('ProtectedRoute: user', user);
   
   if (!user) {
-    console.log('Redirecting to login');
     return <Navigate to="/login" replace />;
   }
 
