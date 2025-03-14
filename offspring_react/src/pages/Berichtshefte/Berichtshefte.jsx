@@ -1,7 +1,7 @@
 // src/pages/Berichtshefte/Berichtshefte.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { getMonth } from "date-fns";
-import { getToken } from "../../helpers";
+import { getToken, getCurrentUser } from "../../helpers"; // Stelle sicher, dass getCurrentUser verfügbar ist!
 import getThemeColors from "../../config/theme";
 import {
   calculateWeekDate,
@@ -15,12 +15,15 @@ import { uploadReport } from "../../api_services/berichtshefte/berichtshefteServ
 import { fetchVorlage } from "../../api_services/vorlagen/vorlageService";
 
 const Berichtshefte = ({ azubi, allowUpload = true }) => {
-  useEffect(() => {
-    console.log("🔄 Berichtshefte wurde neu gerendert mit Azubi:", azubi);
-  }, [azubi]);
+  // Wenn kein azubi-Prop übergeben wird, verwende den aktuell angemeldeten Benutzer
+  const currentAzubi = azubi || getCurrentUser();
   
-  console.log("Erhaltener Azubi in Berichtshefte:", azubi);
-  if (!azubi) return <div>Lade Azubi-Daten...</div>;
+  useEffect(() => {
+    console.log("🔄 Berichtshefte neu gerendert mit Azubi:", currentAzubi);
+  }, [currentAzubi]);
+  
+  console.log("Erhaltener Azubi in Berichtshefte:", currentAzubi);
+  if (!currentAzubi) return <div>Lade Azubi-Daten...</div>;
   
   const token = getToken();
   getThemeColors(localStorage.getItem("theme") || "basicLight");
@@ -32,8 +35,8 @@ const Berichtshefte = ({ azubi, allowUpload = true }) => {
   const [selectedYear, setSelectedYear] = useState(1);
   const [selectedMonth, setSelectedMonth] = useState(0);
 
-  // Daten aus Custom Hook – hier wird azubi als Parameter übergeben
-  const { reports, loading, error, setReports } = useBerichtshefte(token, azubi);
+  // Daten aus dem Custom Hook – currentAzubi wird übergeben
+  const { reports, loading, error, setReports } = useBerichtshefte(token, currentAzubi);
 
   // Start-Daten für 3 Lehrjahre (je September)
   const baseDates = [
@@ -52,7 +55,7 @@ const Berichtshefte = ({ azubi, allowUpload = true }) => {
   const [selectedWeekKey, setSelectedWeekKey] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Vorlage laden beim Mount
+  // Vorlage beim Mount laden
   useEffect(() => {
     const getVorlageData = async () => {
       try {
@@ -69,7 +72,7 @@ const Berichtshefte = ({ azubi, allowUpload = true }) => {
     getVorlageData();
   }, []);
 
-  // Download der Vorlage (PDF) – hier wird die Vorschau im Modal geöffnet
+  // Vorlage-Vorschau öffnen
   const handleDownloadTemplate = () => {
     if (!vorlage || !vorlage.attributes) {
       console.error("Vorlage nicht geladen");
@@ -88,7 +91,7 @@ const Berichtshefte = ({ azubi, allowUpload = true }) => {
     setShowPreview(true);
   };
 
-  // Handler für File Change (Upload & Vorschau)
+  // File-Change Handler (Upload & Vorschau)
   const handleFileChange = (event, weekKey, reportDate) => {
     const file = event.target.files[0];
     if (file) {
@@ -97,8 +100,7 @@ const Berichtshefte = ({ azubi, allowUpload = true }) => {
         return;
       }
       setSelectedFile(file);
-      // Umwandeln in ein Date-Objekt
-      setSelectedReportDate(new Date(reportDate));
+      setSelectedReportDate(new Date(reportDate)); // sicherstellen, dass es ein Date-Objekt ist
       setSelectedWeekKey(weekKey);
       const fileUrl = URL.createObjectURL(file);
       setSelectedPdfUrl(fileUrl);
@@ -126,7 +128,7 @@ const Berichtshefte = ({ azubi, allowUpload = true }) => {
       if (!pdfUrl.startsWith("http")) {
         pdfUrl = `http://localhost:1337${pdfUrl}`;
       }
-      setReports((prev) => ({ ...prev, [selectedWeekKey]: pdfUrl }));
+      setReports(prev => ({ ...prev, [selectedWeekKey]: pdfUrl }));
     } catch (err) {
       console.error("Fehler beim Upload:", err);
       alert("Fehler beim Upload: " + err.message);
@@ -200,7 +202,7 @@ const Berichtshefte = ({ azubi, allowUpload = true }) => {
           {loading && <div>Lade Berichtshefte...</div>}
           {error && <div className="text-red-500">Fehler: {error}</div>}
           <div className="flex justify-between mb-4">
-            {[1, 2, 3].map((year) => (
+            {[1, 2, 3].map(year => (
               <button
                 key={year}
                 className="py-2 px-4 rounded flex-grow mx-1"

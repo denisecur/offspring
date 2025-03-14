@@ -13,6 +13,8 @@ import ChefDashboard from "./components/Dashboard/ChefDashboard";
 import AzubiDashboard from "./components/Dashboard/AzubiDashboard";
 import Logout from "./components/Logout";
 import NotenPage from "./pages/Noten/NotenPage";
+import Ranking from "./pages/ChefView/Ranking";
+import Profile from "./pages/ChefView/Profile";
 
 const AppRoutes = [
   {
@@ -23,13 +25,17 @@ const AppRoutes = [
       </ProtectedRoute>
     ),
     children: [
+      /** AZUBI-VIEW */
       { path: "/", element: <Navigate to="/" /> },
       { path: "noten", element: <ProtectedRoute><NotenPage /></ProtectedRoute> },
       { path: "listView", element: <ProtectedRoute><ListView /></ProtectedRoute> },
       { path: "berichtshefte", element: <ProtectedRoute><Berichtshefte /></ProtectedRoute> },
-      { path: "orders", element: <ProtectedRoute><Orders /></ProtectedRoute> },
-      { path: "chef-dashboard", element: <FullAccessRoute><ChefDashboard /></FullAccessRoute> },
       { path: "azubi-dashboard", element: <ProtectedRoute><AzubiDashboard /></ProtectedRoute> },
+      /** CHEF-VIEW */
+      { path: "chef-dashboard", element: <FullAccessRoute><ChefDashboard /></FullAccessRoute> },
+      { path: "profile", element: <ProtectedRoute><Profile /></ProtectedRoute> },
+      { path: "ranking", element: <ProtectedRoute><Ranking /></ProtectedRoute> },
+
     ],
   },
   {
