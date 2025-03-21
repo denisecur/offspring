@@ -11,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { all } from "axios";
 
 // Benutzerdefinierter Tooltip, der mehr Info anzeigt
 const CustomRadarTooltip = ({ active, payload, label }) => {
@@ -39,6 +40,7 @@ const CustomRadarTooltip = ({ active, payload, label }) => {
 };
 
 const CompetitiveComparison = ({ allGrades, faecher }) => {
+  console.log("knn" + {allGrades});
   // Extrahiere eindeutige Azubis aus allen Noten
   const uniqueAzubis = useMemo(() => {
     const map = {};

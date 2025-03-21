@@ -8,21 +8,16 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import { useAuthContext } from "../../context/AuthContext";
-
-// MUI Icons
 import SchoolIcon from "@mui/icons-material/School";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import GridViewIcon from "@mui/icons-material/GridView";
 import LogoutIcon from "@mui/icons-material/Logout";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-
-// React Icons
+import UserIcon from '@mui/icons-material/PersonOutline';
+import OFFSPRING from "../../assets/offspring_pink.svg";
 import { ImProfile } from "react-icons/im";
 import { FaRankingStar } from "react-icons/fa6";
-
-// Sonstige
 import { Typography } from "@mui/material";
-import OFFSPRING from "../../assets/offspring_pink.svg";
+import { AiFillAppstore } from "react-icons/ai";
 
 function DrawerAppBar() {
   const theme = useTheme();
@@ -38,6 +33,7 @@ function DrawerAppBar() {
   ];
 
   const navItemsChef = [
+    { name: "Dashboard", path: "/chef-dashboard", icon: <AiFillAppstore /> },
     { name: "Profile", path: "/profile", icon: <ImProfile /> },
     { name: "Ranking", path: "/ranking", icon: <FaRankingStar /> },
   ];
@@ -68,7 +64,13 @@ function DrawerAppBar() {
           }}
         >
           {/* Logo */}
-          <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
             <img
               src={OFFSPRING}
               alt="Logo"
@@ -77,48 +79,79 @@ function DrawerAppBar() {
           </Box>
 
           {/* Navigationslinks */}
-          <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 2, alignItems: "center" }}>
+          <Box
+            sx={{
+              flexGrow: 1, // Nav-Bereich erhält den verfügbaren Platz
+              display: { xs: "none", sm: "flex" },
+              gap: 2,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             {navItems.map((item) => (
               <Button
                 key={item.name}
-                sx={{ color: theme.palette.primary.contrastText }}
+                sx={{
+                  color: theme.palette.primary.contrastText,
+                }}
                 component={Link}
                 to={item.path}
-                startIcon={item.icon}
+                startIcon={item.icon} // Richtig: startIcon
               >
                 {item.name}
               </Button>
             ))}
           </Box>
 
-          {/* Username Anzeige oder Login-Button */}
+          {/* Username Anzeige */}
           {user ? (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2, marginRight: theme.spacing(4) }}>
-              <Box sx={{ display: "flex", alignItems: "center", color: theme.palette.primary.contrastText }}>
-                <PersonOutlineIcon style={{ marginRight: 4 }} />
-                {user.username}
-              </Box>
-
-              {/* Logout-Button */}
-              <Button
-                sx={{ color: theme.palette.primary.contrastText }}
-                onClick={handleLogout}
-                startIcon={<LogoutIcon />}
-              >
-                Logout
-              </Button>
-            </Box>
+            <Typography
+              sx={{
+                color: theme.palette.primary.contrastText,
+                mr: 2, // Margin reduziert, um Platz zu schaffen
+              }}
+            >
+              {user.username}
+            </Typography>
           ) : (
             !isLoginPage && (
-              <Button sx={{ color: theme.palette.text.primary }} component={Link} to="/login">
+              <Button
+                sx={{ color: theme.palette.text.primary }}
+                component={Link}
+                to="/login"
+              >
+                Login
+              </Button>
+            )
+          )}
+
+          {/* Logout-Button */}
+          {user ? (
+            <Button
+              sx={{
+                color: theme.palette.primary.contrastText,
+                mr: 2, // Auch hier Margin reduzieren
+              }}
+              onClick={handleLogout}
+              startIcon={<LogoutIcon />}
+            >
+            </Button>
+          ) : (
+            !isLoginPage && (
+              <Button
+                sx={{ color: theme.palette.text.primary }}
+                component={Link}
+                to="/login"
+              >
                 Login
               </Button>
             )
           )}
         </Toolbar>
       </AppBar>
+      {/* Platzhalter für den AppBar */}
       <Box component="main" sx={{ flexGrow: 1 }}>
-        <Toolbar /> {/* Platzhalter für den AppBar */}
+        <Toolbar />
       </Box>
     </Box>
   );

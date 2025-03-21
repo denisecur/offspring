@@ -1,26 +1,23 @@
-// src/AzubiMonitor.jsx
 import React, { useEffect, useState } from "react";
 import {
-  ToggleButtonGroup,
-  ToggleButton,
   Box,
   Typography,
   Paper,
-  Container,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
-import NotenStand from "./pages/Noten/Dashboard/NotenStand";
+import NotenStand from "./pages/Noten/Dashboard/Leistungsstand";
 import Berichtshefte from "./pages/Berichtshefte/Berichtshefte";
 import { fetchUserGrades } from "./api_services/noten/notenService";
 import { fetchAusbildungsDetails } from "./api_services/noten/ausbildungsfaecherService";
 
-const AzubiMonitor = ({ azubi }) => {
-  const [selectedTab, setSelectedTab] = useState("noten"); // "noten" oder "berichtshefte"
+export default function AzubiMonitor({ azubi, selectedTab }) {
   const [grades, setGrades] = useState([]);
   const [faecher, setFaecher] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Noten laden (für Leistungsstand)
+  // Noten laden
   useEffect(() => {
     if (!azubi) return;
     const loadGrades = async () => {
@@ -37,7 +34,7 @@ const AzubiMonitor = ({ azubi }) => {
     loadGrades();
   }, [azubi]);
 
-  // Ausbildungsdetails laden (für Noten)
+  // Ausbildungsdetails laden
   useEffect(() => {
     if (!azubi?.fachrichtung) return;
     const loadDetails = async () => {
@@ -51,45 +48,63 @@ const AzubiMonitor = ({ azubi }) => {
     loadDetails();
   }, [azubi]);
 
+  // Fall: Kein Azubi ausgewählt
   if (!azubi) {
     return (
-      <Box sx={{ p: 2 }}>
-        <Typography>Bitte wähle einen Azubi aus der Liste aus.</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "50vh",
+          p: 2,
+        }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            maxWidth: 500,
+            width: "100%",
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Kein Azubi ausgewählt
+          </Typography>
+          <Typography variant="body1">
+            Bitte wähle einen Azubi aus der Liste aus, um fortzufahren.
+          </Typography>
+        </Paper>
       </Box>
     );
   }
 
   return (
-    <Container>
-      <ToggleButtonGroup
-        value={selectedTab}
-        exclusive
-        onChange={(event, newValue) => {
-          if (newValue !== null) setSelectedTab(newValue);
-        }}
-        aria-label="Ansichtsauswahl"
-        sx={{ mb: 2 }}
-      >
-        <ToggleButton value="noten" aria-label="Leistungsstand">
-          Leistungsstand
-        </ToggleButton>
-        <ToggleButton value="berichtshefte" aria-label="Berichtshefte">
-          Berichtshefte
-        </ToggleButton>
-      </ToggleButtonGroup>
-      {loading && <Typography>Lade Daten...</Typography>}
-      {error && <Typography color="error">{error}</Typography>}
-      {selectedTab === "noten" ? (
-        <Paper elevation={3} sx={{ p: 2 }}>
-          <NotenStand key={azubi.id} azubi={azubi} grades={grades} faecher={faecher} />
-        </Paper>
-      ) : (
-        <Paper elevation={3} sx={{ p: 2 }}>
-<Berichtshefte key={azubi.id} azubi={azubi} allowUpload={false} />
-</Paper>
+    <Paper
+      elevation={3}
+      sx={{
+        p: 3,
+        borderRadius: 2,
+        minHeight: "50vh",
+        display: "flex",
+        flexDirection: "column",
+        gap: 2, bgcolor:"white" 
+      }}
+    >
+      {loading && (
+        <Box sx={{ display: "flex", justifyContent: "center", bgcolor:"white"  }}>
+          <CircularProgress />
+        </Box>
       )}
-    </Container>
-  );
-};
 
-export default AzubiMonitor;
+      {error && <Alert severity="error">{error}</Alert>}
+
+      {selectedTab === "noten" ? (
+        <NotenStand azubi={azubi} grades={grades} faecher={faecher} />
+      ) : (
+        <Berichtshefte azubi={azubi} allowUpload={false} />
+      )}
+    </Paper>
+  );
+}

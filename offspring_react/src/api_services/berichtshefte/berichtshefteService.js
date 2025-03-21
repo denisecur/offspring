@@ -45,7 +45,7 @@ export const fetchReports = async (token, azubiId = null) => {
     url += `&filters[owner][id][$eq]=${azubiId}`;
   }
 
-  console.log("API-Request an:", url); // NEU: Prüfen, ob URL korrekt ist
+  //// console.log("API-Request an:", url); // NEU: Prüfen, ob URL korrekt ist
 
   const response = await fetch(url, {
     headers: {
@@ -58,6 +58,6 @@ export const fetchReports = async (token, azubiId = null) => {
   }
   
   const data = await response.json();
-  console.log("Erhaltene Daten:", data); // NEU: Prüfen, welche Daten zurückkommen
+  //// console.log("Erhaltene Daten:", data); // NEU: Prüfen, welche Daten zurückkommen
   return data;
 };

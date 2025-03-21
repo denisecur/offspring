@@ -2,8 +2,7 @@
 import React from 'react';
 import { Grid, Paper, Card, CardContent, Typography, Box, Button } from '@mui/material';
 import CompetitiveComparisonBarChart from './CompetitiveComparisonBarChart';
-import Leaderboard from './Leaderboard'; // Deine lokale Leaderboard-Komponente (falls vorhanden)
-
+import CompetitiveComparison from './CompetitiveComparison';
 // Dummy-Berechnungen für Summary Cards (Kennzahlen-Kacheln)
 const SummaryCards = ({ allGrades }) => {
   // Beispiel: Gesamt-Durchschnitt berechnen (hier als Dummy)
@@ -95,15 +94,7 @@ const InteractiveFilters = () => (
   </Paper>
 );
 
-const LeaderboardPlaceholder = ({ allGrades, faecher }) => (
-  <Card sx={{ mb: 2 }}>
-    <CardContent>
-      <Typography variant="h6">Leaderboard</Typography>
-      {/* Hier kannst du deine tatsächliche Leaderboard-Komponente einbinden */}
-      <Leaderboard allGrades={allGrades} faecher={faecher} />
-    </CardContent>
-  </Card>
-);
+
 
 const CompetitiveOverview = ({ allGrades, faecher }) => {
   return (
@@ -113,11 +104,13 @@ const CompetitiveOverview = ({ allGrades, faecher }) => {
       </Typography>
       <InteractiveFilters />
       <SummaryCards allGrades={allGrades} />
-      <LeaderboardPlaceholder allGrades={allGrades} faecher={faecher} />
+ 
       <TrendAnalysis />
       <HeatmapOverview />
       <AutomatedComments />
       <CompetitiveComparisonBarChart allGrades={allGrades} faecher={faecher} />
+      <CompetitiveComparison allGrades={allGrades} faecher={faecher} />
+   
     </Box>
   );
 };

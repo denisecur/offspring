@@ -11,29 +11,29 @@ export const useBerichtshefte = (token, azubi) => {
   
 
   useEffect(() => {
-    console.log("🔄 useBerichtshefte triggered! Aktueller Azubi:", azubi);
+    // console.log("🔄 useBerichtshefte triggered! Aktueller Azubi:", azubi);
   
     if (!azubi || !azubi.id) {
-      console.log("⏳ Warte auf gültigen Azubi...");
+      // console.log("⏳ Warte auf gültigen Azubi...");
       return;
     }
   
-    console.log("✅ useBerichtshefte: Azubi erhalten!", azubi);
+    // console.log("✅ useBerichtshefte: Azubi erhalten!", azubi);
   
     setReports({}); // Berichte zurücksetzen
     setLoading(true);
     setError(null);
   
     const loadReports = async () => {
-      console.log("🔍 Lade Berichtshefte für:", azubi.id);
+      // console.log("🔍 Lade Berichtshefte für:", azubi.id);
   
       try {
         const result = await fetchReports(token, azubi.id);
-        console.log("📥 API-Antwort:", result);
+        // console.log("📥 API-Antwort:", result);
   
         const fetchedReports = {};
         result.data.forEach((report) => {
-          console.log("📄 Verarbeite Bericht:", report);
+          // console.log("📄 Verarbeite Bericht:", report);
   
           if (report.owner && report.owner.id === azubi.id) {
             const reportDate = new Date(report.woche_vom);
@@ -43,7 +43,7 @@ export const useBerichtshefte = (token, azubi) => {
           }
         });
   
-        console.log("✅ Gefilterte Berichte:", fetchedReports);
+        // console.log("✅ Gefilterte Berichte:", fetchedReports);
         setReports(fetchedReports);
       } catch (err) {
         console.error("❌ Fehler beim Laden der Berichtshefte:", err);

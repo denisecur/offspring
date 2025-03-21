@@ -427,6 +427,7 @@ export interface ApiAusbildungsfachAusbildungsfach
       'admin::user'
     > &
       Attribute.Private;
+    isFachlichesFach: Attribute.Boolean;
     name: Attribute.String;
     publishedAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

@@ -1,68 +1,88 @@
-// api/noten/notenService.js
-import { getToken } from '../../helpers'; 
+// src/api_services/noten/ausbildungsfaecherService.js
+import { getToken } from '../../helpers';
 import { API } from '../../constant';
-export const fetchAusbildungsfaecher = async (ausbildungsrichtung) => {
-  const url = `${API}/ausbildungen?filters[name][$eq]=${ausbildungsrichtung}&populate=ausbildungsfaches`; // Passe die Filterung auf die Ausbildungsrichtung an
-  const token = getToken();
-  try {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Fehler beim Abrufen der Fächer');
-    }
-
-    const data = await response.json();
-    // Extrahiere nur die Fächer aus der Antwort
-    const faecher = data.data[0]?.attributes.ausbildungsfaches?.data.map(fach => ({
-      id: fach.id,
-      name: fach.attributes.name,
-    })) || [];
-
-    return faecher;
-  } catch (error) {
-    throw error;
-  }
-};
 
 export const fetchAusbildungsDetails = async (ausbildungsrichtung) => {
-  const url = `${API}/ausbildungen?filters[name][$eq]=${ausbildungsrichtung}&populate=ausbildungsfaches,leistungsnachweise`; // Fächer und Leistungsnachweise holen
+  const url = `${API}/ausbildungen?populate=ausbildungsfaches,leistungsnachweise`;
   const token = getToken();
-  
+
   try {
+    // Starte Abruf von Ausbildungsdetails
     const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
     if (!response.ok) {
-      throw new Error('Fehler beim Abrufen der Ausbildungsdetails');
+      throw new Error("Fehler beim Abrufen der Ausbildungsdetails");
     }
 
     const data = await response.json();
-    
-    const ausbildung = data.data[0]; // Erste Ausbildungsrichtung (passend zur Auswahl)
-    
-    const faecher = ausbildung.attributes.ausbildungsfaches.data.map(fach => ({
-      id: fach.id,
-      name: fach.attributes.name,
-    }));
 
-    const leistungsnachweise = ausbildung.attributes.leistungsnachweise.map(ln => ({
-      id: ln.id,
-      art: ln.art,
-      gewichtung: ln.gewichtung,
-    }));
+    if (!data.data || data.data.length === 0) {
+      throw new Error("Keine Ausbildungsdetails gefunden");
+    }
+
+    let faecher = [];
+    let leistungsnachweise = [];
+
+    // Durchlaufe alle Ausbildungs-Einträge
+    data.data.forEach((ausbildung, idx) => {
+      if (!ausbildung.attributes) {
+        console.warn(`Ausbildung an Index ${idx} hat keine attributes:`, ausbildung);
+        return;
+      }
+
+      // Wenn ein Filter (ausbildungsrichtung) gesetzt ist, nur diese Ausbildung berücksichtigen
+      if (ausbildungsrichtung && ausbildung.attributes.name !== ausbildungsrichtung) {
+        return;
+      }
+
+      // Fächer extrahieren
+      const faecherData = ausbildung.attributes.ausbildungsfaches;
+      if (faecherData && Array.isArray(faecherData.data)) {
+        const validFaecher = faecherData.data
+          .map((fach, fachIdx) => {
+            if (!fach.attributes) {
+              console.warn(`Fach an Index ${fachIdx} in Ausbildung ${idx} hat keine attributes:`, fach);
+              return null;
+            }
+            return {
+              id: fach.id,
+              name: fach.attributes.name,
+              isFachlichesFach: fach.attributes.isFachlichesFach,
+            };
+          })
+          .filter((fach) => fach !== null);
+        faecher = faecher.concat(validFaecher);
+      } else {
+        console.warn(`Keine Fächer-Daten in Ausbildung an Index ${idx}:`, ausbildung);
+      }
+
+      // Leistungsnachweise extrahieren
+      const lnData = ausbildung.attributes.leistungsnachweise;
+      if (Array.isArray(lnData) && lnData.length > 0) {
+        const validLeistungsnachweise = lnData.map((ln, lnIdx) => {
+          if (!ln.id) {
+            console.warn(`Leistungsnachweis an Index ${lnIdx} in Ausbildung ${idx} fehlt id:`, ln);
+          }
+          return {
+            id: ln.id,
+            art: ln.art,
+            gewichtung: ln.gewichtung,
+          };
+        });
+        leistungsnachweise = leistungsnachweise.concat(validLeistungsnachweise);
+      } else {
+        console.warn(`Keine Leistungsnachweise in Ausbildung an Index ${idx}:`, ausbildung);
+      }
+    });
 
     return { faecher, leistungsnachweise };
   } catch (error) {
-    console.error('Fehler in fetchAusbildungsDetails:', error);
+    console.error("Fehler in fetchAusbildungsDetails:", error);
     throw error;
   }
 };

@@ -44,14 +44,11 @@ const GradeTableWithCharts = ({ grades }) => {
       fachMap[fachName].grades.push(grade);
     });
 
-    // Umwandlung des fachMap in ein Array
+    // Umwandlung des fachMap in ein Array und Berechnung des Durchschnitts
     return Object.values(fachMap).map((fachData) => {
       const totalWeight = fachData.grades.reduce((sum, g) => sum + g.gewichtung, 0);
       const weightedSum = fachData.grades.reduce((sum, g) => sum + g.wert * g.gewichtung, 0);
-      const averageGrade = (weightedSum / totalWeight).toFixed(2);
-      const latestGrade = fachData.grades
-        .sort((a, b) => new Date(b.datum) - new Date(a.datum))[0]
-        .wert.toFixed(2);
+      const averageGrade = totalWeight ? (weightedSum / totalWeight).toFixed(2) : '0.00';
 
       return {
         fach: fachData.fach,
@@ -75,7 +72,6 @@ const GradeTableWithCharts = ({ grades }) => {
         enableColumnFilter: false,
         Cell: ({ cell }) => {
           const value = parseFloat(cell.getValue());
-          // Nutze dein Theme: Bei guten Noten success, bei schlechten error; sonst text
           let colorClass = '';
           if (value < 2.50) colorClass = 'text-[var(--color-success)]';
           else if (value >= 4.20) colorClass = 'text-[var(--color-error)]';
@@ -95,17 +91,34 @@ const GradeTableWithCharts = ({ grades }) => {
       initialState={{ density: 'comfortable' }}
       renderDetailPanel={({ row }) => {
         const fachData = row.original;
-        const fachGrades = fachData.grades;
+        // Erstelle eine sortierte Kopie der Noten
+        const sortedGrades = [...fachData.grades].sort(
+          (a, b) => new Date(a.datum) - new Date(b.datum)
+        );
 
-        // Sortierung der Noten nach Datum
-        fachGrades.sort((a, b) => new Date(a.datum) - new Date(b.datum));
+        if (sortedGrades.length < 2) {
+          return (
+            <Box
+              sx={{
+                height: '237px',
+                width: '90%',
+                paddingLeft: '5%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography variant="body2">Keine ausreichenden Daten vorhanden</Typography>
+            </Box>
+          );
+        }
 
         const chartData = {
-          labels: fachGrades.map((grade) => grade.datum),
+          labels: sortedGrades.map((grade) => grade.datum),
           datasets: [
             {
               label: 'Notenverlauf',
-              data: fachGrades.map((grade) => grade.wert),
+              data: sortedGrades.map((grade) => grade.wert),
               fill: false,
               borderColor: 'blue',
               backgroundColor: 'lightblue',
@@ -113,7 +126,7 @@ const GradeTableWithCharts = ({ grades }) => {
             },
             {
               label: 'Durchschnitt',
-              data: fachGrades.map(() => parseFloat(fachData.averageGrade)),
+              data: sortedGrades.map(() => parseFloat(fachData.averageGrade)),
               borderColor: 'red',
               borderDash: [5, 5],
               pointRadius: 0,
@@ -123,15 +136,13 @@ const GradeTableWithCharts = ({ grades }) => {
         };
 
         const chartOptions = {
-          maintainAspectRatio: false, // Damit wir die Größe anpassen können
+          maintainAspectRatio: false,
           scales: {
             y: {
-              beginAtZero: true,
-              reverse: true, // Bei Noten ist eine umgekehrte Skala sinnvoll (1 ist besser als 6)
+              min: 1,
+              max: 6,
               ticks: {
                 stepSize: 1,
-                min: 1,
-                max: 6,
               },
             },
           },
@@ -141,12 +152,12 @@ const GradeTableWithCharts = ({ grades }) => {
             },
           },
         };
+        
 
         return (
-          <div style={{ height: '237x', width: '666px'}}>
-  <Line data={chartData} options={chartOptions} />
-</div>
-
+          <div style={{ height: '237px', width: '90%', paddingLeft: '5%' }}>
+            <Line data={chartData} options={chartOptions} />
+          </div>
         );
       }}
       muiTableBodyRowProps={{

@@ -45,7 +45,7 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
     const isIncomplete = gewichtung === null;
       if (isIncomplete) {
         // TODO Fehlerfall
-      console.log("Note wird als unvollständig markiert.");
+      // console.log("Note wird als unvollständig markiert.");
     }
   
     try {
@@ -87,7 +87,7 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
       });
     }
   
-    console.log('Fetched Noten:', noten);
+    // console.log('Fetched Noten:', noten);
   
     return { data: noten };
   
