@@ -61,8 +61,8 @@ export default function Ranking() {
           size="small"
         >
           <ToggleButton value="leaderboard">Leaderboard</ToggleButton>
-          <ToggleButton value="comparison">Radar Chart</ToggleButton>
           <ToggleButton value="overview">Übersicht</ToggleButton>
+          <ToggleButton value="competitive">Wettbewerb</ToggleButton>
         </ToggleButtonGroup>
       </Box>
 
@@ -88,11 +88,11 @@ export default function Ranking() {
               <Leaderboard allGrades={grades} faecher={faecher} />
             )}
 
-            {currentTab === "comparison" && (
-              <CompetitiveComparison allGrades={grades} faecher={faecher} />
+            {currentTab === "overview" && (
+              <CompetitiveOverview allGrades={grades} faecher={faecher} />
             )}
 
-            {currentTab === "overview" && (
+{currentTab === "competitive" && (
               <CompetitiveOverview allGrades={grades} faecher={faecher} />
             )}
           </Grid>

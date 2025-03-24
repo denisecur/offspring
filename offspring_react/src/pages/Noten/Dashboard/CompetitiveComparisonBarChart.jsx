@@ -58,8 +58,8 @@ const CompetitiveComparisonBarChart = ({ allGrades, faecher }) => {
       );
       let classAvg = calculateAverage(allSubjectGrades);
       classAvg = classAvg === "N/A" || isNaN(parseFloat(classAvg)) ? 6 : parseFloat(classAvg);
-      dataPoint["Class Average"] = 7 - classAvg;
-      dataPoint["Class Average_original"] = classAvg;
+      dataPoint["Klassendurchschnitt"] = 7 - classAvg;
+      dataPoint["Klassendurchschnitt_original"] = classAvg;
 
       return dataPoint;
     });
@@ -164,7 +164,7 @@ const CompetitiveComparisonBarChart = ({ allGrades, faecher }) => {
               />
             ))}
             <Bar
-              dataKey="Class Average"
+              dataKey="Klassendurchschnitt"
               fill="#000000"
               label={({ x, y, value }) => (
                 <text x={x + 5} y={y - 5} fill="#000" fontSize="12px">

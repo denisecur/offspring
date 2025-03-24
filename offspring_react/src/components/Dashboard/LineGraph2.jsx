@@ -13,7 +13,7 @@ import {
 } from "recharts";
 
 const LineGraph2 = ({ grades, subjectName }) => {
-  // Berechnung des Durchschnitts
+  // Berechnung des gewichteten Durchschnitts
   const calculateAverage = (arr) => {
     if (!arr.length) return 0;
     let sum = 0;
@@ -23,14 +23,12 @@ const LineGraph2 = ({ grades, subjectName }) => {
       sum += parseFloat(g.wert) * w;
       weight += w;
     }
-    if (weight === 0) return 0;
-    return (sum / weight).toFixed(2);
+    return weight === 0 ? 0 : (sum / weight).toFixed(2);
   };
 
   const overallAverage = calculateAverage(grades);
 
-  // Diagrammdaten vorbereiten:
-  // Datum im Format "tt.mm.jj" und Sortierung nach Datum
+  // Diagrammdaten vorbereiten: Datum formatieren und sortieren
   const chartData = useMemo(() => {
     const dataWithDates = grades.map((g) => {
       const dateObj = new Date(g.datum);
@@ -48,66 +46,48 @@ const LineGraph2 = ({ grades, subjectName }) => {
     return dataWithDates.map(({ rawDate, ...rest }) => rest);
   }, [grades]);
 
-  // Fallback bei zu wenigen Daten
-  if (chartData.length < 2) {
-    return (
-      <Paper sx={{ p: 2, borderRadius: 2, boxShadow: 3 }}>
-        <Typography variant="body2" sx={{ mb: 2, fontWeight: 600 }}>
-          {subjectName} – Durchschnitt: {overallAverage}
+  // Anstatt frühzeitig zu returnen, definieren wir den Inhalt bedingt:
+  const content =
+    chartData.length < 2 ? (
+      <Box
+        sx={{
+          height: 300,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Typography variant="body1">
+          Keine ausreichenden Daten vorhanden
         </Typography>
-        <Box
-          sx={{
-            height: 300,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography variant="body1">
-            Keine ausreichenden Daten vorhanden
-          </Typography>
-        </Box>
-      </Paper>
-    );
-  }
-
-  // Benutzerdefinierte Legend-Einträge
-  const legendPayload = [
-    { value: "Graph", type: "line", id: "lineGraph", color: "#0000FF" },
-    {
-      value: "Durchschnitt",
-      type: "line",
-      id: "average",
-      color: "#FF4560",
-      // Hinweis: Der gestrichelte Effekt wird in der Grafik (ReferenceLine) gesetzt
-    },
-  ];
-
-  return (
-    <Paper sx={{ p: 2, borderRadius: 2, boxShadow: 3 }}>
-      <Typography variant="body2" sx={{ mb: 2, fontWeight: 600 }}>
-        {subjectName} – Durchschnitt: {overallAverage}
-      </Typography>
+      </Box>
+    ) : (
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={chartData}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
-          {/* Hintergrund weiß machen */}
+          {/* Hintergrund weiß */}
           <rect x={0} y={0} width="100%" height="100%" fill="#fff" />
           <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-          <XAxis
-            dataKey="datum"
-            tick={{ fill: "#666", fontSize: 12 }}
-            // Falls nötig: angle={-45} oder textAnchor="end"
-          />
+          <XAxis dataKey="datum" tick={{ fill: "#666", fontSize: 12 }} />
           <YAxis domain={[1, 6]} tick={{ fill: "#666", fontSize: 12 }} />
           <Tooltip
             contentStyle={{ backgroundColor: "#fff", border: "1px solid #ccc" }}
             labelStyle={{ color: "#666" }}
           />
-          <Legend payload={legendPayload} wrapperStyle={{ fontSize: 12, color: "#666" }} />
-          {/* Graphlinie als durchgezogene blaue Linie */}
+          <Legend
+            payload={[
+              { value: "Graph", type: "line", id: "lineGraph", color: "#0000FF" },
+              {
+                value: "Durchschnitt",
+                type: "line",
+                id: "average",
+                color: "#FF4560",
+              },
+            ]}
+            wrapperStyle={{ fontSize: 12, color: "#666" }}
+          />
           <Line
             type="monotone"
             dataKey="note"
@@ -115,7 +95,6 @@ const LineGraph2 = ({ grades, subjectName }) => {
             strokeWidth={1}
             dot={{ r: 3, fill: "#0000FF" }}
           />
-          {/* Durchschnittslinie als dick gestrichelte rote Linie */}
           <ReferenceLine
             y={parseFloat(overallAverage) || 0}
             stroke="#FF4560"
@@ -130,6 +109,14 @@ const LineGraph2 = ({ grades, subjectName }) => {
           />
         </LineChart>
       </ResponsiveContainer>
+    );
+
+  return (
+    <Paper sx={{ p: 2, borderRadius: 2, boxShadow: 3 }}>
+      <Typography variant="body2" sx={{ mb: 2, fontWeight: 600 }}>
+        {subjectName} – Durchschnitt: {overallAverage}
+      </Typography>
+      {content}
     </Paper>
   );
 };
