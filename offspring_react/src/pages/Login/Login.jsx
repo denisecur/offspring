@@ -17,29 +17,31 @@ const Login = () => {
   // Setze beim Laden der Login-Seite fix das Theme auf "basicLight"
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", fixedTheme);
-    console.log("Fixed theme for login set to:", fixedTheme);
   }, []);
 
   const onFinish = async (values) => {
     setIsLoading(true);
     setError(""); 
     try {
+      // Erste Fetch-Anfrage mit Backticks
       const response = await fetch(`${API}/auth/local`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ identifier: values.email, password: values.password }),
       });
-
+  
       const data = await response.json();
       if (data?.error) {
         throw new Error(data.error.message || "Login fehlgeschlagen");
       }
-
+  
       setToken(data.jwt);
+  
+      // Zweite Fetch-Anfrage, URL und Header korrigiert
       const userResponse = await fetch(`${API}/users/me?populate=ausbildung,Rollen.permissions`, {
         headers: { Authorization: `Bearer ${data.jwt}` },
       });
-
+  
       const userData = await userResponse.json();
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
@@ -47,8 +49,6 @@ const Login = () => {
         role.permissions.some((permission) => permission.full_access)
       );
       setHasFullAccess(fullAccess);
-
-      message.success(`Willkommen zurück, ${userData.username}!`);
       navigate(fullAccess ? "/chef-dashboard" : "/azubi-dashboard", { replace: true });
     } catch (error) {
       setError(error?.message ?? "Etwas ist schiefgelaufen!");
@@ -56,6 +56,7 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+  
 
   return (
     // Wir verwenden hier fixedTheme als key, damit React die Komponente bei Theme-Änderungen nicht neu mounted.

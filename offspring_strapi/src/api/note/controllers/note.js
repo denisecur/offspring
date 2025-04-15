@@ -41,16 +41,11 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
   
     const user = ctx.state.user;
     const data = ctx.request.body.data;
-  
-    // Bestimme Gewichtung und prüfe, ob ein sicherer Wert existiert
-    const gewichtung = gewichtungMap[data.art] || null;
-  
-    // Bestimme, ob die Note vollständig ist
+      const gewichtung = gewichtungMap[data.art] || null;
     const isIncomplete = gewichtung === null;
-  
-    // TODO: Setze eine Logik für den Fall, dass eine Note unvollständig sein soll (z.B. keine Gewichtung festgelegt)
-    if (isIncomplete) {
-      console.log("Note wird als unvollständig markiert.");
+      if (isIncomplete) {
+        // TODO Fehlerfall
+      // console.log("Note wird als unvollständig markiert.");
     }
   
     try {
@@ -66,13 +61,8 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
           publishedAt: isIncomplete ? null : new Date(), 
         },
       });
-  
-      // Erfolgreiches Logging der erstellten Note
-      console.log("Note erfolgreich erstellt:", note);
-  
       return { note };
     } catch (error) {
-      // Füge eine Fehlerbehandlung hinzu
       console.error("Fehler beim Erstellen der Note:", error);
       ctx.throw(500, "Fehler beim Erstellen der Note");
     }
@@ -82,10 +72,6 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
   async find(ctx) {
     const user = ctx.state.user;
     const hasFullAccess = ctx.state.hasFullAccess;
-  
-    console.log('User:', user);
-    console.log('Has Full Access:', hasFullAccess);
-  
     let noten;
   
     if (hasFullAccess) {
@@ -101,7 +87,7 @@ module.exports = createCoreController("api::note.note", ({ strapi }) => ({
       });
     }
   
-    console.log('Fetched Noten:', noten);
+    // console.log('Fetched Noten:', noten);
   
     return { data: noten };
   

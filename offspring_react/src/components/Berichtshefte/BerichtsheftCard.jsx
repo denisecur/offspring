@@ -1,4 +1,4 @@
-// src/components/BerichtshefteCard.jsx
+// src/components/Berichtshefte/BerichtsheftCard.jsx
 import React from "react";
 import { format, getISOWeek } from "date-fns";
 
@@ -10,6 +10,8 @@ const BerichtshefteCard = ({
   onFileChange,
   uploading,
   uploadError,
+  onPreviewClick,
+  allowUpload = true, // Standardmäßig erlauben
 }) => {
   const kalenderwoche = getISOWeek(reportDate);
   return (
@@ -19,8 +21,8 @@ const BerichtshefteCard = ({
     >
       <div className="flex justify-between items-center">
         <div className="font-bold">{format(reportDate, "dd.MM.yyyy")}</div>
-        {/* Button nur anzeigen, wenn noch kein Report hochgeladen wurde */}
-        {!reportUrl && (
+        {/* Nur anzeigen, wenn Upload erlaubt ist und noch kein Report vorhanden */}
+        {allowUpload && !reportUrl && (
           <button
             onClick={onUploadClick}
             style={{ color: "var(--color-error)" }}
@@ -40,13 +42,13 @@ const BerichtshefteCard = ({
       <div className="mt-1 text-sm">KW: {kalenderwoche}</div>
       <div className="mt-2">
         {reportUrl ? (
-          <a
-            href={reportUrl}
+          <button
+            onClick={() => onPreviewClick(reportUrl)}
             style={{ color: "var(--color-success)" }}
             className="hover:font-bold"
           >
             Vorschau
-          </a>
+          </button>
         ) : (
           <div className="text-gray-500">ausstehend</div>
         )}
@@ -60,4 +62,3 @@ const BerichtshefteCard = ({
 };
 
 export default BerichtshefteCard;
-

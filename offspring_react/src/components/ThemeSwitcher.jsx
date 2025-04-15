@@ -8,7 +8,6 @@ const ThemeSwitcher = () => {
 
   const handleChange = (e) => {
     const newTheme = e.target.value;
-    console.log("🎨 Wechsel zu:", newTheme);
     setThemeName(newTheme);
   };
 

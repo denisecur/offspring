@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { calculateAverage } from "../../../api_services/noten/calculations";
+
 const CompetitiveComparisonBarChart = ({ allGrades, faecher }) => {
   // Extrahiere eindeutige Azubis aus allen Noten
   const uniqueAzubis = useMemo(() => {
@@ -27,15 +28,15 @@ const CompetitiveComparisonBarChart = ({ allGrades, faecher }) => {
   const [selectedAzubis, setSelectedAzubis] = useState([]);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
 
-  // Erstelle Chart-Daten:
-  // Für jedes Fach: 
-  // - Für jeden Azubi wird der Durchschnitt (z. B. 2,3) berechnet und dann in Score transformiert: Score = 7 - Durchschnitt (also 4,7)
-  // - Außerdem speichern wir den Originalwert
+  // Wenn keine Fächer ausgewählt wurden, nutze alle Fächer als Standard
+  const subjectsToInclude = selectedSubjects.length > 0 ? selectedSubjects : faecher;
+
+  // Erstelle Chart-Daten: Für jedes Fach werden für jeden ausgewählten Azubi und der Klassen-Durchschnitt berechnet.
   const chartData = useMemo(() => {
-    return selectedSubjects.map((subject) => {
+    const data = subjectsToInclude.map((subject) => {
       const dataPoint = { subject: subject.name };
 
-      // Werte für jeden ausgewählten Azubi
+      // Für jeden ausgewählten Azubi
       selectedAzubis.forEach((azubi) => {
         const azubiGrades = allGrades.filter(
           (grade) =>
@@ -43,10 +44,12 @@ const CompetitiveComparisonBarChart = ({ allGrades, faecher }) => {
             grade.ausbildungsfach?.id === subject.id
         );
         let avg = calculateAverage(azubiGrades);
-        avg = avg === "N/A" ? 6 : parseFloat(avg);
+        // Falls kein Durchschnitt berechnet werden konnte, setze Standardwert 6 (schlechteste Note)
+        avg = avg === "N/A" || isNaN(parseFloat(avg)) ? 6 : parseFloat(avg);
         const score = 7 - avg; // Transformation: Note 1 => Score 6, Note 6 => Score 1
-        dataPoint[azubi.username] = score;
-        dataPoint[`${azubi.username}_original`] = avg;
+        // Falls keine Daten vorhanden sind, erzwinge 0
+        dataPoint[azubi.username] = !isNaN(score) ? score : 0;
+        dataPoint[`${azubi.username}_original`] = !isNaN(avg) ? avg : 0;
       });
 
       // Klassen-Durchschnitt im Fach (über alle Noten)
@@ -54,13 +57,19 @@ const CompetitiveComparisonBarChart = ({ allGrades, faecher }) => {
         (grade) => grade.ausbildungsfach?.id === subject.id
       );
       let classAvg = calculateAverage(allSubjectGrades);
-      classAvg = classAvg === "N/A" ? 6 : parseFloat(classAvg);
+      classAvg = classAvg === "N/A" || isNaN(parseFloat(classAvg)) ? 6 : parseFloat(classAvg);
       dataPoint["Class Average"] = 7 - classAvg;
       dataPoint["Class Average_original"] = classAvg;
 
       return dataPoint;
     });
-  }, [selectedSubjects, selectedAzubis, allGrades]);
+    return data;
+  }, [subjectsToInclude, selectedAzubis, allGrades]);
+
+  // Fallback: Wenn keine Daten vorhanden sind, rendern wir einen Hinweis.
+  if (!chartData || chartData.length === 0) {
+    return <Typography variant="body2">Keine Daten vorhanden</Typography>;
+  }
 
   // Farbpalette für die Balken der einzelnen Azubis
   const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff7300", "#0088FE"];
@@ -143,7 +152,6 @@ const CompetitiveComparisonBarChart = ({ allGrades, faecher }) => {
           <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="subject" />
-            {/* Y-Achse: von 1 (schlechteste Leistung) bis 6 (beste Leistung) */}
             <YAxis domain={[1, 6]} />
             <Tooltip content={<CustomBarTooltip />} />
             <Legend />

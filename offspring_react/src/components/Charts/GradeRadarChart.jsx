@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Paper, Typography } from "@mui/material";
+import { Paper, Typography, Grid } from "@mui/material";
 
 const GradeRadarChart = ({ grades, faecher }) => {
   // Durchschnitt berechnen
@@ -40,10 +40,7 @@ const GradeRadarChart = ({ grades, faecher }) => {
   });
 
   return (
-    <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
-        Radar-Ansicht
-      </Typography>
+    <Grid sx={{ p: 3 }}>
       <ResponsiveContainer width="100%" height={300}>
         <RadarChart data={data}>
           <PolarGrid />
@@ -67,7 +64,7 @@ const GradeRadarChart = ({ grades, faecher }) => {
           <Legend />
         </RadarChart>
       </ResponsiveContainer>
-    </Paper>
+    </Grid>
   );
 };
 

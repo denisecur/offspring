@@ -11,7 +11,7 @@ import { useAuthContext } from "../../../context/AuthContext";
 import { fetchAusbildungsDetails } from "../../../api_services/noten/ausbildungsfaecherService";
 
 // Eigene Komponenten
-import NotenStand from "./NotenStand";
+import NotenStand from "./Leistungsstand";
 import NotenVerwaltung from "./NotenVerwaltung";
 import Loading from "../LoadingMessage";
 import ErrorMessage from "../ErrorMessage";
@@ -60,7 +60,7 @@ const Dashboard = () => {
       } finally {
         setLoading(false);
       }
-    };
+    }; 
     loadData();
   }, [user]);
 

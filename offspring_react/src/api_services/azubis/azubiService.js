@@ -2,9 +2,10 @@
 import axios from 'axios';
 import { getToken } from '../../helpers';
 
+const API_URL = 'http://localhost:1337';
+const token = getToken();
+
 export const fetchAzubis = async () => {
-  const API_URL = 'http://localhost:1337';
-  const token = getToken();
   try {
     const response = await axios.get(`${API_URL}/api/users?populate=ausbildung,Rollen.name&filters[Rollen][name][$eq]=azubi`, 
         {
@@ -15,21 +16,26 @@ export const fetchAzubis = async () => {
           }
     );
 
-    console.log("response" + JSON.stringify(response.data));
-
-    // Daten verarbeiten, um das gewünschte Format zu erhalten
     const azubis = response.data.map((user) => ({
       id: user?.id,
       username: user?.username,
       fachrichtung: user?.ausbildung?.name,
     }));
-    console.log(azubis);
-
-   
-
     return azubis;
   } catch (error) {
     console.error('Fehler beim Abrufen der Azubis:', error);
     throw error;
   }
+};
+
+export const TODOfetchAzubisByAusbildungAndByAusbildungsstart = async () => {
+  return;
+};
+
+export const TODOfetchAzubisByAusbildungsstart = async () => {
+  return;
+};
+
+export const TODOfetchGivenAzubiListeByAusbildungsstart = async () => {
+  return;
 };

@@ -1,20 +1,19 @@
-// src/components/LineGraph.jsx
 import React, { useMemo } from "react";
-import { Paper, Typography } from "@mui/material";
+import { Paper, Typography, Box } from "@mui/material";
 import {
   ResponsiveContainer,
-  AreaChart,
-  Area,
+  LineChart,
   Line,
   XAxis,
   YAxis,
+  CartesianGrid,
   Tooltip,
   Legend,
   ReferenceLine,
 } from "recharts";
 
 const LineGraph2 = ({ grades, subjectName }) => {
-  // Berechnung des Durchschnitts aus den Noten
+  // Berechnung des Durchschnitts
   const calculateAverage = (arr) => {
     if (!arr.length) return 0;
     let sum = 0;
@@ -30,54 +29,106 @@ const LineGraph2 = ({ grades, subjectName }) => {
 
   const overallAverage = calculateAverage(grades);
 
-  // Diagrammdaten aufbereiten: sortiert nach Datum
+  // Diagrammdaten vorbereiten:
+  // Datum im Format "tt.mm.jj" und Sortierung nach Datum
   const chartData = useMemo(() => {
-    return grades
-      .map((g) => ({
-        datum: new Date(g.datum).toLocaleDateString(),
+    const dataWithDates = grades.map((g) => {
+      const dateObj = new Date(g.datum);
+      return {
+        datum: dateObj.toLocaleDateString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+        }),
         note: parseFloat(g.wert),
-      }))
-      .sort((a, b) => new Date(a.datum) - new Date(b.datum));
+        rawDate: dateObj,
+      };
+    });
+    dataWithDates.sort((a, b) => a.rawDate - b.rawDate);
+    return dataWithDates.map(({ rawDate, ...rest }) => rest);
   }, [grades]);
 
+  // Fallback bei zu wenigen Daten
+  if (chartData.length < 2) {
+    return (
+      <Paper sx={{ p: 2, borderRadius: 2, boxShadow: 3 }}>
+        <Typography variant="body2" sx={{ mb: 2, fontWeight: 600 }}>
+          {subjectName} – Durchschnitt: {overallAverage}
+        </Typography>
+        <Box
+          sx={{
+            height: 300,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="body1">
+            Keine ausreichenden Daten vorhanden
+          </Typography>
+        </Box>
+      </Paper>
+    );
+  }
+
+  // Benutzerdefinierte Legend-Einträge
+  const legendPayload = [
+    { value: "Graph", type: "line", id: "lineGraph", color: "#0000FF" },
+    {
+      value: "Durchschnitt",
+      type: "line",
+      id: "average",
+      color: "#FF4560",
+      // Hinweis: Der gestrichelte Effekt wird in der Grafik (ReferenceLine) gesetzt
+    },
+  ];
+
   return (
-    <Paper sx={{ p: 2 }}>
-      <Typography variant="body2" sx={{ mb: 2 }}>
+    <Paper sx={{ p: 2, borderRadius: 2, boxShadow: 3 }}>
+      <Typography variant="body2" sx={{ mb: 2, fontWeight: 600 }}>
         {subjectName} – Durchschnitt: {overallAverage}
       </Typography>
       <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={chartData}>
-          <XAxis dataKey="datum" />
-          <YAxis domain={[1, 6]} />
-          <Tooltip />
-          <Legend />
-          <Area
-            type="monotone"
-            dataKey="note"
-            fillOpacity={0.3}
-            strokeWidth={2}
-            activeDot={{ r: 8 }}
-            stackId="1"
+        <LineChart
+          data={chartData}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          {/* Hintergrund weiß machen */}
+          <rect x={0} y={0} width="100%" height="100%" fill="#fff" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+          <XAxis
+            dataKey="datum"
+            tick={{ fill: "#666", fontSize: 12 }}
+            // Falls nötig: angle={-45} oder textAnchor="end"
           />
+          <YAxis domain={[1, 6]} tick={{ fill: "#666", fontSize: 12 }} />
+          <Tooltip
+            contentStyle={{ backgroundColor: "#fff", border: "1px solid #ccc" }}
+            labelStyle={{ color: "#666" }}
+          />
+          <Legend payload={legendPayload} wrapperStyle={{ fontSize: 12, color: "#666" }} />
+          {/* Graphlinie als durchgezogene blaue Linie */}
           <Line
             type="monotone"
             dataKey="note"
-            stroke="#8884d8"
-            strokeWidth={2}
-            dot={true}
+            stroke="#0000FF"
+            strokeWidth={1}
+            dot={{ r: 3, fill: "#0000FF" }}
           />
+          {/* Durchschnittslinie als dick gestrichelte rote Linie */}
           <ReferenceLine
             y={parseFloat(overallAverage) || 0}
-            stroke="#FFC107"
-            strokeDasharray="3 3"
+            stroke="#FF4560"
+            strokeDasharray="6 6"
+            strokeWidth={3}
             label={{
               value: `Durchschnitt: ${overallAverage}`,
               position: "right",
-              fill: "#FFC107",
+              fill: "#FF4560",
               fontSize: 12,
             }}
           />
-        </AreaChart>
+        </LineChart>
       </ResponsiveContainer>
     </Paper>
   );
