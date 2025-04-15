@@ -12,6 +12,7 @@ import { ThemeProviderCustom, ThemeContext } from "./context/ThemeContext";
 const queryClient = new QueryClient();
 const router = createBrowserRouter(routes);
 
+
 const AppContent = () => {
   const { muiTheme } = useContext(ThemeContext);  // Holt das MUI-Theme aus dem Context
 

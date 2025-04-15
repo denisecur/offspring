@@ -15,6 +15,7 @@ import Logout from "./components/Logout";
 import NotenPage from "./pages/Noten/NotenPage";
 import Ranking from "./pages/ChefView/Ranking";
 import Profile from "./pages/ChefView/Profile";
+import AusbildungsstartPrompt from "./pages/Login/AusbildungsstartPrompt";
 
 const AppRoutes = [
   {
@@ -25,26 +26,25 @@ const AppRoutes = [
       </ProtectedRoute>
     ),
     children: [
-      /** AZUBI-VIEW */
       { path: "/", element: <Navigate to="/" /> },
       { path: "noten", element: <ProtectedRoute><NotenPage /></ProtectedRoute> },
       { path: "listView", element: <ProtectedRoute><ListView /></ProtectedRoute> },
       { path: "berichtshefte", element: <ProtectedRoute><Berichtshefte /></ProtectedRoute> },
       { path: "azubi-dashboard", element: <ProtectedRoute><AzubiDashboard /></ProtectedRoute> },
-      /** CHEF-VIEW */
+      { path: "ausbildungsstart", element: <ProtectedRoute><AusbildungsstartPrompt /></ProtectedRoute> },
+
       { path: "chef-dashboard", element: <FullAccessRoute><ChefDashboard /></FullAccessRoute> },
       { path: "profile", element: <ProtectedRoute><Profile /></ProtectedRoute> },
       { path: "ranking", element: <ProtectedRoute><Ranking /></ProtectedRoute> },
-
     ],
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Login />,
   },
   {
     path: "/logout",
-    element: <Logout />
+    element: <Logout />,
   },
 ];
 

@@ -75,22 +75,8 @@ const AutomatedComments = () => (
       Automatisierte Zusammenfassung
     </Typography>
     <Typography variant="body2">
-      [Basierend auf den Kennzahlen: z. B. "Azubi A ist in Mathe Spitzenreiter, in Deutsch besteht Verbesserungspotenzial."]
+      [Basierend auf den Kennzahlen: z. B. "Azubi xyz ist in Mathe Spitzenreiter, in Deutsch besteht Verbesserungspotenzial."]
     </Typography>
-  </Paper>
-);
-
-const InteractiveFilters = () => (
-  <Paper sx={{ p: 2, mb: 2 }}>
-    <Typography variant="h6" gutterBottom>
-      Interaktive Filter
-    </Typography>
-    <Typography variant="body2">
-      [Hier können Filter für Zeitraum, Fachrichtung etc. integriert werden.]
-    </Typography>
-    <Box sx={{ mt: 1 }}>
-      <Button variant="contained">Filter anwenden</Button>
-    </Box>
   </Paper>
 );
 
@@ -102,7 +88,6 @@ const CompetitiveOverview = ({ allGrades, faecher }) => {
       <Typography variant="h5" gutterBottom>
         Wettbewerbs-Übersicht
       </Typography>
-      <InteractiveFilters />
       <SummaryCards allGrades={allGrades} />
  
       <TrendAnalysis />

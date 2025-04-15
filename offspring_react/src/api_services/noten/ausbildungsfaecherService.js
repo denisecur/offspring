@@ -3,7 +3,7 @@ import { getToken } from '../../helpers';
 import { API } from '../../constant';
 
 export const fetchAusbildungsDetails = async (ausbildungsrichtung) => {
-  const url = `${API}/ausbildungen?populate=ausbildungsfaches,leistungsnachweise`;
+  const url = `${API}/ausbildungen?populate=ausbildungsfaches, leistungsnachweise`;
   const token = getToken();
 
   try {

@@ -10,11 +10,11 @@ import {
   Alert,
 } from "@mui/material";
 import CompetitiveComparison from "../../pages/Noten/Dashboard/CompetitiveComparison";
-import CompetitiveComparisonBarChart from "../../pages/Noten/Dashboard/CompetitiveComparisonBarChart";
 import CompetitiveOverview from "../../pages/Noten/Dashboard/CompetitiveOverview";
 import { fetchUserGrades } from "../../api_services/noten/notenService";
 import { fetchAusbildungsDetails } from "../../api_services/noten/ausbildungsfaecherService";
 import Leaderboard from "./Leaderboard";
+import Schulklassen from "../../components/Schulklassen";
 
 export default function Ranking() {
   const [currentTab, setCurrentTab] = useState("leaderboard");
@@ -60,6 +60,7 @@ export default function Ranking() {
           }}
           size="small"
         >
+                    <ToggleButton value="klassenview">Klassenview</ToggleButton>
           <ToggleButton value="leaderboard">Leaderboard</ToggleButton>
           <ToggleButton value="comparison">Radar Chart</ToggleButton>
           <ToggleButton value="overview">Übersicht</ToggleButton>
@@ -84,6 +85,9 @@ export default function Ranking() {
       {!loading && !error && (
         <Grid container spacing={2}>
           <Grid item xs={12}>
+          {currentTab === "klassenview" && (
+              <Schulklassen allGrades={grades} />
+            )}
             {currentTab === "leaderboard" && (
               <Leaderboard allGrades={grades} faecher={faecher} />
             )}
