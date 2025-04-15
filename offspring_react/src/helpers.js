@@ -16,7 +16,19 @@ export const removeToken = () => {
 // src/helpers.js
 export const getCurrentUser = () => {
   try {
-    // Annahme: Die Benutzerdaten sind im localStorage unter "user" als JSON gespeichert.
+    /**
+      {
+      	"id": 1,
+	      "username": "a.fritz",
+	      "email": "azubi.fritz@sdv.ag",
+	      "provider": "local",
+	      "confirmed": true,
+	      "blocked": false,
+	      "createdAt": "2024-07-18T14:06:42.995Z",
+	      "updatedAt": "2024-09-15T10:16:59.134Z"
+}
+     * 
+     */
     const user = JSON.parse(localStorage.getItem("user"));
     return user;
   } catch (error) {

@@ -3,9 +3,13 @@ import { Grid, Paper, Typography, Box } from '@mui/material';
 import FeatureCard from '../../components/FeatureCard';
 import { useNavigate } from 'react-router-dom';
 import dashboardData from './dashboardData'; // Import der zusammengeführten Daten
+import { getCurrentUser } from '../../helpers';
 
 const AzubiDashboard = () => {
   const navigate = useNavigate();
+  
+  // getCurrentUser aufrufen, um die Benutzerinformationen zu erhalten
+  const currentUser = getCurrentUser();
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -39,6 +43,13 @@ const AzubiDashboard = () => {
               textAlign: 'left',
             }}
           >
+            {/* Beispiel: Benutzerbegrüßung, wenn der Benutzer vorhanden ist */}
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              {currentUser
+                ? `Willkommen, ${currentUser.username} (Ausbildungsstart: ${currentUser.createdAt})!`
+                : 'Willkommen, Gast!'}
+            </Typography>
+
             <Typography
               variant="h5"
               sx={{
