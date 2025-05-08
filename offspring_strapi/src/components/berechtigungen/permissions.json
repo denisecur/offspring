@@ -13,6 +13,11 @@
       "type": "boolean",
       "default": false,
       "required": true
+    },
+    "individuelles": {
+      "type": "component",
+      "repeatable": false,
+      "component": "berechtigungen.eigenschaften"
     }
   }
 }

@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_berechtigungen_eigenschaftens",
+  "info": {
+    "displayName": "eigenschaften"
+  },
+  "options": {},
+  "attributes": {
+    "ausbildungsstart": {
+      "type": "date"
+    }
+  }
+}

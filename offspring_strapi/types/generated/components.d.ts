@@ -84,6 +84,16 @@ export interface AusbildungSchule extends Schema.Component {
   };
 }
 
+export interface BerechtigungenEigenschaften extends Schema.Component {
+  collectionName: 'components_berechtigungen_eigenschaftens';
+  info: {
+    displayName: 'eigenschaften';
+  };
+  attributes: {
+    ausbildungsstart: Attribute.Date;
+  };
+}
+
 export interface BerechtigungenPermissions extends Schema.Component {
   collectionName: 'components_berechtigungen_permissions';
   info: {
@@ -95,6 +105,7 @@ export interface BerechtigungenPermissions extends Schema.Component {
     full_access: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
+    individuelles: Attribute.Component<'berechtigungen.eigenschaften'>;
   };
 }
 
@@ -106,6 +117,7 @@ declare module '@strapi/types' {
       'ausbildung.leistungsnachweis': AusbildungLeistungsnachweis;
       'ausbildung.noten': AusbildungNoten;
       'ausbildung.schule': AusbildungSchule;
+      'berechtigungen.eigenschaften': BerechtigungenEigenschaften;
       'berechtigungen.permissions': BerechtigungenPermissions;
     }
   }
