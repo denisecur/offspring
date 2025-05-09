@@ -105,7 +105,6 @@ export interface BerechtigungenPermissions extends Schema.Component {
     full_access: Attribute.Boolean &
       Attribute.Required &
       Attribute.DefaultTo<false>;
-    individuelles: Attribute.Component<'berechtigungen.eigenschaften'>;
   };
 }
 

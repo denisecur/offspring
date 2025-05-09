@@ -551,79 +551,6 @@ export interface ApiNoteNote extends Schema.CollectionType {
   };
 }
 
-export interface ApiOrderOrder extends Schema.CollectionType {
-  collectionName: 'orders';
-  info: {
-    description: '';
-    displayName: 'Order';
-    pluralName: 'orders';
-    singularName: 'order';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    confirmation_date: Attribute.DateTime;
-    confirmed: Attribute.Boolean;
-    createdAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::order.order',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    owner: Attribute.Relation<
-      'api::order.order',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    products: Attribute.Relation<
-      'api::order.order',
-      'oneToMany',
-      'api::product.product'
-    >;
-    publishedAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    updatedBy: Attribute.Relation<
-      'api::order.order',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiProductProduct extends Schema.CollectionType {
-  collectionName: 'products';
-  info: {
-    displayName: 'Product';
-    pluralName: 'products';
-    singularName: 'product';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::product.product',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    name: Attribute.String;
-    product_code: Attribute.String;
-    publishedAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    updatedBy: Attribute.Relation<
-      'api::product.product',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface ApiRolleRolle extends Schema.CollectionType {
   collectionName: 'rollen';
   info: {
@@ -1144,8 +1071,6 @@ declare module '@strapi/types' {
       'api::berichtsheft.berichtsheft': ApiBerichtsheftBerichtsheft;
       'api::lernfeld.lernfeld': ApiLernfeldLernfeld;
       'api::note.note': ApiNoteNote;
-      'api::order.order': ApiOrderOrder;
-      'api::product.product': ApiProductProduct;
       'api::rolle.rolle': ApiRolleRolle;
       'api::vorlage.vorlage': ApiVorlageVorlage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
