@@ -407,6 +407,46 @@ export interface ApiAusbildungAusbildung extends Schema.CollectionType {
   };
 }
 
+export interface ApiAusbildungsdefinitionAusbildungsdefinition
+  extends Schema.CollectionType {
+  collectionName: 'ausbildungsdefinitionen';
+  info: {
+    displayName: 'Ausbildungsdefinition';
+    pluralName: 'ausbildungsdefinitionen';
+    singularName: 'ausbildungsdefinition';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    ausbildungsfaecher: Attribute.Relation<
+      'api::ausbildungsdefinition.ausbildungsdefinition',
+      'oneToMany',
+      'api::ausbildungsfach.ausbildungsfach'
+    >;
+    createdAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::ausbildungsdefinition.ausbildungsdefinition',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    leistungsnachweise: Attribute.Component<
+      'ausbildung.leistungsnachweis',
+      true
+    >;
+    name: Attribute.String;
+    publishedAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    updatedBy: Attribute.Relation<
+      'api::ausbildungsdefinition.ausbildungsdefinition',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiAusbildungsfachAusbildungsfach
   extends Schema.CollectionType {
   collectionName: 'ausbildungsfaecher';
@@ -1067,6 +1107,7 @@ declare module '@strapi/types' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::ausbildung.ausbildung': ApiAusbildungAusbildung;
+      'api::ausbildungsdefinition.ausbildungsdefinition': ApiAusbildungsdefinitionAusbildungsdefinition;
       'api::ausbildungsfach.ausbildungsfach': ApiAusbildungsfachAusbildungsfach;
       'api::berichtsheft.berichtsheft': ApiBerichtsheftBerichtsheft;
       'api::lernfeld.lernfeld': ApiLernfeldLernfeld;

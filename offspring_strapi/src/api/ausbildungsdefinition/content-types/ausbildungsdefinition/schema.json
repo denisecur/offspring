@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ausbildungsdefinitionen",
+  "info": {
+    "singularName": "ausbildungsdefinition",
+    "pluralName": "ausbildungsdefinitionen",
+    "displayName": "Ausbildungsdefinition"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ausbildungsfaecher": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::ausbildungsfach.ausbildungsfach"
+    },
+    "leistungsnachweise": {
+      "type": "component",
+      "repeatable": true,
+      "component": "ausbildung.leistungsnachweis"
+    },
+    "name": {
+      "type": "string"
+    }
+  }
+}

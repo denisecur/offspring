@@ -6,7 +6,6 @@ import Login from "./pages/Login/Login";
 import ListView from "./components/ListView";
 import Berichtshefte from "./pages/Berichtshefte/Berichtshefte";
 import Layout from "./Layout";
-import Orders from "./components/Orders";
 import ProtectedRoute from "./components/ProtectedRoute";
 import FullAccessRoute from "./components/FullAccessRoute";
 import ChefDashboard from "./components/Dashboard/ChefDashboard";
@@ -15,8 +14,7 @@ import Logout from "./components/Logout";
 import NotenPage from "./pages/Noten/NotenPage";
 import Ranking from "./pages/ChefView/Ranking";
 import Profile from "./pages/ChefView/Profile";
-import AusbildungSetupForm from "./pages/Ausbildung/AusbildungSetupForm";
-
+import AusbildungsstartPrompt from "./pages/Login/AusbildungsstartPrompt";
 const AppRoutes = [
   {
     path: "/",
@@ -31,7 +29,7 @@ const AppRoutes = [
       { path: "listView", element: <ProtectedRoute><ListView /></ProtectedRoute> },
       { path: "berichtshefte", element: <ProtectedRoute><Berichtshefte /></ProtectedRoute> },
       { path: "azubi-dashboard", element: <ProtectedRoute><AzubiDashboard /></ProtectedRoute> },
-      { path: "setup", element: <ProtectedRoute><AusbildungSetupForm /></ProtectedRoute> },
+      { path: "setup", element: <ProtectedRoute><AusbildungsstartPrompt /></ProtectedRoute> },
 
       { path: "chef-dashboard", element: <FullAccessRoute><ChefDashboard /></FullAccessRoute> },
       { path: "profile", element: <ProtectedRoute><Profile /></ProtectedRoute> },
